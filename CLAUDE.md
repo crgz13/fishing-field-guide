@@ -28,8 +28,13 @@ Current state: one self-contained file, `fishing-field-guide.html` (~80KB), no b
 - Structure: sticky nav → PLAN (gear presets + map + venue panel + regs + calendar + kit +
   checklist) → DO (rig diagram, phase 1/2/aftercare, drawn SVG illustrations) → KNOW
   (fish ID, safety, dog box) → LOOK UP (details-collapsed baits/troubleshooting/glossary).
-- State `{rod, line, venue, custom weights}` persisted in URL hash. Night mode (red-on-black)
-  via body class + CSS var overrides incl. SVG attribute selectors. Print opens all <details>.
+- State `{rod, line, venue, custom weights, no-rod flag}` persisted in URL hash — written only
+  after first user interaction, so clean URLs stay clean. Precedence: hash > saved profile
+  (localStorage `efg-profile`, written on user changes; the hash doubles as the shareable
+  export) > neutral defaults (generic light spinning, braid 15lb, all venues). First-visit
+  card (location + rod-or-none) shows once when neither hash nor profile exists. Night mode
+  (red-on-black) via body class + CSS var overrides incl. SVG attribute selectors. Print
+  opens all <details>.
 - Venue data: 8 marks + "all" in a JS object — each has lat/lng, confidence badge, blurb,
   stats, hazards, sub-spots (each with own badge), per-rod-class verdicts (g/y/r + reason),
   species-by-month strings (12 chars p/m/n), shops, region N/S.
@@ -55,7 +60,7 @@ Current state: one self-contained file, `fishing-field-guide.html` (~80KB), no b
   Angling & Hiking Centre Barrow (01229 829661), Bonners New Brighton (0151 638 0883).
 
 ## Prioritised roadmap (agreed order)
-① **Stranger-proofing:** first-visit profile (location + rod-or-none), de-Craig the copy
+① **Stranger-proofing:** first-visit profile (location + rod-or-none) ✅ done, de-Craig the copy
    (venue-relative not Runcorn-relative; dog box becomes a toggle; RR gear becomes a saved
    profile not the page identity), "checked <date>" stamps + verify links on every
    perishable fact (regs, phone numbers, tide ceilings, parking), one global date banner,

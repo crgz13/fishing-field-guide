@@ -221,6 +221,10 @@
   body.night .deck select,body.night .deck input{background:#0a0405;color:#e03d3d;border-color:#e03d3d}
   body.night .derived div{border-color:#3a1414}
   body.night .whynote{color:#c05050}
+  #firstvisit .q{font-weight:600;font-size:.9rem;margin:10px 0 2px}
+  #firstvisit .skip{float:right;font:inherit;font-size:.8rem;background:none;border:none;color:var(--teal);cursor:pointer;text-decoration:underline}
+  body.night #firstvisit .skip{color:#c05050}
+  @media print{#firstvisit{display:none}}
 
   /* ---------- leaflet map ---------- */
   #livemap{height:430px;border:1.5px solid var(--ink);background:#dfe6e0}
@@ -273,14 +277,14 @@
   <div class="wrap">
     <p class="eyebrow">Mersey · Dee · Duddon — light shore &amp; estuary fishing</p>
     <h1>The Estuary<br>Field Guide</h1>
-    <p class="standfirst">Everything from the box of parts to your first flounder, in order, built around whatever gear you select below (default: the Rigged &amp; Ready World Traveller + RR3000). Print it, save it to your phone, take it to the water.</p>
+    <p class="standfirst">Everything from the box of parts to your first flounder, in order, built around whatever gear you select below (default: a generic light spinning rod — set yours below). Print it, save it to your phone, take it to the water.</p>
     <div class="specstrip" id="specstrip">
-      <div>Rod<b>6-pc travel, 2 tips</b></div>
-      <div>Regular tip<b>5–20 g · 7 ft</b></div>
-      <div>Short tip<b>15–40 g · 6′3″</b></div>
-      <div>Reel<b>RR3000 + spare spool</b></div>
-      <div>Main line<b>Infinite braid 15 lb</b></div>
-      <div>Hard ceiling<b>40 g rig, total</b></div>
+      <div>Rod<b>Generic light spinning</b></div>
+      <div>Cast weight<b>10–30 g</b></div>
+      <div>Main line<b>Braid 15lb (0.12mm)</b></div>
+      <div>Max lead<b>0.5oz (14g)</b></div>
+      <div>Hooklength<b>11 lb</b></div>
+      <div>Mark<b>All venues</b></div>
     </div>
   </div>
 </header>
@@ -302,6 +306,8 @@
     </div>
     <div class="derived" id="derived"></div>
     <p class="whynote" id="gearwhy"></p>
+    <p class="whynote" id="norodnote" hidden>No rod yet — the numbers on this page assume a generic light spinning rod (10–30g), the sensible first buy for these marks.</p>
+    <p class="whynote" id="savedline" hidden>Saved on this device · <a href="#" id="resetprofile">reset</a></p>
   </div>
 
   <div class="chips" id="chips" role="tablist" aria-label="Choose a fishing mark"></div>
@@ -786,7 +792,27 @@
   var LEADS=[[14,'0.5oz'],[21,'0.75oz'],[28,'1oz'],[35,'1.25oz'],[42,'1.5oz'],[57,'2oz'],[85,'3oz'],[113,'4oz'],[142,'5oz'],[170,'6oz']];
   var CLASSNAMES={light:'Light spinning',lure:'Lure rod',bass:'Bass rod',beach:'Beachcaster'};
 
-  var state={rod:'rr-short',line:'braid15',venue:'hodbarrow',cmin:10,cmax:40};
+  var state={rod:'lightgen',line:'braid15',venue:'all',cmin:10,cmax:40};
+
+  /* ================= PROFILE (first visit + saved setup) ================= */
+  var NOROD=false, INIT_DONE=false; // false during init so the initial render neither overwrites the local profile nor stamps a hash on a clean URL
+  function canStore(){ try{localStorage.setItem('efg-t','1');localStorage.removeItem('efg-t');return true}catch(e){return false} }
+  function loadProfile(){ try{return JSON.parse(localStorage.getItem('efg-profile'))}catch(e){return null} }
+  function saveProfile(){
+    if(!INIT_DONE) return;
+    try{
+      localStorage.setItem('efg-profile',JSON.stringify({rod:state.rod,line:state.line,venue:state.venue,cmin:state.cmin,cmax:state.cmax,norod:NOROD,answered:true}));
+      document.getElementById('savedline').hidden=false;
+    }catch(e){}
+  }
+  function applyProfile(p){
+    if(!p) return;
+    if(RODS[p.rod]) state.rod=p.rod;
+    if(LINES[p.line]) state.line=p.line;
+    if(VENUES[p.venue]) state.venue=p.venue;
+    state.cmin=+p.cmin||10; state.cmax=+p.cmax||40;
+    NOROD=!!p.norod;
+  }
 
   function rodOf(){ var r=RODS[state.rod];
     if(state.rod!=='custom') return r;
@@ -824,6 +850,7 @@
       '<div>Max lead<b>'+(g.maxLead? g.maxLead[1]+' ('+g.maxLead[0]+'g)':'—')+'</b></div>'+
       '<div>Hooklength<b>'+g.hook+' lb</b></div>'+
       '<div>Mark<b>'+(VENUES[state.venue]?VENUES[state.venue].chip:'—')+'</b></div>';
+    document.getElementById('norodnote').hidden=!NOROD;
   }
 
   /* ================= VENUES (research-verified) ================= */
@@ -1008,12 +1035,15 @@
     });
     if(MAP&&MARKERS[key]) MAP.panTo(MARKERS[key].getLatLng());
     writeHash();
+    saveProfile();
   }
   window.select=select;
 
   function writeHash(){
+    if(!INIT_DONE) return; // keep a clean URL clean until the user changes something
     location.hash='v='+state.venue+'&r='+state.rod+'&l='+state.line+
-      (state.rod==='custom'?('&cw='+state.cmin+'-'+state.cmax):'');
+      (state.rod==='custom'?('&cw='+state.cmin+'-'+state.cmax):'')+
+      (NOROD?'&nr=1':'');
   }
   function readHash(){
     var h=location.hash.replace('#','');
@@ -1023,10 +1053,14 @@
       if(p[0]==='r'&&RODS[p[1]]) state.rod=p[1];
       if(p[0]==='l'&&LINES[p[1]]) state.line=p[1];
       if(p[0]==='cw'){var w=p[1].split('-');state.cmin=+w[0]||10;state.cmax=+w[1]||40;}
+      if(p[0]==='nr') NOROD = p[1]==='1';
     });
   }
 
-  // build controls
+  // build controls — precedence: URL hash > saved profile > neutral defaults
+  var PROF=loadProfile();
+  var HASHSTATE=location.hash.length>1;
+  if(!HASHSTATE) applyProfile(PROF);
   readHash();
   var rs=document.getElementById('rodsel');
   Object.keys(RODS).forEach(function(k){var o=document.createElement('option');o.value=k;o.textContent=RODS[k].label;rs.appendChild(o);});
@@ -1035,7 +1069,7 @@
   Object.keys(LINES).forEach(function(k){var o=document.createElement('option');o.value=k;o.textContent=LINES[k].label;ls.appendChild(o);});
   ls.value=state.line;
   function customVis(){document.getElementById('customrod').style.display = state.rod==='custom'?'inline':'none';}
-  rs.addEventListener('change',function(){state.rod=rs.value;customVis();select(state.venue);});
+  rs.addEventListener('change',function(){state.rod=rs.value;NOROD=false;customVis();select(state.venue);});
   ls.addEventListener('change',function(){state.line=ls.value;select(state.venue);});
   document.getElementById('cmin').addEventListener('input',function(){state.cmin=+this.value||1;select(state.venue);});
   document.getElementById('cmax').addEventListener('input',function(){state.cmax=+this.value||2;select(state.venue);});
@@ -1050,8 +1084,53 @@
     chips.appendChild(b);
   });
 
+  function buildFirstVisit(){
+    if(HASHSTATE || (PROF&&PROF.answered) || !canStore()) return;
+    var card=document.createElement('div');
+    card.className='deck'; card.id='firstvisit';
+    card.innerHTML='<button type="button" class="skip" id="fvskip">skip ×</button>'+
+      '<h3>First time here?</h3>'+
+      '<p class="q">Where will you fish?</p><div class="chips" id="fvwhere"></div>'+
+      '<p class="q">What rod do you have?</p><div class="chips" id="fvrod"></div>';
+    var deck=document.getElementById('geardeck');
+    deck.parentNode.insertBefore(card,deck);
+    var done={where:false,rod:false};
+    function mark(row,btn,part){
+      row.querySelectorAll('button').forEach(function(b){b.classList.toggle('active',b===btn);});
+      done[part]=true; saveProfile();
+      if(done.where&&done.rod) card.remove();
+    }
+    var wrow=document.getElementById('fvwhere');
+    [['Cumbria — Duddon & Barrow','hodbarrow'],['Merseyside — Mersey & Dee','newbrighton'],['Not sure yet','all']]
+      .forEach(function(o){
+        var b=document.createElement('button'); b.type='button'; b.textContent=o[0];
+        b.addEventListener('click',function(){select(o[1]);mark(wrow,b,'where');});
+        wrow.appendChild(b);
+      });
+    var rrow=document.getElementById('fvrod');
+    Object.keys(RODS).forEach(function(k){
+      var b=document.createElement('button'); b.type='button'; b.textContent=RODS[k].label;
+      b.addEventListener('click',function(){NOROD=false;state.rod=k;rs.value=k;customVis();select(state.venue);mark(rrow,b,'rod');});
+      rrow.appendChild(b);
+    });
+    var norodbtn=document.createElement('button'); norodbtn.type='button'; norodbtn.textContent='No rod yet';
+    norodbtn.addEventListener('click',function(){NOROD=true;state.rod='lightgen';rs.value='lightgen';customVis();select(state.venue);mark(rrow,norodbtn,'rod');});
+    rrow.appendChild(norodbtn);
+    document.getElementById('fvskip').addEventListener('click',function(){saveProfile();card.remove();});
+  }
+
+  document.getElementById('resetprofile').addEventListener('click',function(e){
+    e.preventDefault();
+    try{localStorage.removeItem('efg-profile')}catch(err){}
+    history.replaceState(null,'',location.pathname+location.search);
+    location.reload(); // ponytail: reload guarantees the exact fresh-visit state, no re-render bookkeeping
+  });
+
   initMap();
   select(state.venue);
+  if(PROF&&PROF.answered){ try{document.getElementById('savedline').hidden=false}catch(e){} }
+  buildFirstVisit();
+  INIT_DONE=true;
 </script>
 
 </body>
