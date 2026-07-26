@@ -247,6 +247,8 @@
   .b-ver{background:#dfe9df;color:#274d33;border:1px solid #274d33}
   .b-anec{background:#f4ecd7;color:#7a5a12;border:1px solid #7a5a12}
   .b-shift{background:#fdeae2;color:#8a3417;border:1px solid #8a3417}
+  /* ponytail: provenance, not attestation — deliberately off the ver/anec/shift colour ramp. */
+  .b-est{background:#e4e8ea;color:#3c4c56;border:1px solid #3c4c56}
   .fit{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:7px;border:1.5px solid var(--ink)}
   .fit-g{background:#4a7d52}.fit-y{background:#e0a52c}.fit-r{background:#c33a1e}
   .verdicts{margin:10px 0}
@@ -323,7 +325,7 @@
     <button type="button" id="jumpS">🌉 Mersey &amp; Dee marks</button>
   </div>
   <div id="livemap" role="application" aria-label="Satellite map of fishing marks"></div>
-  <p class="rig-caption" style="margin:6px 0 12px">Satellite view is usually captured at low tide — zoom in on a mark and you can read the gutters, channel edges and mud-to-sand lines yourself. That beats any stale pin: <b>confirm on foot at low water before fishing the flood over it.</b> Amber ⚠ pins are anecdotal or shifting-ground info; the red pin is a do-not.</p>
+  <p class="rig-caption" style="margin:6px 0 12px">Satellite view is usually captured at low tide — zoom in on a mark and you can read the gutters, channel edges and mud-to-sand lines yourself. That beats any stale pin: <b>confirm on foot at low water before fishing the flood over it.</b> Amber ⚠ pins are anecdotal or shifting-ground info; the red pin is a do-not. <b>Every pin is an approximate stance marker, not a surveyed fix</b> — it shows which structure to walk to, not where to stand.</p>
 
   <div class="mapbox" id="mapfallback" aria-hidden="true">
 <svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" font-family="Archivo,sans-serif">
@@ -335,6 +337,7 @@
 <text x="60" y="180" font-size="12" font-weight="700">MERSEY / DEE:</text>
 <text x="60" y="200" font-size="11">● Perch Rock · ● Otterspool · ◐ Thurstaston</text>
 <text x="60" y="220" font-size="11">◐ Pickerings · ◐ West Bank</text>
+<text x="60" y="248" font-size="10" fill="#3c4c56">● verified · ◐ anecdotal — pin positions approximate</text>
 </svg>
   </div>
 
@@ -349,9 +352,9 @@
 </section>
 <!-- ================= SEASONS ================= -->
 <section class="wrap" id="seasons">
-  <h2 class="phase">What's biting when — <span id="calvenue">all venues</span><small>This table follows the mark selected above.</small></h2>
+  <h2 class="phase">What's biting when — <span id="calvenue">all venues</span> <span class="badge b-est">estimate</span><small>This table follows the mark selected above.</small></h2>
   <div class="scroll" id="calwrap"></div>
-  <p class="legend">● prime &nbsp;·&nbsp; ◐ possible &nbsp;·&nbsp; ○ unlikely. Local and yearly variation applies — the calendar says what to <em>target</em>, not what's guaranteed.</p>
+  <p class="legend">● prime &nbsp;·&nbsp; ◐ possible &nbsp;·&nbsp; ○ unlikely. Local and yearly variation applies — the calendar says what to <em>target</em>, not what's guaranteed. <b>Every row here is an estimate.</b> The month bands were calibrated from each mark's own notes and the research credited in the venue panel — not from catch records. Where a venue's notes name a hard window (Hodbarrow's April–September, Silecroft's October codling), that window is the sourced fact and the row follows it.</p>
 </section>
 
 <!-- ================= KIT ================= -->
@@ -1031,7 +1034,7 @@
         var v=VENUES[k]; if(!v.lat) return;
         var col = v.conf==='ver' ? '#2f6b3a' : '#c98a1b';
         var mk=L.circleMarker([v.lat,v.lng],{radius:9,color:'#1c2b36',weight:2,fillColor:col,fillOpacity:.95}).addTo(MAP);
-        mk.bindPopup('<b>'+v.name+'</b><br>'+v.why+'<br><a href="#vpanel" onclick="select(\''+k+'\')">Open tactics \u2193</a>');
+        mk.bindPopup('<b>'+v.name+'</b> '+BADGE[v.conf]+'<br>'+v.why+'<br><a href="#vpanel" onclick="select(\''+k+'\')">Open tactics \u2193</a>');
         mk.on('click',function(){select(k);});
         MARKERS[k]=mk;
       });

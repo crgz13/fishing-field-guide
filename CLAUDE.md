@@ -11,8 +11,12 @@ Current state: one self-contained file, `fishing-field-guide.html` (~80KB), no b
    controls touched. Progressive disclosure for every feature; defaults always sensible.
 2. **Evidence honesty.** Three badges — verified / anecdotal / shifting-danger — on venues,
    sub-spots, and claims. Never flatten these. Claude-synthesised estimates (season calendar
-   rows) must be distinguishable from researched facts (add an "estimate" tag — roadmap ①).
-   Date stamps obey the same rule: "reviewed <date>" means someone read the page that day;
+   rows) must be distinguishable from researched facts (the "estimate" tag). "Estimate" is a
+   PROVENANCE tag — who authored the number — and is orthogonal to the verified/anecdotal/
+   shifting ATTESTATION axis. Never collapse the two: a fourth attestation badge is a
+   flattening. While every calendar row is synthesised the tag sits on the table once, with
+   the legend naming the venue-sourced windows; move it per-row the day a row gets its own
+   source. Date stamps obey the same rule: "reviewed <date>" means someone read the page that day;
    "verified against <source> <date>" is only for facts actually re-checked against that
    source. Never write "checked" over facts nobody rang, sourced or measured — a false
    stamp is worse than no stamp. Bump dates only when the re-check really happened.
@@ -71,7 +75,11 @@ Current state: one self-contained file, `fishing-field-guide.html` (~80KB), no b
    date stamps + verify links ✅ done (global "Page reviewed <date>" banner under the
    specstrip, per-venue "Venue details reviewed <date>" line, NWIFCA + gov.uk bass-rules
    links in the regs box; the same commit fixed print not expanding closed <details>),
-   "estimate" tag on synthesised calendar rows, "approximate" on anecdotal pins.
+   estimate/approximate tags ✅ done — **① COMPLETE** (table-level "estimate" badge on the
+   season calendar + legend naming which windows are venue-sourced; "every pin is an
+   approximate stance marker" in the map caption — all pins, since restricting it to amber
+   pins would imply the green ones are surveyed; confidence badge added to pin popups; ●/◐
+   key added to the offline map SVG so the anecdotal signal survives offline).
 ② **Start-here router** (never fished → DO; picking a day → PLAN; at the water → LOOK UP)
    + proper credits/sources section.
 ③ **Hosting:** GitHub Pages, one canonical URL; raw-file sharing becomes offline fallback.
