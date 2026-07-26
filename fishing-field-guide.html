@@ -51,6 +51,7 @@
   }
   .specstrip div:last-child{border-right:none}
   .specstrip b{display:block;font-size:1.05rem;font-weight:800}
+  .checked{font-size:.8rem;color:var(--teal);max-width:70ch;margin:10px 0}
 
   /* ---------- rig hero diagram ---------- */
   .hero-rig{padding:26px 0 8px;overflow-x:auto}
@@ -291,6 +292,7 @@
       <div>Hooklength<b>11 lb</b></div>
       <div>Mark<b>All venues</b></div>
     </div>
+    <p class="checked">Page reviewed 26 Jul 2026. Rules, phone numbers, parking and tide windows all change without notice — re-verify anything you'll rely on before you travel.</p>
   </div>
 </header>
 
@@ -341,7 +343,7 @@
 
   <div class="regs">
     <h3>Rules that apply everywhere here (2026)</h3>
-    <p><b>Bass:</b> 42&nbsp;cm minimum · 3 per angler per day · <b>catch-and-release ONLY 1 Feb – 31 Mar</b>. <b>Eels:</b> always released — protected. <b>Dee Estuary</b> is a statutory Bass Nursery Area (31 May–1 Oct): shore anglers are exempt from the boat ban but expected to release bass voluntarily in that window. No EA rod licence for sea species from the shore; a licence IS needed to target salmon/sea trout anywhere — any accidental migratory fish goes straight back. Rules are reviewed annually — re-check NWIFCA/gov.uk before a trip.</p>
+    <p><b>Bass:</b> 42&nbsp;cm minimum · 3 per angler per day · <b>catch-and-release ONLY 1 Feb – 31 Mar</b>. <b>Eels:</b> always released — protected. <b>Dee Estuary</b> is a statutory Bass Nursery Area (31 May–1 Oct): shore anglers are exempt from the boat ban but expected to release bass voluntarily in that window. No EA rod licence for sea species from the shore; a licence IS needed to target salmon/sea trout anywhere — any accidental migratory fish goes straight back. Rules are reviewed annually — re-check <a href="https://www.nw-ifca.gov.uk/" target="_blank" rel="noopener">NWIFCA</a> / <a href="https://www.gov.uk/government/publications/bass-industry-guidance-2026/bass-fishing-guidance-2025#recreational-bass-fishing" target="_blank" rel="noopener">gov.uk bass rules</a> before a trip. Bass size, bag limit and closed season verified against gov.uk 26 Jul 2026.</p>
   </div>
 
 </section>
@@ -778,6 +780,17 @@
     nb.setAttribute('aria-pressed', on ? 'true' : 'false');
   });
 
+  /* ponytail: @media print cannot open a closed <details> — only these events can. */
+  var PRINTCLOSED = [];
+  window.addEventListener('beforeprint', function () {
+    PRINTCLOSED = [].slice.call(document.querySelectorAll('details:not([open])'));
+    PRINTCLOSED.forEach(function (d) { d.open = true; });
+  });
+  window.addEventListener('afterprint', function () {
+    PRINTCLOSED.forEach(function (d) { d.open = false; });
+    PRINTCLOSED = [];
+  });
+
   /* ================= GEAR ================= */
   var RODS = {
     'rr-reg':   {label:'RR World Traveller — regular tip (5–20g)', min:5,  max:20,  cls:'light'},
@@ -1000,6 +1013,7 @@
     }
     h+='<div class="vhazard"><b>Hazard:</b> '+v.hazard+'</div>';
     h+='<p style="font-size:.85rem;margin-top:8px"><b>Bait &amp; tackle:</b> '+v.shops+' · <a href="https://www.google.com/maps/dir/?api=1&destination='+v.lat+','+v.lng+'" target="_blank" rel="noopener">Directions \u2197</a></p>';
+    h+='<p class="checked">Venue details reviewed 26 Jul 2026 \u2014 they change without notice, so re-verify before travelling.</p>';
     el.innerHTML=h;
   }
 

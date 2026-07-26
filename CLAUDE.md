@@ -12,6 +12,10 @@ Current state: one self-contained file, `fishing-field-guide.html` (~80KB), no b
 2. **Evidence honesty.** Three badges — verified / anecdotal / shifting-danger — on venues,
    sub-spots, and claims. Never flatten these. Claude-synthesised estimates (season calendar
    rows) must be distinguishable from researched facts (add an "estimate" tag — roadmap ①).
+   Date stamps obey the same rule: "reviewed <date>" means someone read the page that day;
+   "verified against <source> <date>" is only for facts actually re-checked against that
+   source. Never write "checked" over facts nobody rang, sourced or measured — a false
+   stamp is worse than no stamp. Bump dates only when the re-check really happened.
 3. **Safety is proportionate and prominent.** Duddon/Dee sands cut-off, Perch Rock causeway,
    Rock Channel is a red DO-NOT pin (never a destination), weever first aid (hot water
    40–45°C 30+ min), shock leader mandatory above 57g/2oz casting weight.
@@ -64,8 +68,9 @@ Current state: one self-contained file, `fishing-field-guide.html` (~80KB), no b
 ① **Stranger-proofing:** first-visit profile (location + rod-or-none) ✅ done, de-Craig the
    copy ✅ done (neutral title, kit table de-owned/de-branded, live casting-weight gloss,
    dog box now a closed <details> toggle, no Runcorn-relative copy),
-   "checked <date>" stamps + verify links on every
-   perishable fact (regs, phone numbers, tide ceilings, parking), one global date banner,
+   date stamps + verify links ✅ done (global "Page reviewed <date>" banner under the
+   specstrip, per-venue "Venue details reviewed <date>" line, NWIFCA + gov.uk bass-rules
+   links in the regs box; the same commit fixed print not expanding closed <details>),
    "estimate" tag on synthesised calendar rows, "approximate" on anecdotal pins.
 ② **Start-here router** (never fished → DO; picking a day → PLAN; at the water → LOOK UP)
    + proper credits/sources section.
