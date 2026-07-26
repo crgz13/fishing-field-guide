@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Estuary Field Guide — Craig's start-to-finish shore fishing manual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1c2b36;        /* chart ink navy */
+    --paper:#edf0ea;      /* cool almanac paper */
+    --teal:#3d6b6a;       /* estuary water */
+    --sand:#c9b892;       /* duddon sand */
+    --buoy:#d14d28;       /* safety / signal only */
+    --line:#1c2b36;
+    --faint:#94a39c;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{
+    background:var(--paper);color:var(--ink);
+    font-family:'Public Sans',system-ui,sans-serif;
+    font-size:17px;line-height:1.65;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 20px}
+  a{color:var(--teal)}
+  a:focus-visible,button:focus-visible{outline:3px solid var(--buoy);outline-offset:2px}
+
+  /* ---------- header ---------- */
+  header{border-bottom:3px solid var(--ink);padding:34px 0 0}
+  .eyebrow{
+    font-family:'Archivo',sans-serif;font-stretch:75%;font-weight:700;
+    letter-spacing:.14em;text-transform:uppercase;font-size:.78rem;color:var(--teal);
+  }
+  h1{
+    font-family:'Archivo',sans-serif;font-stretch:62%;font-weight:900;
+    font-size:clamp(2.6rem,7vw,4.6rem);line-height:.95;text-transform:uppercase;
+    margin:.35rem 0 .6rem;
+  }
+  .standfirst{max-width:56ch;color:#3c4c56;margin-bottom:22px}
+  .specstrip{
+    display:flex;flex-wrap:wrap;border-top:1.5px solid var(--ink);
+    font-family:'Archivo',sans-serif;font-stretch:80%;
+  }
+  .specstrip div{
+    flex:1 1 160px;padding:10px 14px 12px;border-right:1.5px solid var(--ink);
+    font-size:.82rem;letter-spacing:.03em;
+  }
+  .specstrip div:last-child{border-right:none}
+  .specstrip b{display:block;font-size:1.05rem;font-weight:800}
+
+  /* ---------- rig hero diagram ---------- */
+  .hero-rig{padding:26px 0 8px;overflow-x:auto}
+  .hero-rig svg{min-width:760px;width:100%;height:auto;display:block}
+  .rig-caption{font-size:.85rem;color:#3c4c56;padding:6px 0 30px;max-width:70ch}
+
+  /* ---------- sections ---------- */
+  section{padding:40px 0 8px}
+  .phase{
+    font-family:'Archivo',sans-serif;font-stretch:62%;font-weight:900;
+    text-transform:uppercase;font-size:clamp(1.6rem,4vw,2.3rem);line-height:1;
+    border-top:3px solid var(--ink);padding-top:14px;margin-bottom:4px;
+  }
+  .phase small{
+    display:block;font-family:'Public Sans',sans-serif;font-weight:600;
+    font-size:.85rem;text-transform:none;color:var(--teal);letter-spacing:.02em;margin-top:4px;
+  }
+  .step{display:flex;gap:16px;margin:22px 0;align-items:flex-start}
+  .stepnum{
+    flex:0 0 44px;height:44px;border:2px solid var(--ink);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Archivo',sans-serif;font-weight:800;font-size:1.05rem;background:#fff;
+  }
+  .step h3{font-family:'Archivo',sans-serif;font-stretch:80%;font-weight:800;font-size:1.06rem;text-transform:uppercase;letter-spacing:.03em;margin-bottom:4px}
+  .step p{max-width:62ch}
+  .tip{
+    background:#fff;border-left:4px solid var(--teal);padding:12px 16px;margin:10px 0 0;
+    font-size:.92rem;max-width:60ch;
+  }
+  figure{background:#fff;border:1.5px solid var(--ink);margin:18px 0;padding:16px 16px 10px}
+  figure svg{width:100%;height:auto;display:block}
+  figcaption{font-size:.82rem;color:#3c4c56;padding-top:8px;border-top:1px dashed var(--faint);margin-top:10px}
+  .watch{
+    display:inline-block;margin:6px 8px 0 0;padding:7px 13px;background:var(--ink);color:#fff;
+    text-decoration:none;font-family:'Archivo',sans-serif;font-stretch:80%;font-weight:700;
+    font-size:.8rem;letter-spacing:.05em;text-transform:uppercase;border-radius:3px;
+  }
+  .watch:hover{background:var(--teal)}
+  .watch::before{content:"▶ ";font-size:.7rem}
+
+  /* ---------- safety ---------- */
+  .safety{
+    background:var(--buoy);color:#fff;border:none;margin:34px 0;padding:22px 24px;
+  }
+  .safety h2{font-family:'Archivo',sans-serif;font-stretch:62%;font-weight:900;text-transform:uppercase;font-size:1.6rem;margin-bottom:8px}
+  .safety ul{margin-left:20px}
+  .safety li{margin:6px 0;max-width:70ch}
+
+  /* ---------- venues ---------- */
+  .venue{border-top:1.5px solid var(--ink);padding:14px 0}
+  .venue h3{font-family:'Archivo',sans-serif;font-stretch:75%;font-weight:800;font-size:1.05rem;text-transform:uppercase}
+  .venue .why{color:var(--teal);font-weight:600;font-size:.88rem}
+  .venue p{font-size:.95rem;max-width:70ch;margin-top:3px}
+
+  /* ---------- tables ---------- */
+  table{width:100%;border-collapse:collapse;background:#fff;font-size:.92rem;margin:16px 0 30px}
+  caption{text-align:left;font-family:'Archivo',sans-serif;font-stretch:75%;font-weight:800;text-transform:uppercase;font-size:1rem;padding-bottom:8px}
+  th{
+    font-family:'Archivo',sans-serif;font-stretch:80%;font-weight:800;text-transform:uppercase;
+    font-size:.75rem;letter-spacing:.06em;text-align:left;
+    background:var(--ink);color:#fff;padding:9px 12px;
+  }
+  td{padding:8px 12px;border-bottom:1px solid #d8ddd4;vertical-align:top}
+  tr:nth-child(even) td{background:#f6f8f3}
+  td b{font-weight:700}
+  .scroll{overflow-x:auto}
+
+  footer{border-top:3px solid var(--ink);margin-top:40px;padding:20px 0 46px;font-size:.85rem;color:#3c4c56}
+  .knot-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+  .knot-grid figure{margin:0}
+  @media(max-width:560px){.step{gap:12px}.stepnum{flex-basis:36px;height:36px;font-size:.95rem}}
+
+  /* ---------- pre-trip checklist ---------- */
+  .check{list-style:none;margin:12px 0 6px;columns:2;column-gap:34px}
+  @media(max-width:560px){.check{columns:1}}
+  .check li{margin:7px 0;break-inside:avoid}
+  .check label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+  .check input{width:20px;height:20px;accent-color:var(--teal);margin-top:2px;flex-shrink:0}
+  .check input:checked+span{text-decoration:line-through;opacity:.5}
+
+  /* ---------- fish id ---------- */
+  .fishgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+  .fishgrid figure{margin:0}
+  .danger-card{border-left:5px solid var(--buoy)}
+
+  /* ---------- dog box ---------- */
+  .dogbox{background:#fff;border:1.5px solid var(--ink);border-left:6px solid var(--sand);padding:18px 22px;margin:0 0 6px}
+  .dogbox h2{font-family:'Archivo',sans-serif;font-stretch:62%;font-weight:900;text-transform:uppercase;font-size:1.3rem;margin-bottom:6px}
+  .dogbox ul{margin-left:20px}
+  .dogbox li{margin:5px 0;max-width:70ch;font-size:.95rem}
+
+  /* ---------- season calendar ---------- */
+  .cal td{text-align:center;padding:8px 4px}
+  .cal td:first-child{text-align:left;padding-left:12px;white-space:nowrap}
+  .cal .p{color:var(--teal);font-size:1.05rem}
+  .cal .m{color:var(--sand);font-size:1.05rem}
+  .cal .n{color:#c9cfc6;font-size:1.05rem}
+  .legend{font-size:.83rem;color:#3c4c56;margin:-18px 0 26px}
+
+  /* ---------- interactive map ---------- */
+  .maplayout{display:grid;grid-template-columns:minmax(240px,340px) 1fr;gap:20px;align-items:start}
+  @media(max-width:700px){.maplayout{grid-template-columns:1fr}}
+  .mapbox{background:#fff;border:1.5px solid var(--ink);padding:10px}
+  .mapbox svg{width:100%;height:auto;display:block}
+  .marker{cursor:pointer}
+  .marker circle{fill:#fff;stroke:var(--ink);stroke-width:3;transition:r .15s}
+  .marker.active circle{fill:var(--buoy)}
+  .marker text{font-size:11px;font-weight:700;font-family:'Archivo',sans-serif;pointer-events:none}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+  .chips button{
+    font-family:'Archivo',sans-serif;font-stretch:80%;font-weight:800;font-size:.78rem;
+    letter-spacing:.04em;text-transform:uppercase;padding:8px 13px;border-radius:20px;
+    border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;
+  }
+  .chips button.active{background:var(--ink);color:#fff}
+  .vpanel{background:#fff;border:1.5px solid var(--ink);padding:16px 18px}
+  .vpanel h3{font-family:'Archivo',sans-serif;font-stretch:62%;font-weight:900;text-transform:uppercase;font-size:1.4rem}
+  .vpanel .why{color:var(--teal);font-weight:600;font-size:.88rem;margin-bottom:8px}
+  .vstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0;border:1.5px solid var(--ink);margin:10px 0}
+  .vstats div{padding:8px 10px;border-right:1px solid #d8ddd4;border-bottom:1px solid #d8ddd4;font-size:.82rem}
+  .vstats b{display:block;font-family:'Archivo',sans-serif;font-stretch:80%;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--teal)}
+  .vhazard{background:#fdf1ec;border-left:4px solid var(--buoy);padding:10px 14px;font-size:.9rem;margin-top:10px}
+  body.night .mapbox,body.night .chips button,body.night .vpanel{background:#140708}
+  body.night .chips button{color:#e03d3d;border-color:#e03d3d}
+  body.night .chips button.active{background:#e03d3d;color:#0a0405}
+  body.night .marker circle{fill:#140708}
+  body.night .vstats div{border-color:#3a1414}
+  body.night .vhazard{background:#2a0a0a;color:#ff9c8a}
+
+  /* ---------- night mode ---------- */
+  #nightbtn{position:fixed;top:14px;right:14px;z-index:50;background:var(--ink);color:#fff;border:2px solid var(--ink);border-radius:20px;padding:8px 14px;font-family:'Archivo',sans-serif;font-weight:800;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+  body.night{--ink:#e03d3d;--teal:#c04848;--sand:#8a2c2c;--buoy:#ff5a36;--faint:#5c1f1f;background:#0a0405;color:#e03d3d}
+  body.night .standfirst,body.night .rig-caption,body.night figcaption,body.night .venue p,body.night td,body.night footer,body.night .step p,body.night .legend,body.night .tip,body.night .dogbox li{color:#c05050}
+  body.night figure,body.night .stepnum,body.night table,body.night .tip,body.night .dogbox{background:#140708}
+  body.night th{background:#3a0e0e;color:#ff9c8a}
+  body.night tr:nth-child(even) td{background:#180a0b}
+  body.night td{border-bottom-color:#3a1414}
+  body.night .watch{background:#3a0e0e;color:#ff9c8a}
+  body.night .safety{background:#2a0a0a;color:#ff9c8a}
+  body.night #nightbtn{background:#e03d3d;color:#0a0405;border-color:#e03d3d}
+  body.night .cal .n{color:#2e1212}
+  body.night svg text{fill:#e03d3d}
+  body.night svg [stroke="#1c2b36"]{stroke:#e03d3d}
+  body.night svg [fill="#1c2b36"]{fill:#e03d3d}
+  body.night svg [fill="#fff"]{fill:#140708}
+  body.night svg [stroke="#3d6b6a"]{stroke:#c04848}
+  body.night svg [fill="#3d6b6a"]{fill:#c04848}
+  body.night svg [fill="#3c4c56"]{fill:#c05050}
+  body.night svg [stroke="#94a39c"]{stroke:#5c1f1f}
+
+  /* ---------- sticky nav ---------- */
+  nav.stick{position:sticky;top:0;z-index:40;background:var(--paper);border-bottom:2px solid var(--ink);display:flex;gap:0;overflow-x:auto}
+  nav.stick a{flex:1;text-align:center;padding:11px 8px;text-decoration:none;color:var(--ink);font-family:'Archivo',sans-serif;font-stretch:75%;font-weight:800;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;border-right:1px solid #cfd6cc;white-space:nowrap}
+  nav.stick a:last-child{border-right:none}
+  body.night nav.stick{background:#0a0405}
+  body.night nav.stick a{color:#e03d3d;border-color:#3a1414}
+
+  /* ---------- gear deck ---------- */
+  .deck{background:#fff;border:1.5px solid var(--ink);padding:16px 18px;margin:18px 0}
+  .deck h3{font-family:'Archivo',sans-serif;font-stretch:75%;font-weight:800;font-size:.95rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+  .deck .row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+  .deck select,.deck input[type=number]{font:inherit;padding:8px 10px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:3px}
+  .derived{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));border:1.5px solid var(--ink)}
+  .derived div{padding:8px 10px;border-right:1px solid #d8ddd4;font-size:.85rem}
+  .derived b{display:block;font-family:'Archivo',sans-serif;font-stretch:80%;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--teal)}
+  .whynote{font-size:.8rem;color:#3c4c56;margin-top:6px}
+  body.night .deck{background:#140708}
+  body.night .deck select,body.night .deck input{background:#0a0405;color:#e03d3d;border-color:#e03d3d}
+  body.night .derived div{border-color:#3a1414}
+  body.night .whynote{color:#c05050}
+
+  /* ---------- leaflet map ---------- */
+  #livemap{height:430px;border:1.5px solid var(--ink);background:#dfe6e0}
+  @media(max-width:700px){#livemap{height:340px}}
+  .leaflet-popup-content{font-family:'Public Sans',sans-serif;font-size:.85rem}
+  .mapjump{display:flex;gap:8px;margin:8px 0}
+  .mapjump button{font-family:'Archivo',sans-serif;font-weight:800;font-size:.75rem;letter-spacing:.05em;text-transform:uppercase;padding:7px 12px;border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;border-radius:3px}
+  .mapjump button:hover{background:var(--ink);color:#fff}
+  body.night .mapjump button{background:#140708;color:#e03d3d;border-color:#e03d3d}
+  #mapfallback{display:none}
+
+  /* ---------- badges ---------- */
+  .badge{display:inline-block;font-family:'Archivo',sans-serif;font-weight:800;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:3px;margin-left:6px;vertical-align:middle}
+  .b-ver{background:#dfe9df;color:#274d33;border:1px solid #274d33}
+  .b-anec{background:#f4ecd7;color:#7a5a12;border:1px solid #7a5a12}
+  .b-shift{background:#fdeae2;color:#8a3417;border:1px solid #8a3417}
+  .fit{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:7px;border:1.5px solid var(--ink)}
+  .fit-g{background:#4a7d52}.fit-y{background:#e0a52c}.fit-r{background:#c33a1e}
+  .verdicts{margin:10px 0}
+  .verdicts li{list-style:none;margin:6px 0;font-size:.88rem}
+  .subspots{margin:10px 0 0}
+  .subspots li{list-style:none;border-top:1px dashed var(--faint);padding:7px 0;font-size:.88rem}
+  .buygap{background:#fff;border:1.5px solid var(--ink);border-left:6px solid var(--buoy);padding:14px 18px;margin:14px 0}
+  .buygap h3{font-family:'Archivo',sans-serif;font-stretch:75%;font-weight:800;text-transform:uppercase;font-size:1rem}
+  .buygap p,.buygap li{font-size:.9rem}
+  .buygap ul{margin:6px 0 0 20px}
+  body.night .buygap{background:#140708}
+
+  /* ---------- regs ---------- */
+  .regs{background:#fff;border:1.5px solid var(--ink);padding:14px 18px;margin:14px 0;font-size:.9rem}
+  .regs h3{font-family:'Archivo',sans-serif;font-stretch:75%;font-weight:800;text-transform:uppercase;font-size:1rem;margin-bottom:6px}
+  body.night .regs{background:#140708}
+
+  /* ---------- lookup collapsibles ---------- */
+  details.ref{border-top:3px solid var(--ink);padding:10px 0}
+  details.ref summary{cursor:pointer;font-family:'Archivo',sans-serif;font-stretch:62%;font-weight:900;text-transform:uppercase;font-size:clamp(1.4rem,4vw,2rem);list-style:none;padding:8px 0}
+  details.ref summary::after{content:' +';color:var(--teal)}
+  details.ref[open] summary::after{content:' \2212'}
+  @media print{details.ref{display:block}details.ref summary::after{content:''}}
+</style>
+</head>
+<body>
+
+<button id="nightbtn" type="button" aria-pressed="false">☾ Night mode</button>
+
+<nav class="stick" aria-label="Page sections">
+  <a href="#plan">Plan</a><a href="#do">Do</a><a href="#know">Know</a><a href="#lookup">Look up</a>
+</nav>
+<header>
+  <div class="wrap">
+    <p class="eyebrow">Mersey · Dee · Duddon — light shore &amp; estuary fishing</p>
+    <h1>The Estuary<br>Field Guide</h1>
+    <p class="standfirst">Everything from the box of parts to your first flounder, in order, built around whatever gear you select below (default: the Rigged &amp; Ready World Traveller + RR3000). Print it, save it to your phone, take it to the water.</p>
+    <div class="specstrip" id="specstrip">
+      <div>Rod<b>6-pc travel, 2 tips</b></div>
+      <div>Regular tip<b>5–20 g · 7 ft</b></div>
+      <div>Short tip<b>15–40 g · 6′3″</b></div>
+      <div>Reel<b>RR3000 + spare spool</b></div>
+      <div>Main line<b>Infinite braid 15 lb</b></div>
+      <div>Hard ceiling<b>40 g rig, total</b></div>
+    </div>
+  </div>
+</header>
+
+
+<!-- ================= PLAN ================= -->
+<section class="wrap" id="plan">
+  <h2 class="phase">Plan the session<small>Pick your gear, pick your mark. Every number and verdict on this page follows both.</small></h2>
+
+  <div class="deck" id="geardeck">
+    <h3>Gear</h3>
+    <div class="row">
+      <select id="rodsel" aria-label="Rod"></select>
+      <select id="linesel" aria-label="Main line"></select>
+      <span id="customrod" style="display:none">
+        <input type="number" id="cmin" min="1" max="300" value="10" style="width:70px" aria-label="Min cast weight g"> –
+        <input type="number" id="cmax" min="2" max="400" value="40" style="width:70px" aria-label="Max cast weight g"> g
+      </span>
+    </div>
+    <div class="derived" id="derived"></div>
+    <p class="whynote" id="gearwhy"></p>
+  </div>
+
+  <div class="chips" id="chips" role="tablist" aria-label="Choose a fishing mark"></div>
+  <div class="mapjump">
+    <button type="button" id="jumpN">⛰ Cumbria marks</button>
+    <button type="button" id="jumpS">🌉 Mersey &amp; Dee marks</button>
+  </div>
+  <div id="livemap" role="application" aria-label="Satellite map of fishing marks"></div>
+  <p class="rig-caption" style="margin:6px 0 12px">Satellite view is usually captured at low tide — zoom in on a mark and you can read the gutters, channel edges and mud-to-sand lines yourself. That beats any stale pin: <b>confirm on foot at low water before fishing the flood over it.</b> Amber ⚠ pins are anecdotal or shifting-ground info; the red pin is a do-not.</p>
+
+  <div class="mapbox" id="mapfallback" aria-hidden="true">
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" font-family="Archivo,sans-serif">
+<rect width="420" height="300" fill="#e4ebe6"/>
+<text x="210" y="40" text-anchor="middle" font-size="14" font-weight="800">OFFLINE — SCHEMATIC VIEW</text>
+<text x="210" y="62" text-anchor="middle" font-size="11" fill="#3c4c56">No map tiles available. Use the chips above — all tactics still work offline.</text>
+<text x="60" y="110" font-size="12" font-weight="700">CUMBRIA:</text>
+<text x="60" y="130" font-size="11">● Hodbarrow · ● Silecroft · ◐ Askam</text>
+<text x="60" y="180" font-size="12" font-weight="700">MERSEY / DEE:</text>
+<text x="60" y="200" font-size="11">● Perch Rock · ● Otterspool · ◐ Thurstaston</text>
+<text x="60" y="220" font-size="11">◐ Pickerings · ◐ West Bank</text>
+</svg>
+  </div>
+
+  <div class="vpanel" id="vpanel" aria-live="polite"></div>
+  <div id="buygap"></div>
+
+  <div class="regs">
+    <h3>Rules that apply everywhere here (2026)</h3>
+    <p><b>Bass:</b> 42&nbsp;cm minimum · 3 per angler per day · <b>catch-and-release ONLY 1 Feb – 31 Mar</b>. <b>Eels:</b> always released — protected. <b>Dee Estuary</b> is a statutory Bass Nursery Area (31 May–1 Oct): shore anglers are exempt from the boat ban but expected to release bass voluntarily in that window. No EA rod licence for sea species from the shore; a licence IS needed to target salmon/sea trout anywhere — any accidental migratory fish goes straight back. Rules are reviewed annually — re-check NWIFCA/gov.uk before a trip.</p>
+  </div>
+
+</section>
+<!-- ================= SEASONS ================= -->
+<section class="wrap" id="seasons">
+  <h2 class="phase">What's biting when — <span id="calvenue">all venues</span><small>This table follows the mark selected above.</small></h2>
+  <div class="scroll" id="calwrap"></div>
+  <p class="legend">● prime &nbsp;·&nbsp; ◐ possible &nbsp;·&nbsp; ○ unlikely. Local and yearly variation applies — the calendar says what to <em>target</em>, not what's guaranteed.</p>
+</section>
+
+<!-- ================= KIT ================= -->
+<section class="wrap" id="kit">
+  <h2 class="phase">Kit list, in build order<small>Grams, not just ounces. ✔ = already in the combo box.</small></h2>
+  <div class="scroll">
+  <table>
+    <tr><th>#</th><th>Item</th><th>Job</th><th>Spec</th><th>~£</th></tr>
+    <tr><td>✔</td><td><b>Infinite braid 15 lb</b> (main spool)</td><td>Feel + distance; the nervous system</td><td>0.12 mm, 200 m</td><td>owned</td></tr>
+    <tr><td>1</td><td>12 lb mono (spare spool)</td><td>Stretchy surf/backup line</td><td>0.30 mm</td><td>5–6</td></tr>
+    <tr><td>2</td><td>Rolling swivels</td><td>Kill line twist at every junction</td><td>size 6–8</td><td>2.50</td></tr>
+    <tr><td>3</td><td>Snap-link swivels</td><td>5-second lead changes</td><td>small/med</td><td>2.50</td></tr>
+    <tr><td>4</td><td>Grip leads, wired</td><td>Pin bait in tide</td><td><b>1 oz = 28 g</b> (workhorse)</td><td>1 ea ×6</td></tr>
+    <tr><td>5</td><td>Flat pear leads</td><td>Trundle bait in slack water</td><td>15–28 g</td><td>1 ea ×4</td></tr>
+    <tr><td>6</td><td>Beads, small + bright</td><td>Knot buffer / flounder attractor</td><td>4–8 mm mixed</td><td>2.50</td></tr>
+    <tr><td>7</td><td>Fluorocarbon</td><td>Invisible, sacrificial hooklength</td><td><b>10–12 lb</b> (weaker than main)</td><td>5–7</td></tr>
+    <tr><td>8</td><td>Aberdeen hooks</td><td>Worm presentation</td><td>size 4 (×2 pks) + size 2</td><td>3/pk</td></tr>
+    <tr><td>9</td><td>Bait elastic</td><td>Worm stays on through the cast</td><td>any</td><td>1.50</td></tr>
+    <tr><td>10</td><td>Flattie / flapper rigs</td><td>Pre-tied shortcut</td><td>hooks 2–4, light-lead build</td><td>2.50 ea</td></tr>
+    <tr><td>11</td><td>Metal lures</td><td>Mobile bass/mackerel searching</td><td>15–20 g, silver</td><td>4–5 ea</td></tr>
+    <tr><td>12</td><td>Shads + jig heads (+ Gulp Sandworm)</td><td>Slow bass work / rag substitute</td><td>3–4 in, 7–10 g heads</td><td>8</td></tr>
+    <tr><td>13</td><td>Pliers + braid scissors</td><td>Unhooking, clean cuts</td><td>long-nose</td><td>6</td></tr>
+    <tr><td>14</td><td>Tackle box</td><td>Findable with cold wet hands</td><td>small, compartments</td><td>6</td></tr>
+  </table>
+  </div>
+  <p class="rig-caption"><b>Lead conversion:</b> 1 oz = 28 g · 1.5 oz = 42.5 g (already over the 40 g ceiling — don't buy) · 2 oz = 57 g (beachcaster territory). Buy leads from UK sellers or the tackle shop, everything else where it's cheapest.</p>
+</section>
+
+<section class="wrap"><h2 class="phase" style="font-size:1.5rem;margin-top:26px">Pre-trip checklist<small>Tick at the car boot. Resets every time you open the page.</small></h2>
+  <ul class="check">
+    <li><label><input type="checkbox"><span>Rod + <b>both</b> tips</span></label></li>
+    <li><label><input type="checkbox"><span>Reel mounted, drag backed off, spare spool</span></label></li>
+    <li><label><input type="checkbox"><span>Braid checked — tight, no fuzz</span></label></li>
+    <li><label><input type="checkbox"><span>3–4 pre-tied hooklengths on card</span></label></li>
+    <li><label><input type="checkbox"><span>Leads: 6 × 28 g grips, 4 × flats</span></label></li>
+    <li><label><input type="checkbox"><span>Hooks, swivels, snap links, beads box</span></label></li>
+    <li><label><input type="checkbox"><span>Bait elastic</span></label></li>
+    <li><label><input type="checkbox"><span>Pliers + braid scissors</span></label></li>
+    <li><label><input type="checkbox"><span>Rag in cool bag (rung ahead &amp; collected)</span></label></li>
+    <li><label><input type="checkbox"><span>Tide checked: neap? window planned?</span></label></li>
+    <li><label><input type="checkbox"><span>Headtorch (yes, even daytime)</span></label></li>
+    <li><label><input type="checkbox"><span>Towel, bucket, water bottle</span></label></li>
+    <li><label><input type="checkbox"><span>Told someone where + when back</span></label></li>
+    <li><label><input type="checkbox"><span>Dog kit: lead, water bowl, paw check plan</span></label></li>
+  </ul></section>
+
+<!-- ================= DO ================= -->
+<div id="do"></div>
+<!-- ================= HERO RIG DIAGRAM ================= -->
+<div class="wrap hero-rig" role="img" aria-label="Diagram of the running ledger rig from reel to baited hook">
+<svg viewBox="0 0 900 240" xmlns="http://www.w3.org/2000/svg" font-family="Archivo, sans-serif">
+  <!-- water line -->
+  <path d="M0 200 Q 60 192 120 200 T 240 200 T 360 200 T 480 200 T 600 200 T 720 200 T 840 200 T 960 200" fill="none" stroke="#3d6b6a" stroke-width="2" opacity=".5"/>
+  <!-- main line -->
+  <line x1="60" y1="110" x2="330" y2="110" stroke="#1c2b36" stroke-width="3"/>
+  <!-- reel -->
+  <circle cx="45" cy="110" r="26" fill="#fff" stroke="#1c2b36" stroke-width="3"/>
+  <circle cx="45" cy="110" r="9" fill="#3d6b6a"/>
+  <text x="45" y="165" text-anchor="middle" font-size="13" font-weight="700">REEL</text>
+  <text x="45" y="181" text-anchor="middle" font-size="11" fill="#3c4c56">braid 15 lb</text>
+  <!-- sliding snap link + lead -->
+  <rect x="180" y="96" width="14" height="28" rx="6" fill="#fff" stroke="#1c2b36" stroke-width="3"/>
+  <line x1="187" y1="124" x2="187" y2="150" stroke="#1c2b36" stroke-width="3"/>
+  <path d="M187 150 l-14 34 q14 12 28 0 z" fill="#c9b892" stroke="#1c2b36" stroke-width="3"/>
+  <line x1="176" y1="184" x2="166" y2="204" stroke="#1c2b36" stroke-width="2.5"/>
+  <line x1="198" y1="184" x2="208" y2="204" stroke="#1c2b36" stroke-width="2.5"/>
+  <text x="187" y="228" text-anchor="middle" font-size="13" font-weight="700">1 oz GRIP LEAD</text>
+  <text x="270" y="86" text-anchor="middle" font-size="12" fill="#3c4c56">link slides freely ⟷</text>
+  <!-- buffer bead -->
+  <circle cx="318" cy="110" r="7" fill="#d14d28" stroke="#1c2b36" stroke-width="2.5"/>
+  <text x="318" y="140" text-anchor="middle" font-size="12" font-weight="700">BEAD</text>
+  <!-- swivel -->
+  <ellipse cx="352" cy="110" rx="8" ry="6" fill="none" stroke="#1c2b36" stroke-width="3"/>
+  <ellipse cx="370" cy="110" rx="8" ry="6" fill="none" stroke="#1c2b36" stroke-width="3"/>
+  <text x="361" y="140" text-anchor="middle" font-size="12" font-weight="700">SWIVEL</text>
+  <text x="361" y="156" text-anchor="middle" font-size="11" fill="#3c4c56">uni knot each side</text>
+  <!-- hooklength -->
+  <line x1="378" y1="110" x2="700" y2="110" stroke="#3d6b6a" stroke-width="2.5" stroke-dasharray="1 0"/>
+  <text x="540" y="92" text-anchor="middle" font-size="12" fill="#3c4c56">50 cm fluorocarbon 10–12 lb (the weak link, on purpose)</text>
+  <!-- attractor beads -->
+  <circle cx="640" cy="110" r="6" fill="#d14d28"/>
+  <circle cx="656" cy="110" r="6" fill="#e8b23a"/>
+  <circle cx="672" cy="110" r="6" fill="#3d6b6a"/>
+  <text x="656" y="140" text-anchor="middle" font-size="12" font-weight="700">BRIGHT BEADS</text>
+  <!-- hook + worm -->
+  <path d="M700 110 v40 a18 18 0 0 0 36 0 v-8" fill="none" stroke="#1c2b36" stroke-width="3.5"/>
+  <path d="M736 142 l-6 10" stroke="#1c2b36" stroke-width="3.5"/>
+  <path d="M700 112 q10 8 4 20 q-6 12 2 20" fill="none" stroke="#b0563c" stroke-width="7" stroke-linecap="round"/>
+  <path d="M706 152 q8 8 2 16 q8 2 14 -4" fill="none" stroke="#b0563c" stroke-width="5" stroke-linecap="round"/>
+  <text x="770" y="130" font-size="13" font-weight="700">ABERDEEN size 4</text>
+  <text x="770" y="147" font-size="11" fill="#3c4c56">ragworm up the shank,</text>
+  <text x="770" y="162" font-size="11" fill="#3c4c56">tail free, elastic wrap</text>
+</svg>
+</div>
+<p class="wrap rig-caption"><strong>The spine of everything:</strong> the running ledger. The lead anchors; the line slides through the link so a fish never feels the weight; the fluoro section is deliberately the weakest so snags cost a hook, not the rig. Every bait session on this guide is a variation of this one chain.</p>
+
+<!-- ================= PHASE 1 ================= -->
+<section class="wrap" id="phase1">
+  <h2 class="phase">Phase 1 — At home, the night before<small>Knots, hooklengths, packing. Do the fiddly work in the warm.</small></h2>
+
+  <div class="step"><div class="stepnum">1</div><div>
+    <h3>Assemble the rod for practice</h3>
+    <p>Sections join with a push and a quarter-twist — snug, never forced. Sight down the rod and line up the guides. Fit the <b>short tip</b> for bait in tide, the <b>regular tip</b> for lures and slack water. Mount the reel, hand-tight.</p>
+  </div></div>
+
+  <div class="step"><div class="stepnum">2</div><div>
+    <h3>Check the braid</h3>
+    <p>Pull a few metres off: it should sit firm on the spool (fingernail press = solid, not spongy), no fuzzing or fading, and survive a hard pull between gloved hands. Loose braid? Walk it out 150&nbsp;m under tension and rewind firmly.</p>
+  </div></div>
+
+  <div class="step"><div class="stepnum">3</div><div>
+    <h3>Learn the one knot: the uni</h3>
+    <p>It does every connection in this guide — braid to swivel, fluoro to hook, leader to lure. Practise five times at the table on the mono spool. <b>Always wet it before pulling tight</b>; braid burns itself dry.</p>
+    <figure>
+      <div class="knot-grid">
+        <figure aria-hidden="true"><svg viewBox="0 0 170 110"><ellipse cx="24" cy="55" rx="10" ry="8" fill="none" stroke="#1c2b36" stroke-width="3"/><path d="M34 55 H150" stroke="#1c2b36" stroke-width="3" fill="none"/><path d="M150 55 q14 0 14 14 q0 12 -14 12 H60" stroke="#3d6b6a" stroke-width="3" fill="none"/><text x="85" y="22" font-size="12" font-weight="700" font-family="Archivo">1 · THROUGH THE EYE</text><text x="85" y="38" font-size="10" fill="#3c4c56">pass line in, double back</text></svg></figure>
+        <figure aria-hidden="true"><svg viewBox="0 0 170 110"><path d="M20 55 H150" stroke="#1c2b36" stroke-width="3"/><path d="M60 55 q40 -34 80 0" fill="none" stroke="#3d6b6a" stroke-width="3"/><g stroke="#3d6b6a" stroke-width="3" fill="none"><path d="M78 48 q6 14 0 22"/><path d="M92 46 q6 16 0 26"/><path d="M106 46 q6 16 0 26"/><path d="M120 48 q6 14 0 22"/></g><text x="85" y="22" font-size="12" font-weight="700" font-family="Archivo">2 · SIX TURNS</text><text x="85" y="38" font-size="10" fill="#3c4c56">tag end through the loop, ×6</text></svg></figure>
+        <figure aria-hidden="true"><svg viewBox="0 0 170 110"><path d="M20 55 H150" stroke="#1c2b36" stroke-width="3"/><path d="M70 55 h50" stroke="#3d6b6a" stroke-width="9" stroke-linecap="round" opacity=".8"/><text x="85" y="22" font-size="12" font-weight="700" font-family="Archivo">3 · WET IT, DRAW UP</text><text x="85" y="38" font-size="10" fill="#3c4c56">spit on it, pull steadily tight</text><text x="95" y="86" font-size="16">💧</text></svg></figure>
+        <figure aria-hidden="true"><svg viewBox="0 0 170 110"><ellipse cx="24" cy="55" rx="10" ry="8" fill="none" stroke="#1c2b36" stroke-width="3"/><path d="M34 55 H150" stroke="#1c2b36" stroke-width="3"/><path d="M40 55 h16" stroke="#3d6b6a" stroke-width="9" stroke-linecap="round"/><path d="M58 50 l8 -8" stroke="#d14d28" stroke-width="3"/><text x="85" y="22" font-size="12" font-weight="700" font-family="Archivo">4 · SLIDE &amp; TRIM</text><text x="85" y="38" font-size="10" fill="#3c4c56">slide to the eye, trim tag</text></svg></figure>
+      </div>
+      <figcaption>The uni knot in four moves. Retains ~90% line strength when wetted and drawn slowly.</figcaption>
+    </figure>
+    <a class="watch" href="https://www.youtube.com/results?search_query=uni+knot+braid+tutorial" target="_blank" rel="noopener">Watch: uni knot</a>
+  </div></div>
+
+  <div class="step"><div class="stepnum">4</div><div>
+    <h3>Pre-tie 3–4 hooklengths</h3>
+    <p>50&nbsp;cm of fluoro → uni knot to an Aberdeen → slide 2–3 bright beads down to the hook → uni knot a size-6 swivel on the top end. Wind each onto a strip of card. On a windy shore this preparation is the difference between fishing and fumbling.</p>
+  </div></div>
+
+  <div class="step"><div class="stepnum">5</div><div>
+    <h3>Check the tide, then pack</h3>
+    <p>Pick a <b>neap</b> tide (the small ones — any tide app shows the range) and plan to fish from ~2&nbsp;hours before high water through the top. Pack: leads, hooklengths, spare hooks &amp; swivels, bait elastic, pliers, scissors, towel, headtorch, bucket, water, and ragworm in a cool bag — collected fresh that day.</p>
+    <div class="tip"><b>Bait note:</b> ragworm bites — grip it behind the head. Backup if worm falls through: supermarket raw prawns or a Gulp Sandworm.</div>
+  </div></div>
+
+  
+</section>
+
+<!-- ================= PHASE 2 ================= -->
+<section class="wrap" id="phase2">
+  <h2 class="phase">Phase 2 — At the water<small>Rig, bait, cast, read the tip, land the fish.</small></h2>
+
+  <div class="step"><div class="stepnum">6</div><div>
+    <h3>Set up above the tide line</h3>
+    <p>Flat ground, gear behind you, and clock your exit route <em>before</em> you fish. On estuary sand, the water comes to you.</p>
+  </div></div>
+
+  <div class="step"><div class="stepnum">7</div><div>
+    <h3>Build the running ledger</h3>
+    <p>Exactly as the big diagram above: thread the snap-link up the braid (it must slide) → thread one small bead → uni knot the braid to a swivel → clip on a pre-tied hooklength → clip a <b>1&nbsp;oz (28&nbsp;g) grip lead</b> into the sliding link. One knot tied on site; everything else was done at the kitchen table.</p>
+    <div class="tip"><b>Lead maths:</b> 28&nbsp;g lead + rig + bait ≈ 40&nbsp;g — right at the rod's ceiling with the short tip. Slack water: swap to a 15–20&nbsp;g flat lead and let it trundle. If 28&nbsp;g won't hold, fish the margins — don't up the lead.</div>
+  </div></div>
+
+  <div class="step"><div class="stepnum">8</div><div>
+    <h3>Bait: worm up the shank</h3>
+    <figure aria-label="Diagram of threading a ragworm along the hook shank">
+      <svg viewBox="0 0 720 150" xmlns="http://www.w3.org/2000/svg" font-family="Archivo, sans-serif">
+        <path d="M80 40 v56 a26 26 0 0 0 52 0 v-12" fill="none" stroke="#1c2b36" stroke-width="5"/>
+        <path d="M132 84 l-8 14" stroke="#1c2b36" stroke-width="5"/>
+        <path d="M80 42 q14 10 8 30 q-6 20 4 34 q10 12 26 6" fill="none" stroke="#b0563c" stroke-width="11" stroke-linecap="round"/>
+        <path d="M118 112 q16 6 30 -2 q12 -8 22 -2" fill="none" stroke="#b0563c" stroke-width="8" stroke-linecap="round"/>
+        <g stroke="#d14d28" stroke-width="2.5"><line x1="84" y1="58" x2="102" y2="52"/><line x1="84" y1="72" x2="104" y2="66"/><line x1="86" y1="86" x2="106" y2="80"/></g>
+        <text x="230" y="46" font-size="15" font-weight="700">HEAD FIRST, UP AND AROUND THE LONG SHANK</text>
+        <text x="230" y="70" font-size="13" fill="#3c4c56">· hook point enters at the head; worm slides up like a sock</text>
+        <text x="230" y="92" font-size="13" fill="#3c4c56">· leave 2–3 cm of tail hanging free — the wiggle is the attraction</text>
+        <text x="230" y="114" font-size="13" fill="#3c4c56">· 3–4 wraps of bait elastic (red lines) so the cast can't strip it</text>
+      </svg>
+      <figcaption>Why Aberdeens have long shanks: the worm presents straight and natural instead of bunched in a ball.</figcaption>
+    </figure>
+    <a class="watch" href="https://www.youtube.com/results?search_query=how+to+bait+ragworm+hook" target="_blank" rel="noopener">Watch: baiting ragworm</a>
+  </div></div>
+
+  <div class="step"><div class="stepnum">9</div><div>
+    <h3>Set the drag, then cast</h3>
+    <figure aria-label="Three-stage casting sequence diagram">
+      <svg viewBox="0 0 720 170" xmlns="http://www.w3.org/2000/svg" font-family="Archivo, sans-serif">
+        <!-- stage 1 -->
+        <line x1="70" y1="150" x2="70" y2="60" stroke="#1c2b36" stroke-width="4"/>
+        <line x1="70" y1="60" x2="96" y2="20" stroke="#1c2b36" stroke-width="3"/>
+        <circle cx="70" cy="118" r="6" fill="#3d6b6a"/>
+        <text x="70" y="166" text-anchor="middle" font-size="12" font-weight="700">1 OPEN BAIL,</text>
+        <text x="70" y="180" text-anchor="middle" font-size="12" font-weight="700">FINGER ON LINE</text>
+        <!-- stage 2 -->
+        <line x1="300" y1="150" x2="300" y2="72" stroke="#1c2b36" stroke-width="4"/>
+        <line x1="300" y1="72" x2="246" y2="26" stroke="#1c2b36" stroke-width="3"/>
+        <path d="M258 40 q-16 22 -6 44" fill="none" stroke="#94a39c" stroke-width="2" stroke-dasharray="4 4"/>
+        <text x="300" y="166" text-anchor="middle" font-size="12" font-weight="700">2 ROD BACK</text>
+        <text x="300" y="180" text-anchor="middle" font-size="12" font-weight="700">OVER SHOULDER — CHECK BEHIND</text>
+        <!-- stage 3 -->
+        <line x1="540" y1="150" x2="540" y2="66" stroke="#1c2b36" stroke-width="4"/>
+        <line x1="540" y1="66" x2="596" y2="30" stroke="#1c2b36" stroke-width="3"/>
+        <path d="M596 30 q60 -18 108 6" fill="none" stroke="#d14d28" stroke-width="3" stroke-dasharray="6 5"/>
+        <circle cx="704" cy="38" r="6" fill="#c9b892" stroke="#1c2b36" stroke-width="2"/>
+        <text x="540" y="166" text-anchor="middle" font-size="12" font-weight="700">3 SMOOTH PUSH THROUGH,</text>
+        <text x="540" y="180" text-anchor="middle" font-size="12" font-weight="700">RELEASE AT ~45°</text>
+      </svg>
+      <figcaption>A lob, not a whip. 20–40 m is plenty — estuary fish feed close. Close the bail <b>by hand</b> after the cast.</figcaption>
+    </figure>
+    <p>Drag first: turn the knob on the spool face until pulling line off by hand takes firm-but-yielding pressure. Braid has no stretch — the drag is your only shock absorber.</p>
+    <a class="watch" href="https://www.youtube.com/results?search_query=how+to+cast+spinning+reel+beginner" target="_blank" rel="noopener">Watch: casting a spinning reel</a>
+  </div></div>
+
+  <div class="step"><div class="stepnum">10</div><div>
+    <h3>Read the tip, wait out the rattle</h3>
+    <figure aria-label="Rod tip bite trace diagram">
+      <svg viewBox="0 0 720 120" xmlns="http://www.w3.org/2000/svg" font-family="Archivo, sans-serif">
+        <path d="M20 70 h150 l8 -18 8 18 h40 l8 -20 8 20 8 -20 8 20 h60 l10 -34 8 34 10 -30 8 30 h160" fill="none" stroke="#1c2b36" stroke-width="3"/>
+        <text x="95" y="98" text-anchor="middle" font-size="12" fill="#3c4c56">tide moving the lead</text>
+        <text x="300" y="30" text-anchor="middle" font-size="13" font-weight="700" fill="#3d6b6a">tap… tap-tap = FLOUNDER</text>
+        <text x="470" y="18" text-anchor="middle" font-size="13" font-weight="700" fill="#d14d28">rattle building = LET IT EAT</text>
+        <text x="620" y="98" text-anchor="middle" font-size="12" fill="#3c4c56">now wind slow → weight → lift</text>
+      </svg>
+      <figcaption>The discipline: 30–60 seconds of doing nothing after the first taps. Flounder mouth the bait before taking it.</figcaption>
+    </figure>
+    <p>Wind slowly until you feel solid weight, then lift the rod firmly. No dramatic strike — the thin-wire Aberdeen sets itself. Wind steadily and slide the fish up the sand or lift it over the margin.</p>
+  </div></div>
+
+  <div class="step"><div class="stepnum">11</div><div>
+    <h3>Land, unhook, release (or keep)</h3>
+    <p><b>Wet your hands first.</b> Lay a flounder flat, grip gently across the body, back the hook out the way it came — pliers for anything deep (eels especially). Going back: hold it upright in the shallows until it kicks. Keeping one: dispatch immediately with a firm knock to the head, and know the size rules — bass minimum is 42&nbsp;cm with strict bag limits; undersized anything goes back. Your rod bag has a printed measure.</p>
+    <a class="watch" href="https://www.youtube.com/results?search_query=unhooking+flounder+safely" target="_blank" rel="noopener">Watch: unhooking flatfish</a>
+  </div></div>
+
+  <div class="step"><div class="stepnum">12</div><div>
+    <h3>The rhythm</h3>
+    <p>Fresh worm every 15–20 minutes, touched or not — washed-out bait stops working. Nothing in an hour? Move 30–50&nbsp;m. Flounder are patchy: <em>finding</em> them beats waiting for them.</p>
+  </div></div>
+
+  <div class="step"><div class="stepnum">L</div><div>
+    <h3>Lure mode (swaps for steps 7–10)</h3>
+    <p>Fit the regular tip. Uni knot a metre of fluoro to the braid, uni knot an 18&nbsp;g metal to that. Cast, sink for a 3–5 count, retrieve steady-medium with pauses. A hit is a dead stop or a thump — just keep winding. Shads on 7–10&nbsp;g jig heads: same connection, bounced slowly along channel edges at dawn and dusk for bass.</p>
+  </div></div>
+</section>
+
+<!-- ================= AFTERCARE ================= -->
+<section class="wrap" id="aftercare">
+  <h2 class="phase">Phase 3 — Home<small>Two minutes that doubles the reel's life.</small></h2>
+  <div class="step"><div class="stepnum">13</div><div>
+    <h3>Rinse, dry, relax the drag</h3>
+    <p>Gentle fresh-water rinse of rod and reel (never dunk or jet-wash — that drives salt into the bearings), wipe dry, back the drag knob right off, and let the rod sections dry apart before they go back in the tube. Salt-treated is not salt-proof.</p>
+  </div></div>
+  <p style="max-width:66ch;padding-bottom:10px"><b>The whole guide in one line:</b> assemble, one knot everywhere, worm up the shank, lob it, watch the tip, wait out the rattle, lift, wet hands, rinse the reel.</p>
+</section>
+
+
+<!-- ================= KNOW ================= -->
+<div id="know"></div>
+<!-- ================= FISH ID ================= -->
+<section class="wrap" id="fishid">
+  <h2 class="phase">What have I caught?<small>The three flatfish everyone mixes up — and the two to handle with care.</small></h2>
+  <div class="fishgrid">
+    <figure aria-label="Flounder identification">
+      <svg viewBox="0 0 230 130" font-family="Archivo, sans-serif">
+        <ellipse cx="105" cy="62" rx="82" ry="42" fill="#c9b892" stroke="#1c2b36" stroke-width="3"/>
+        <path d="M23 62 h164" stroke="#1c2b36" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <circle cx="168" cy="50" r="4" fill="#1c2b36"/><circle cx="176" cy="60" r="4" fill="#1c2b36"/>
+        <path d="M187 62 l22 -12 v24 z" fill="#c9b892" stroke="#1c2b36" stroke-width="3"/>
+        <g fill="#1c2b36"><circle cx="50" cy="26" r="2.2"/><circle cx="72" cy="22" r="2.2"/><circle cx="94" cy="21" r="2.2"/><circle cx="116" cy="22" r="2.2"/><circle cx="50" cy="98" r="2.2"/><circle cx="72" cy="102" r="2.2"/><circle cx="94" cy="103" r="2.2"/><circle cx="116" cy="102" r="2.2"/></g>
+        <text x="105" y="120" text-anchor="middle" font-size="12" font-weight="800">FLOUNDER</text>
+      </svg>
+      <figcaption><b>Rough bony bumps</b> along the base of the fins (the dotted rows); thick-set body; dull mottled brown, sometimes faint orange spots. Your most likely catch.</figcaption>
+    </figure>
+    <figure aria-label="Dab identification">
+      <svg viewBox="0 0 230 130" font-family="Archivo, sans-serif">
+        <ellipse cx="105" cy="62" rx="78" ry="38" fill="#e0d4b4" stroke="#1c2b36" stroke-width="3"/>
+        <path d="M30 62 h95 q18 0 24 -18 q4 -12 18 -12" fill="none" stroke="#d14d28" stroke-width="2.5"/>
+        <circle cx="166" cy="50" r="4" fill="#1c2b36"/><circle cx="174" cy="60" r="4" fill="#1c2b36"/>
+        <path d="M183 62 l22 -11 v22 z" fill="#e0d4b4" stroke="#1c2b36" stroke-width="3"/>
+        <text x="105" y="120" text-anchor="middle" font-size="12" font-weight="800">DAB</text>
+      </svg>
+      <figcaption><b>Lateral line kinks sharply</b> over the side fin (the orange curve); skin feels like sandpaper stroked tail-to-head; smaller, sandy, translucent-ish.</figcaption>
+    </figure>
+    <figure aria-label="Plaice identification">
+      <svg viewBox="0 0 230 130" font-family="Archivo, sans-serif">
+        <ellipse cx="105" cy="62" rx="82" ry="40" fill="#b59a6e" stroke="#1c2b36" stroke-width="3"/>
+        <g fill="#d14d28"><circle cx="60" cy="48" r="5"/><circle cx="92" cy="72" r="5"/><circle cx="120" cy="44" r="5"/><circle cx="76" cy="88" r="5"/><circle cx="132" cy="78" r="5"/></g>
+        <circle cx="168" cy="50" r="4" fill="#1c2b36"/><circle cx="176" cy="60" r="4" fill="#1c2b36"/>
+        <path d="M187 62 l22 -12 v24 z" fill="#b59a6e" stroke="#1c2b36" stroke-width="3"/>
+        <text x="105" y="120" text-anchor="middle" font-size="12" font-weight="800">PLAICE</text>
+      </svg>
+      <figcaption><b>Bold orange spots</b>, smooth skin, and a line of bony knobs behind the eyes. Check size limits before keeping — often undersized inshore.</figcaption>
+    </figure>
+    <figure class="danger-card" aria-label="Bass handling warning">
+      <svg viewBox="0 0 230 110" font-family="Archivo, sans-serif">
+        <path d="M25 60 q45 -34 130 -20 l45 -18 -8 24 8 22 -45 -14 q-85 16 -130 6 z" fill="#a8b8b6" stroke="#1c2b36" stroke-width="3"/>
+        <g stroke="#d14d28" stroke-width="2.5"><line x1="70" y1="38" x2="66" y2="20"/><line x1="88" y1="34" x2="86" y2="16"/><line x1="106" y1="32" x2="106" y2="14"/><line x1="124" y1="33" x2="126" y2="15"/></g>
+        <path d="M138 42 q10 8 6 20" fill="none" stroke="#d14d28" stroke-width="2.5"/>
+        <circle cx="50" cy="52" r="3.5" fill="#1c2b36"/>
+        <text x="115" y="100" text-anchor="middle" font-size="12" font-weight="800">BASS — SPINES + RAZOR GILLS</text>
+      </svg>
+      <figcaption>Dorsal spines (red) and <b>sharp-edged gill covers</b>. Smooth the spines flat back-to-front, grip the lower jaw or across the shoulders, keep fingers off the gill plates. 42&nbsp;cm minimum — most estuary bass go back.</figcaption>
+    </figure>
+    <figure class="danger-card" aria-label="Weever fish warning">
+      <svg viewBox="0 0 230 110" font-family="Archivo, sans-serif">
+        <path d="M30 66 q50 -22 120 -14 l40 -12 -6 18 6 16 -40 -10 q-70 10 -120 2 z" fill="#d8c9a0" stroke="#1c2b36" stroke-width="3"/>
+        <path d="M78 50 l4 -22 8 20 6 -20 8 20 6 -18 6 20" fill="#1c2b36" stroke="#1c2b36" stroke-width="2"/>
+        <circle cx="55" cy="58" r="3.5" fill="#1c2b36"/>
+        <path d="M20 88 q30 -8 60 0 t60 0 t60 0" fill="none" stroke="#c9b892" stroke-width="3"/>
+        <text x="115" y="105" text-anchor="middle" font-size="12" font-weight="800" fill="#d14d28">WEEVER — DO NOT TOUCH</text>
+      </svg>
+      <figcaption>Small sandy fish with a <b>black spiky dorsal flag</b> — venomous spines, buries itself in wet sand (Silecroft especially). Never handle: cut the hooklength if needed. <b>Sting first aid: immerse in water as hot as bearable (~40–45°C) for 30+ minutes</b> — heat breaks down the venom. Not cold water.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ================= SAFETY ================= -->
+<div class="wrap">
+  <div class="safety" role="note">
+    <h2>Tide safety — non-negotiable</h2>
+    <ul>
+      <li><b>Duddon &amp; Mersey sands flood fast and fill channels behind you.</b> Fish from the edges; never wander the flats on a making tide.</li>
+      <li><b>Perch Rock causeway cuts off early on the flood.</b> Know your return time before you walk out.</li>
+      <li>Check tide times every session. Start backing off as soon as the flood begins.</li>
+      <li>Greasy rocks + running tide = fish from the beach or solid standings, not the outer rocks.</li>
+      <li>Tell someone where you are. Take the headtorch even for “daylight” sessions.</li>
+      <li><b>Weever fish sting:</b> hot water immersion (~40–45°C, 30+ min), remove visible spines, seek help if it worsens. Wear footwear on wet sand.</li>
+      <li>Discarded line kills wildlife (and dogs). Every scrap of trimmings goes in a pocket, home, and cut into pieces before the bin.</li>
+    </ul>
+  </div>
+
+  <div class="dogbox" role="note">
+    <h2>🐾 Dog rules at the mark</h2>
+    <ul>
+      <li><b>Baited hooks never touch the ground.</b> A hook in rag smells like dinner; a swallowed hook is an emergency vet job. Rig in hand or in the bucket, always.</li>
+      <li><b>Bait bucket stays lidded</b> — a tub of ragworm is irresistible and expensive to replace.</li>
+      <li>Clip the dog on while casting and while a fish is on — a dog lunging at a flapping flounder mid-unhook is how hooks end up in paws and lips.</li>
+      <li>Check paws before leaving: hooks, glass, and weever spines all hide in tideline sand.</li>
+      <li>Estuary mud that takes your boot takes a dog too — same rule for both of you: stay off the soft flats.</li>
+      <li>Salt water drunk from the shallows = a sick dog in the tent later. Bring fresh water and offer it often.</li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- ================= LOOKUP ================= -->
+<section class="wrap" id="lookup">
+  <h2 class="phase">Look up<small>Reference — tap to open. All open when printing.</small></h2>
+<details class="ref"><summary>No rag? Bait alternatives</summary>
+  
+  <div class="scroll">
+  <table>
+    <tr><th>Bait</th><th>Get it from</th><th>Best for</th><th>Notes</th></tr>
+    <tr><td><b>Fresh ragworm</b></td><td>Tackle shop (ring ahead)</td><td>Everything</td><td>The gold standard. Tough, wiggly, scented.</td></tr>
+    <tr><td><b>Lugworm</b></td><td>Tackle shop</td><td>Flounder, dabs, whiting</td><td>Softer — needs more elastic; big scent trail.</td></tr>
+    <tr><td><b>Mackerel strip</b></td><td>Supermarket / fishmonger, freeze spares</td><td>Whiting, eels, tipping worm baits</td><td>Cut thin pennant shapes; oily scent in coloured water.</td></tr>
+    <tr><td><b>Raw king prawn</b></td><td>Supermarket freezer aisle</td><td>Flounder, bass, eels</td><td>The best emergency bait — peel, halve, elastic on.</td></tr>
+    <tr><td><b>Gulp Sandworm</b></td><td>Amazon/tackle shop, keeps for months</td><td>Flounder, bass</td><td>Scented rubber rag; fish it exactly like real worm.</td></tr>
+    <tr><td><b>Squid strip</b></td><td>Supermarket / tackle shop frozen</td><td>Whiting, dabs, tipping</td><td>Very tough — stays on when crabs strip everything else.</td></tr>
+    <tr><td><b>Bacon</b></td><td>The fridge</td><td>Flounder</td><td>Genuinely works — thin fatty strips. The old prom-angler's secret.</td></tr>
+  </table>
+  </div>
+</details>
+<details class="ref"><summary>Troubleshooting</summary>
+  
+  <div class="scroll">
+  <table>
+    <tr><th>Problem</th><th>Probable cause</th><th>Fix</th></tr>
+    <tr><td><b>No bites in 2 hours</b></td><td>Wrong spot or wrong tide stage, or washed-out bait</td><td>Fresh bait every 15–20 min; move 30–50 m; check you're in the 2-hrs-before-high window; go again on a neap</td></tr>
+    <tr><td><b>Tip nodding constantly</b></td><td>Weed on the line, or lead trundling in tide</td><td>Wind in, clear weed; swap flat lead → grip lead; if grips won't hold either, see next row</td></tr>
+    <tr><td><b>28 g lead won't hold</b></td><td>Tide run too strong for the rod's range</td><td>Don't up the lead — move to slacker margins, or wait for the hour around high/low water</td></tr>
+    <tr><td><b>Cracked off mid-cast</b></td><td>Jerky whip-cast, or line caught on something at release</td><td>Slow lobbing action; check nothing loops the tip guide; release smoothly at ~45°</td></tr>
+    <tr><td><b>Birdsnest on the spool</b></td><td>Loose braid, or bail closed by winding the handle</td><td>Pick it out patiently (never yank); rewind line under tension; always close the bail by hand</td></tr>
+    <tr><td><b>Constantly snagged</b></td><td>Rough ground, or rig dragging in tide</td><td>Single-hook rig, lighter 10 lb hooklength (cheap losses), hold the rod high; or move — clean sand exists</td></tr>
+    <tr><td><b>Bites but nothing hooks up</b></td><td>Striking too soon, or bait too big for small mouths</td><td>Wait out the full rattle (30–60 s); halve the bait; drop to size 4 or 6 hook</td></tr>
+    <tr><td><b>Line in coils / twisting</b></td><td>Missing swivel, or a lure spinning on retrieve</td><td>Swivel at every junction; for lures, check they swim (not spin) at your retrieve speed</td></tr>
+    <tr><td><b>Reel grinding after a trip</b></td><td>Salt got in</td><td>Rinse gently, work the handle, light oil on visible moving points; if it persists it's a strip-down or warranty job</td></tr>
+  </table>
+  </div>
+</details>
+<details class="ref"><summary>Glossary</summary>
+  
+  <div class="scroll">
+  <table>
+    <tr><th>Term</th><th>Plain meaning</th></tr>
+    <tr><td><b>Terminal tackle</b></td><td>Everything on the fishy end — hooks, weights, swivels</td></tr>
+    <tr><td><b>Rig</b></td><td>The arrangement of hooks/weights/line you cast out</td></tr>
+    <tr><td><b>Running ledger</b></td><td>Rig where the weight slides, so a fish pulls the bait without feeling it</td></tr>
+    <tr><td><b>Flapper rig</b></td><td>Pre-tied rig with hooks on short side branches</td></tr>
+    <tr><td><b>Hooklength / snood</b></td><td>The short, weaker line the hook is tied to</td></tr>
+    <tr><td><b>Leader</b></td><td>Any different line between main line and hook/lure</td></tr>
+    <tr><td><b>Braid</b></td><td>Woven line — thin, strong, no stretch, feels everything</td></tr>
+    <tr><td><b>Mono</b></td><td>Single-strand nylon — stretchy and forgiving</td></tr>
+    <tr><td><b>Fluorocarbon</b></td><td>Nearly invisible line used near the hook</td></tr>
+    <tr><td><b>Breaking strain</b></td><td>How hard you can pull before the line snaps</td></tr>
+    <tr><td><b>Gripper / breakout lead</b></td><td>Weight with wire legs that dig into sand and hold in current</td></tr>
+    <tr><td><b>Aberdeen</b></td><td>Long, thin-wire hook shape, ideal for worm baits</td></tr>
+    <tr><td><b>Shank</b></td><td>The straight part of a hook</td></tr>
+    <tr><td><b>Swivel</b></td><td>Tiny spinning connector that stops line twist</td></tr>
+    <tr><td><b>Snap link</b></td><td>Swivel with a clip, for quick weight changes</td></tr>
+    <tr><td><b>Bail (arm)</b></td><td>The wire hoop on the reel you flip open to cast</td></tr>
+    <tr><td><b>Drag</b></td><td>The reel's slipping clutch — lets a strong fish take line instead of snapping it</td></tr>
+    <tr><td><b>Rag / lug</b></td><td>The two marine worms used as bait (rag = tougher, all-round)</td></tr>
+    <tr><td><b>Tipping</b></td><td>Adding a sliver of fish to a worm bait for extra scent</td></tr>
+    <tr><td><b>Metal / spoon / wedge</b></td><td>Shiny metal lure that flashes like a fleeing baitfish</td></tr>
+    <tr><td><b>Shad / jig head</b></td><td>Rubber fish body / the weighted hook it slides onto</td></tr>
+    <tr><td><b>Mark</b></td><td>A fishing spot</td></tr>
+    <tr><td><b>Ground</b></td><td>What the seabed is like there (sand, mud, rock)</td></tr>
+    <tr><td><b>Snag</b></td><td>Anything on the bottom that grabs your rig</td></tr>
+    <tr><td><b>Crack off</b></td><td>Snapping the line mid-cast; the bait sails away alone</td></tr>
+    <tr><td><b>Birdsnest</b></td><td>A tangle of line on the reel</td></tr>
+    <tr><td><b>Flood / ebb</b></td><td>Tide coming in / going out</td></tr>
+    <tr><td><b>Slack water</b></td><td>The quiet pause around high or low tide</td></tr>
+    <tr><td><b>Springs / neaps</b></td><td>Biggest tides (strong flow) / smallest tides (novice-friendly)</td></tr>
+    <tr><td><b>The run</b></td><td>How fast the tidal current is moving</td></tr>
+    <tr><td><b>School bass</b></td><td>Young, smaller bass travelling in groups</td></tr>
+    <tr><td><b>Flattie</b></td><td>Any flatfish, usually flounder</td></tr>
+    <tr><td><b>Strike</b></td><td>Lifting the rod to set the hook</td></tr>
+    <tr><td><b>Casting weight</b></td><td>The weight range a rod is built to throw (yours: 5–40 g)</td></tr>
+  </table>
+  </div>
+</details>
+</section>
+<footer>
+  <div class="wrap">
+    Built around the gear you select · Mersey, Dee &amp; Duddon estuaries · Venue research: Sea Angler, Turners Tackle, Taskers, WSF &amp; local forums (verified vs anecdotal as badged) · 2026 bass rules baked in — re-check annually · Video buttons open YouTube searches.
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+  var nb = document.getElementById('nightbtn');
+  nb.addEventListener('click', function () {
+    var on = document.body.classList.toggle('night');
+    nb.textContent = on ? '\u2600 Day mode' : '\u263e Night mode';
+    nb.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+
+  /* ================= GEAR ================= */
+  var RODS = {
+    'rr-reg':   {label:'RR World Traveller — regular tip (5–20g)', min:5,  max:20,  cls:'light'},
+    'rr-short': {label:'RR World Traveller — short tip (15–40g)',  min:15, max:40,  cls:'light'},
+    'lure':     {label:'Dedicated lure rod (7–28g)',               min:7,  max:28,  cls:'lure'},
+    'lightgen': {label:'Generic light spinning (10–30g)',          min:10, max:30,  cls:'light'},
+    'bassrod':  {label:'Bass rod (20–60g)',                        min:20, max:60,  cls:'bass'},
+    'beach':    {label:'Beachcaster (100–170g)',                   min:100,max:170, cls:'beach'},
+    'custom':   {label:'Custom — enter cast weight', cls:null}
+  };
+  var LINES = {
+    'braid15':{label:'Braid 15lb (0.12mm)', lb:15, type:'braid'},
+    'braid20':{label:'Braid 20lb (0.15mm)', lb:20, type:'braid'},
+    'mono12': {label:'Mono 12lb',           lb:12, type:'mono'},
+    'mono15': {label:'Mono 15lb',           lb:15, type:'mono'}
+  };
+  var LEADS=[[14,'0.5oz'],[21,'0.75oz'],[28,'1oz'],[35,'1.25oz'],[42,'1.5oz'],[57,'2oz'],[85,'3oz'],[113,'4oz'],[142,'5oz'],[170,'6oz']];
+  var CLASSNAMES={light:'Light spinning',lure:'Lure rod',bass:'Bass rod',beach:'Beachcaster'};
+
+  var state={rod:'rr-short',line:'braid15',venue:'hodbarrow',cmin:10,cmax:40};
+
+  function rodOf(){ var r=RODS[state.rod];
+    if(state.rod!=='custom') return r;
+    var mx=Math.max(state.cmin+1,state.cmax);
+    return {label:'Custom ('+state.cmin+'–'+mx+'g)',min:state.cmin,max:mx,
+            cls: mx<45?'light': mx<80?'bass':'beach'};
+  }
+  function maxLead(r){ var cap=r.max-12, best=null;
+    LEADS.forEach(function(L){ if(L[0]<=cap) best=L; });
+    return best; // null if even 14g doesn't fit
+  }
+  function gearCalc(){
+    var r=rodOf(), ln=LINES[state.line], ml=maxLead(r);
+    var hl=Math.max(6,Math.round(ln.lb*0.75));
+    return {rod:r, line:ln, maxLead:ml, hook:hl,
+      lure:[r.min, Math.min(r.max, r.cls==='beach'?60:r.max)]};
+  }
+  function renderGear(){
+    var g=gearCalc();
+    var d=document.getElementById('derived');
+    d.innerHTML =
+      '<div><b>Rod class</b>'+CLASSNAMES[g.rod.cls]+'</div>'+
+      '<div><b>Max lead</b>'+(g.maxLead? g.maxLead[0]+'g ('+g.maxLead[1]+')':'—')+'</div>'+
+      '<div><b>Lure window</b>'+g.lure[0]+'–'+g.lure[1]+'g</div>'+
+      '<div><b>Hooklength</b>'+g.hook+'lb fluoro</div>'+
+      '<div><b>Drag</b>'+(g.line.type==='braid'?'set soft — no stretch':'normal — mono stretches')+'</div>';
+    document.getElementById('gearwhy').textContent =
+      'Why: max lead = rod ceiling ('+g.rod.max+'g) minus ~12g of rig + bait, rounded to a real lead size. '+
+      'Hooklength = main line ('+g.line.lb+'lb) minus ~25% so a snag breaks at the hook, never mid-line.';
+    var ss=document.getElementById('specstrip');
+    if(ss) ss.innerHTML =
+      '<div>Rod<b>'+g.rod.label.replace(/ \(.*/,'')+'</b></div>'+
+      '<div>Cast weight<b>'+g.rod.min+'–'+g.rod.max+' g</b></div>'+
+      '<div>Main line<b>'+g.line.label+'</b></div>'+
+      '<div>Max lead<b>'+(g.maxLead? g.maxLead[1]+' ('+g.maxLead[0]+'g)':'—')+'</b></div>'+
+      '<div>Hooklength<b>'+g.hook+' lb</b></div>'+
+      '<div>Mark<b>'+(VENUES[state.venue]?VENUES[state.venue].chip:'—')+'</b></div>';
+  }
+
+  /* ================= VENUES (research-verified) ================= */
+  // months Jan→Dec: p=● prime, m=◐ possible, n=○ unlikely
+  var VENUES = {
+    all:{name:'all venues',chip:'All venues',
+      species:[['Flounder','pmmmmmmmpppp'],['Bass','nnnmppppppmn'],['Codling','ppmnnnnnnppp'],['Whiting','ppmnnnnnmppp'],['Dab','pppmnnnnmppp'],['Mackerel','nnnnnmpppmnn'],['Eel (release)','nnnmpppppnnn']]},
+
+    hodbarrow:{name:'Hodbarrow Seawall, Haverigg',chip:'Hodbarrow',lat:54.1969,lng:-3.2801,conf:'ver',region:'N',
+      why:'THE Duddon mark · best-documented · made for a light rod',
+      blurb:'Tiered concrete-block breakwater at the estuary mouth — the best-documented Duddon stance (Sea Angler / Alan Darby of Gint\u2019s, Millom). Fish the FIRST OF THE FLOOD (~3.5 hrs before HW) on tides UNDER 8.4m Barrow scale, April–September. Bass on lures May–Sept along the wall; flounder and plaice on worm baits.',
+      stats:[['Ground','concrete blocks / sand'],['Window','first of flood, ~3.5h before HW'],['Tide ceiling','under 8.4m (Barrow scale)'],['Season','April–September best'],['Parking','LA18 4NG, drive toward lighthouse'],['Tide table','Barrow-in-Furness scale']],
+      hazard:'Uneven blocks — watch footing; big-tide run at the mouth. Duddon sands beyond the wall remain lethal: stay on the structure.',
+      subs:[['Wall toward lighthouse','main stance along the breakwater','ver'],['RSPB Hodbarrow lagoon side','no fishing — reserve, dogs on leads','ver']],
+      fit:{light:['g','the mark\u2019s profile (light leads, close range, lure bass) fits this rod exactly'],lure:['g','bass on lures May–Sept along the wall'],bass:['g','ideal all-rounder here'],beach:['y','works, but overkill — the fish are close']},
+      shops:'Gint\u2019s Bait & Tackle, rear of 57 Lord St, Millom (01229 777832) · Lowery Tackle, Haverigg PO (01229 772338) · Angling & Hiking Centre, Barrow (01229 829661)',
+      species:[['Flounder','nnmpppppppmn'],['Plaice','nnnmppppmnnn'],['Bass','nnnnpppppmnn'],['Mullet','nnnnmpppmnnn']]},
+
+    silecroft:{name:'Silecroft Beach',chip:'Silecroft',lat:54.2119,lng:-3.3480,conf:'ver',region:'N',
+      why:'clean-ground surf beach · fishes evenly along its length',
+      blurb:'Three miles of snag-free shingle-to-sand storm beach — no documented \u201cbest section\u201d; it fishes fairly evenly, so spread out. Local pattern: 2 hrs down to low and 2 back up, wants a bit of surf, cloudy days better, productive from mid-April. October on it becomes a codling/whiting beach — beachcaster territory.',
+      stats:[['Ground','clean shingle over sand'],['Window','2h down to LW + 2h back up'],['Wind','onshore surf helps'],['Season','mid-Apr on (summer) / Oct on (codling)'],['Parking','Shore car park, honesty box ~£2'],['Tide table','Barrow-in-Furness scale']],
+      hazard:'No lifeguard; a rip runs and the shingle is steep at high tide. Weever fish on the wet sand in summer — footwear on, never handle. Sting: hot water 40–45°C, 30+ min.',
+      subs:[['Main access, end of Main St','café, toilets, tractor-launch area','ver']],
+      fit:{light:['y','calm-day lure bass and light flatfish work only — a proper surf needs 4–5oz to hold'],lure:['y','flat evenings for bass; useless in surf'],bass:['y','small surf OK'],beach:['g','the surf and autumn codling tool']},
+      shops:'Lowery Tackle, Haverigg PO (01229 772338) · Gint\u2019s, Millom',
+      species:[['Bass','nnnmpppppmnn'],['Flounder','nnmmppppppmn'],['Dab','ppmnnnnnmppp'],['Codling','ppmnnnnnnppp'],['Whiting','ppmnnnnnmppp'],['Mackerel','nnnnnmpppmnn']]},
+
+    askam:{name:'Askam Pier (Duddon)',chip:'Askam',lat:54.1836,lng:-3.2100,conf:'anec',region:'N',
+      why:'low-key flounder/plaice explore · anecdotal stances',
+      blurb:'Man-made slag pier from the old ironworks. Forum knowledge (single-source — verify locally): eels plague the LEFT side; flatfish to the RIGHT but among moored boats; occasional bonus bass. Arrive ~4 hrs before HW and fish a couple of hours either side of the top.',
+      stats:[['Ground','slag/sand, moorings right side'],['Window','~4h before HW → 2h after'],['Confidence','anecdotal — ask at Gint\u2019s'],['Parking','near beach/pier, Steel St LA16 7BW'],['Tide table','Barrow-in-Furness scale'],['Rescue','Duddon Inshore Rescue based here']],
+      hazard:'It has a lifeboat station for a reason: fast tides and quicksand on the flats. Fish from the pier/edges only; never wade the channels. \u201cTreading\u201d for flounder is local tradition, not novice practice.',
+      subs:[['Pier left side','eels (must be released)','anec'],['Pier right side','flatfish among the boats — mind the moorings','anec']],
+      fit:{light:['g','flounder at short range off structure — fine'],lure:['y','occasional bass, not a lure venue'],bass:['g','fine'],beach:['y','unnecessary']},
+      shops:'Gint\u2019s, Millom · Angling & Hiking Centre, Barrow',
+      species:[['Flounder','pmmmmmmmpppp'],['Plaice','nnnmppppmnnn'],['Eel (release)','nnnmpppppnnn'],['School bass','nnnnmmpppmnn']]},
+
+    newbrighton:{name:'New Brighton / Perch Rock',chip:'Perch Rock',lat:53.4425,lng:-3.0400,conf:'ver',region:'S',
+      why:'best novice mark · LOW-WATER venue · free parking',
+      blurb:'A LOW-water venue: fish down to and around low water from the beach either side of the fort — go round the LEFT of the fort past the lighthouse (firmer ground). The green buoy stance is popular (nearest the deep Rock Channel). At high water switch to Town Hall Steps on the prom. Mid-tide the Mersey run demands 5–6oz grip leads — beyond any light rod — so plan light-rod visits around the slack and the summer bass lure work off the rock edges.',
+      stats:[['Ground','firm sand + rock, groynes'],['Window','LOW water ±2h (bait)'],['Run','5–6oz to hold mid-tide'],['Parking','FREE, by fort, CH45 2JX'],['Tide table','Liverpool (Gladstone)'],['Tackle','Bonners, Victoria Rd (0151 638 0883)']],
+      hazard:'The fort causeway cuts off on the flood — never get caught behind the fort. The \u201cRock Channel long walk\u201d wade is for experienced anglers only: treat the red pin as a DO NOT. Weevers in summer sand.',
+      subs:[['Left of fort → lighthouse','main route out, firmer ground','ver'],['Green buoy stance','popular — closest to the deep channel','ver'],['Town Hall Steps','the HIGH-water alternative on the prom','ver'],['Rock Channel','DANGER — chest-wade across draining tide. Not for you.','shift']],
+      fit:{light:['y','lures & the slack windows only — bottom fishing on the run needs 5–6oz'],lure:['g','summer bass off the rock edges/marine lake wall is prime light-lure water'],bass:['y','slack + small tides'],beach:['g','the tool for proper bottom fishing here: whiting, cod, rays, smoothhound']},
+      shops:'Bonners, 114 Victoria Rd, CH45 2JF — ring ahead for fresh bait',
+      species:[['Whiting','pppmmmmmpppp'],['Cod','ppmnnnnnnmpp'],['Dab','pppmnnnnmppp'],['Flounder','pmmmmmmmpppp'],['Bass','nnnmppppppmn'],['Smoothhound','nnnnmpppmnnn'],['Thornback ray','nnnmpppppmnn']]},
+
+    otterspool:{name:'Otterspool Promenade',chip:'Otterspool',lat:53.3648,lng:-2.9433,conf:'ver',region:'S',
+      why:'WINTER venue · codling & whiting late Sept–April',
+      blurb:'Predominantly a winter mark: late September to April for codling (2–3lb bracket) and whiting on fresh black lug; summer is famously quiet. Fish 3.5 hrs up to HW and 1 hr after. Tides OVER ~8.5m are hard work — heavy run and weed. Scout the snags at low water first: the mussel beds close in eat rigs.',
+      stats:[['Ground','mud + mussel beds, SNAGGY'],['Window','3.5h up to HW + 1h after'],['Tide ceiling','under ~8.5m'],['Wind','easterly (offshore) behind you'],['Parking','Festival Gdns / Jericho Ln L17 5AL — NEVER on the prom (clamped)'],['Tide table','Liverpool (Gladstone)']],
+      hazard:'Busy shared prom — cast with care. Strong tidal run. Park only in the car parks: prom parking = clamp.',
+      subs:[['The \u201celbow\u201d by the big buoy','~200yds from the Britannia pub — the popular 500yd stretch toward Jericho Ln; snaggy (that\u2019s the attraction for cod)','ver'],['Pumping station front','favoured stance toward the river mouth','ver'],['Britannia pub + 200yds left','extremely snaggy — expect losses','ver']],
+      fit:{light:['y','small/neap tides and the last of the flood only; 8.5m+ or the main run needs 5oz'],lure:['r','not a lure venue — coloured water over mud'],bass:['y','marginal'],beach:['g','the winter codling/whiting tool here']},
+      shops:'Taskers Angling / Turners Tackle (Liverpool) for fresh black lug',
+      species:[['Codling','ppmnnnnnmppp'],['Whiting','ppmnnnnnmppp'],['Flounder','pmmmnnnnmppp'],['Dab','pmmmnnnnmppp'],['Eel (release)','nnnmmpppmnnn'],['Rockling','ppmnnnnnnppp']]},
+
+    thurstaston:{name:'Thurstaston, Dee Estuary',chip:'Thurstaston',lat:53.3430,lng:-3.1470,conf:'anec',region:'S',
+      why:'gentle Duddon rehearsal · patchy catch record',
+      blurb:'Steps below the country-park visitor centre down to sand/shingle; fish the channel as the flood breaks over the banks (reports: 2 hrs up, 1 down). Honest note from the record: results are modest and blanks are documented — treat it as tide-craft practice with a chance of flounder and school bass, not a banker.',
+      stats:[['Ground','sand/shingle → mud banks'],['Window','flood over the banks → HW +1h'],['Confidence','access verified; catches patchy'],['Parking','Wirral Country Park visitor centre'],['Tide table','Hilbre / Dee'],['Reserve','borders RSPB Dee Estuary']],
+      hazard:'The Dee is notorious for cut-off, quicksand and fast floods — never walk out to the distant channels. Unstable clay cliffs: keep clear of the base. Bass Nursery Area 31 May–1 Oct: release bass voluntarily.',
+      subs:[['Beach below visitor centre','steep steps down the boulder-clay cliffs','ver'],['Toward Dee SC slipway / Caldy','causeway used by cocklers; bird concentrations — give them space','anec']],
+      fit:{light:['g','gentle run, close range — the rehearsal venue for Cumbria'],lure:['g','school bass on small shads along channel edges'],bass:['g','fine'],beach:['y','unnecessary here']},
+      shops:'Wirral tackle shops (Bonners New Brighton) en route',
+      species:[['Flounder','pmmmmmmmpppp'],['School bass','nnnnmppppmnn'],['Dab (winter)','mmmnnnnnnmmm'],['Whiting','pmnnnnnnmppp']]},
+
+    pickerings:{name:'Pickerings Pasture, Hale Bank',chip:'Pickerings',lat:53.3560,lng:-2.7360,conf:'anec',region:'S',
+      why:'15 min away · marginal, anecdotal · nature reserve etiquette',
+      blurb:'A birdwatching nature reserve first, a fishing mark second — anglers do fish the shore path stretch for flounder and eels (anecdotal, older reports), but there is no access onto Hale Marsh and the LNR is managed for wildlife: fish discreetly from the shore path only. The upper Mersey here only fishes on bigger flooding tides — neaps barely wet the mark. Better-documented alternative 5 min away: West Bank / Spike Island.',
+      stats:[['Ground','soft tidal mud, snaggy'],['Window','flood to HW, SPRING tides only'],['Confidence','anecdotal, dated'],['Parking','free, Mersey View Rd WA8 8LP'],['Tide table','Liverpool (Gladstone)'],['Etiquette','shore path only — never the marsh']],
+      hazard:'Very soft mud and fast-filling gutters — do not step onto the flats. All eels go back (protected). If it looks like coarse fishing you need an EA licence — stick to sea species.',
+      subs:[['Shore path stretch','the fished stretch — discreet, tackle off the ground','anec'],['West Bank / Spike Island','better-documented upper-Mersey alternative with its own car park','anec']],
+      fit:{light:['g','close-range flounder ledgering — what the venue is'],lure:['r','shallow coloured mud — no'],bass:['y','outside chance of a schoolie'],beach:['y','unnecessary']},
+      shops:'Widnes Angling Centre (closed Wed/Sun) · AD Warrington',
+      species:[['Flounder','pmmmmmmmpppp'],['Eel (release)','nnnmpppppnnn'],['Whiting','mmnnnnnnnmmm'],['School bass','nnnnnmmppmnn']]},
+
+    westbank:{name:'West Bank / Spike Island, Widnes',chip:'West Bank',lat:53.3459,lng:-2.7418,conf:'anec',region:'S',
+      why:'the better-documented upper-Mersey mark',
+      blurb:'The forum-documented upper-Mersey stretch: \u201cdecent-size eels and flatties, a few whiting in winter.\u201d Own car park at Spike Island. Same rules as Pickerings: only fishes on decent flooding tides, sea species only, eels back.',
+      stats:[['Ground','tidal mud/banks'],['Window','flood to HW, bigger tides'],['Confidence','anecdotal forum reports'],['Parking','Spike Island car park'],['Tide table','Liverpool (Gladstone)'],['Drive','~10 min from Runcorn']],
+      hazard:'Soft mud, fast gutters — bank fishing only.',
+      subs:[['Spike Island shore','main fished stretch near the car park','anec']],
+      fit:{light:['g','close-range flounder/eel ledgering'],lure:['r','no'],bass:['y','outside chance'],beach:['y','unnecessary']},
+      shops:'Widnes Angling Centre 5 min away',
+      species:[['Flounder','pmmmmmmmpppp'],['Eel (release)','nnnmpppppnnn'],['Whiting','mmnnnnnnnmmm']]}
+  };
+  var ROCKCHANNEL={lat:53.4460,lng:-3.0560};
+
+  var SYM={p:['\u25cf','p'],m:['\u25d0','m'],n:['\u25cb','n']};
+  var BADGE={ver:'<span class="badge b-ver">verified</span>',anec:'<span class="badge b-anec">anecdotal</span>',shift:'<span class="badge b-shift">shifting / danger</span>'};
+  var FITTXT={g:'ideal',y:'conditional',r:'wrong tool'};
+
+  function renderCal(key){
+    var v=VENUES[key];
+    var h='<table class="cal"><tr><th>Species</th><th>J</th><th>F</th><th>M</th><th>A</th><th>M</th><th>J</th><th>J</th><th>A</th><th>S</th><th>O</th><th>N</th><th>D</th></tr>';
+    v.species.forEach(function(row){
+      h+='<tr><td><b>'+row[0]+'</b></td>';
+      for(var i=0;i<12;i++){var s=SYM[row[1][i]];h+='<td class="'+s[1]+'">'+s[0]+'</td>';}
+      h+='</tr>';
+    });
+    document.getElementById('calwrap').innerHTML=h+'</table>';
+    document.getElementById('calvenue').textContent=v.name;
+  }
+
+  function renderBuyGap(){
+    var v=VENUES[state.venue], el=document.getElementById('buygap');
+    if(!v || state.venue==='all'){el.innerHTML='';return;}
+    var g=gearCalc(), mine=v.fit[g.rod.cls];
+    if(mine[0]==='g'){el.innerHTML='';return;}
+    var best=null; ['beach','lure','bass','light'].forEach(function(c){ if(!best && v.fit[c][0]==='g' && c!==g.rod.cls) best=c; });
+    if(!best){el.innerHTML='';return;}
+    var buy={
+      beach:'<ul><li><b>12ft beachcaster, 4–6oz</b> (budget combos ~£60–100 incl. reel)</li><li><b>6500/70-size reel</b> with 15lb mono + <b>60lb shock leader</b> (mandatory when casting 5oz+)</li><li><b>5–6oz breakout leads</b> ×6 and stronger flapper rigs (size 1–2/0 hooks)</li><li>Rod rest/tripod for the prom or beach</li></ul>',
+      lure:'<ul><li><b>7–28g lure rod</b> (~£40–80) — lighter tip than your travel rod, better lure feel</li><li>You already own suitable line, lures and leaders</li></ul>',
+      bass:'<ul><li><b>Bass rod 20–60g</b> (~£50–90) — bridges light and beach work</li></ul>'
+    };
+    el.innerHTML='<div class="buygap"><h3>Gear gap at this mark</h3><p>Your current rod is <b>'+FITTXT[mine[0]]+'</b> here — '+mine[1]+'. The right tool is a <b>'+CLASSNAMES[best]+'</b> ('+v.fit[best][1]+'). To fish this mark properly you\u2019d add:</p>'+buy[best]+'<p style="margin-top:6px">Or simply fish it on your rod\u2019s terms: '+mine[1]+'.</p></div>';
+  }
+
+  function renderPanel(key){
+    var v=VENUES[key], el=document.getElementById('vpanel');
+    if(key==='all'){
+      el.innerHTML='<h3>All marks</h3><p class="why">tap a pin or chip for tactics, verdicts and sub-spots</p><p style="font-size:.95rem">Eight marks, honestly labelled: green badges are documented (Sea Angler, tackle-shop guides), amber are single-source forum knowledge to verify locally, and the red Rock Channel pin is a warning, not a destination. Verdicts below each mark show how every rod class fares there — including gear you don\u2019t own yet.</p>';
+      return;
+    }
+    var g=gearCalc();
+    var h='<h3>'+v.name+' '+BADGE[v.conf]+'</h3><p class="why">'+v.why+'</p><p style="font-size:.95rem">'+v.blurb+'</p><div class="vstats">';
+    v.stats.forEach(function(s){h+='<div><b>'+s[0]+'</b>'+s[1]+'</div>';});
+    h+='</div><ul class="verdicts">';
+    ['light','lure','bass','beach'].forEach(function(c){
+      var f=v.fit[c], me=(c===g.rod.cls)?' \u2190 <b>your rod</b>':'';
+      h+='<li><span class="fit fit-'+f[0]+'"></span><b>'+CLASSNAMES[c]+':</b> '+FITTXT[f[0]]+' — '+f[1]+me+'</li>';
+    });
+    h+='</ul>';
+    if(v.subs&&v.subs.length){
+      h+='<h3 style="font-size:1rem;margin-top:8px">Sub-spots</h3><ul class="subspots">';
+      v.subs.forEach(function(s){h+='<li><b>'+s[0]+'</b> '+BADGE[s[2]]+' — '+s[1]+'</li>';});
+      h+='</ul>';
+    }
+    h+='<div class="vhazard"><b>Hazard:</b> '+v.hazard+'</div>';
+    h+='<p style="font-size:.85rem;margin-top:8px"><b>Bait &amp; tackle:</b> '+v.shops+' · <a href="https://www.google.com/maps/dir/?api=1&destination='+v.lat+','+v.lng+'" target="_blank" rel="noopener">Directions \u2197</a></p>';
+    el.innerHTML=h;
+  }
+
+  var MAP=null, MARKERS={};
+  function initMap(){
+    try{
+      if(typeof L==='undefined') throw 'no leaflet';
+      MAP=L.map('livemap',{scrollWheelZoom:false}).setView([53.44,-3.04],11);
+      var sat=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,attribution:'Imagery \u00a9 Esri, Maxar, Earthstar Geographics'});
+      var osm=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'\u00a9 OpenStreetMap contributors'});
+      sat.addTo(MAP);
+      L.control.layers({'Satellite':sat,'Street map':osm}).addTo(MAP);
+      sat.on('tileerror',function(){ if(!MAP._fellback){MAP._fellback=true; osm.addTo(MAP);} });
+      Object.keys(VENUES).forEach(function(k){
+        var v=VENUES[k]; if(!v.lat) return;
+        var col = v.conf==='ver' ? '#2f6b3a' : '#c98a1b';
+        var mk=L.circleMarker([v.lat,v.lng],{radius:9,color:'#1c2b36',weight:2,fillColor:col,fillOpacity:.95}).addTo(MAP);
+        mk.bindPopup('<b>'+v.name+'</b><br>'+v.why+'<br><a href="#vpanel" onclick="select(\''+k+'\')">Open tactics \u2193</a>');
+        mk.on('click',function(){select(k);});
+        MARKERS[k]=mk;
+      });
+      var danger=L.circleMarker([ROCKCHANNEL.lat,ROCKCHANNEL.lng],{radius:8,color:'#7a1d0a',weight:2,fillColor:'#c33a1e',fillOpacity:.95}).addTo(MAP);
+      danger.bindPopup('<b>Rock Channel — DO NOT</b><br>Chest-wade across a draining tide. Experienced locals only; people are cut off here. Not a destination.');
+      document.getElementById('jumpN').addEventListener('click',function(){MAP.setView([54.20,-3.29],12);});
+      document.getElementById('jumpS').addEventListener('click',function(){MAP.setView([53.40,-2.92],11);});
+    }catch(e){
+      document.getElementById('livemap').style.display='none';
+      document.querySelector('.mapjump').style.display='none';
+      document.getElementById('mapfallback').style.display='block';
+    }
+  }
+
+  function select(key){
+    state.venue=key;
+    renderPanel(key); renderCal(key); renderBuyGap(); renderGear();
+    document.querySelectorAll('.chips button').forEach(function(b){
+      var on=b.dataset.key===key;
+      b.classList.toggle('active',on); b.setAttribute('aria-selected',on?'true':'false');
+    });
+    if(MAP&&MARKERS[key]) MAP.panTo(MARKERS[key].getLatLng());
+    writeHash();
+  }
+  window.select=select;
+
+  function writeHash(){
+    location.hash='v='+state.venue+'&r='+state.rod+'&l='+state.line+
+      (state.rod==='custom'?('&cw='+state.cmin+'-'+state.cmax):'');
+  }
+  function readHash(){
+    var h=location.hash.replace('#','');
+    h.split('&').forEach(function(kv){
+      var p=kv.split('=');
+      if(p[0]==='v'&&VENUES[p[1]]) state.venue=p[1];
+      if(p[0]==='r'&&RODS[p[1]]) state.rod=p[1];
+      if(p[0]==='l'&&LINES[p[1]]) state.line=p[1];
+      if(p[0]==='cw'){var w=p[1].split('-');state.cmin=+w[0]||10;state.cmax=+w[1]||40;}
+    });
+  }
+
+  // build controls
+  readHash();
+  var rs=document.getElementById('rodsel');
+  Object.keys(RODS).forEach(function(k){var o=document.createElement('option');o.value=k;o.textContent=RODS[k].label;rs.appendChild(o);});
+  rs.value=state.rod;
+  var ls=document.getElementById('linesel');
+  Object.keys(LINES).forEach(function(k){var o=document.createElement('option');o.value=k;o.textContent=LINES[k].label;ls.appendChild(o);});
+  ls.value=state.line;
+  function customVis(){document.getElementById('customrod').style.display = state.rod==='custom'?'inline':'none';}
+  rs.addEventListener('change',function(){state.rod=rs.value;customVis();select(state.venue);});
+  ls.addEventListener('change',function(){state.line=ls.value;select(state.venue);});
+  document.getElementById('cmin').addEventListener('input',function(){state.cmin=+this.value||1;select(state.venue);});
+  document.getElementById('cmax').addEventListener('input',function(){state.cmax=+this.value||2;select(state.venue);});
+  document.getElementById('cmin').value=state.cmin; document.getElementById('cmax').value=state.cmax;
+  customVis();
+
+  var chips=document.getElementById('chips');
+  Object.keys(VENUES).forEach(function(k){
+    var b=document.createElement('button');
+    b.type='button';b.dataset.key=k;b.textContent=VENUES[k].chip;b.setAttribute('role','tab');
+    b.addEventListener('click',function(){select(k);});
+    chips.appendChild(b);
+  });
+
+  initMap();
+  select(state.venue);
+</script>
+
+</body>
+</html>
