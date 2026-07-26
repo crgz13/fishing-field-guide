@@ -27,7 +27,8 @@ Current state: one self-contained file, `fishing-field-guide.html` (~80KB), no b
   satellite tiles + OSM toggle; offline fallback panel if tiles/L fail.
 - Structure: sticky nav → PLAN (gear presets + map + venue panel + regs + calendar + kit +
   checklist) → DO (rig diagram, phase 1/2/aftercare, drawn SVG illustrations) → KNOW
-  (fish ID, safety, dog box) → LOOK UP (details-collapsed baits/troubleshooting/glossary).
+  (fish ID, safety, dog box as closed details toggle) → LOOK UP (details-collapsed
+  baits/troubleshooting/glossary).
 - State `{rod, line, venue, custom weights, no-rod flag}` persisted in URL hash — written only
   after first user interaction, so clean URLs stay clean. Precedence: hash > saved profile
   (localStorage `efg-profile`, written on user changes; the hash doubles as the shareable
@@ -60,9 +61,10 @@ Current state: one self-contained file, `fishing-field-guide.html` (~80KB), no b
   Angling & Hiking Centre Barrow (01229 829661), Bonners New Brighton (0151 638 0883).
 
 ## Prioritised roadmap (agreed order)
-① **Stranger-proofing:** first-visit profile (location + rod-or-none) ✅ done, de-Craig the copy
-   (venue-relative not Runcorn-relative; dog box becomes a toggle; RR gear becomes a saved
-   profile not the page identity), "checked <date>" stamps + verify links on every
+① **Stranger-proofing:** first-visit profile (location + rod-or-none) ✅ done, de-Craig the
+   copy ✅ done (neutral title, kit table de-owned/de-branded, live casting-weight gloss,
+   dog box now a closed <details> toggle, no Runcorn-relative copy),
+   "checked <date>" stamps + verify links on every
    perishable fact (regs, phone numbers, tide ceilings, parking), one global date banner,
    "estimate" tag on synthesised calendar rows, "approximate" on anecdotal pins.
 ② **Start-here router** (never fished → DO; picking a day → PLAN; at the water → LOOK UP)

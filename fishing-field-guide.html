@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Estuary Field Guide — Craig's start-to-finish shore fishing manual</title>
+<title>The Estuary Field Guide — beginner shore fishing on the Mersey, Dee &amp; Duddon</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
@@ -141,6 +141,11 @@
   .dogbox h2{font-family:'Archivo',sans-serif;font-stretch:62%;font-weight:900;text-transform:uppercase;font-size:1.3rem;margin-bottom:6px}
   .dogbox ul{margin-left:20px}
   .dogbox li{margin:5px 0;max-width:70ch;font-size:.95rem}
+  .dogbox summary{cursor:pointer;list-style:none}
+  .dogbox summary h2{display:inline;margin:0}
+  .dogbox summary h2::after{content:' +';color:var(--teal)}
+  .dogbox[open] summary h2::after{content:' \2212'}
+  @media print{.dogbox{display:block}.dogbox summary h2::after{content:''}}
 
   /* ---------- season calendar ---------- */
   .cal td{text-align:center;padding:8px 4px}
@@ -349,11 +354,11 @@
 
 <!-- ================= KIT ================= -->
 <section class="wrap" id="kit">
-  <h2 class="phase">Kit list, in build order<small>Grams, not just ounces. ✔ = already in the combo box.</small></h2>
+  <h2 class="phase">Kit list, in build order<small>Grams, not just ounces.</small></h2>
   <div class="scroll">
   <table>
     <tr><th>#</th><th>Item</th><th>Job</th><th>Spec</th><th>~£</th></tr>
-    <tr><td>✔</td><td><b>Infinite braid 15 lb</b> (main spool)</td><td>Feel + distance; the nervous system</td><td>0.12 mm, 200 m</td><td>owned</td></tr>
+    <tr><td>0</td><td><b>Braid 15 lb main line</b> (skip if already spooled)</td><td>Feel + distance; the nervous system</td><td>0.12 mm, 150 m+</td><td>10–15</td></tr>
     <tr><td>1</td><td>12 lb mono (spare spool)</td><td>Stretchy surf/backup line</td><td>0.30 mm</td><td>5–6</td></tr>
     <tr><td>2</td><td>Rolling swivels</td><td>Kill line twist at every junction</td><td>size 6–8</td><td>2.50</td></tr>
     <tr><td>3</td><td>Snap-link swivels</td><td>5-second lead changes</td><td>small/med</td><td>2.50</td></tr>
@@ -388,7 +393,7 @@
     <li><label><input type="checkbox"><span>Headtorch (yes, even daytime)</span></label></li>
     <li><label><input type="checkbox"><span>Towel, bucket, water bottle</span></label></li>
     <li><label><input type="checkbox"><span>Told someone where + when back</span></label></li>
-    <li><label><input type="checkbox"><span>Dog kit: lead, water bowl, paw check plan</span></label></li>
+    <li><label><input type="checkbox"><span>Dog coming? Lead, water bowl, paw-check plan</span></label></li>
   </ul></section>
 
 <!-- ================= DO ================= -->
@@ -565,7 +570,7 @@
 
   <div class="step"><div class="stepnum">11</div><div>
     <h3>Land, unhook, release (or keep)</h3>
-    <p><b>Wet your hands first.</b> Lay a flounder flat, grip gently across the body, back the hook out the way it came — pliers for anything deep (eels especially). Going back: hold it upright in the shallows until it kicks. Keeping one: dispatch immediately with a firm knock to the head, and know the size rules — bass minimum is 42&nbsp;cm with strict bag limits; undersized anything goes back. Your rod bag has a printed measure.</p>
+    <p><b>Wet your hands first.</b> Lay a flounder flat, grip gently across the body, back the hook out the way it came — pliers for anything deep (eels especially). Going back: hold it upright in the shallows until it kicks. Keeping one: dispatch immediately with a firm knock to the head, and know the size rules — bass minimum is 42&nbsp;cm with strict bag limits; undersized anything goes back. Many rod bags have a printed measure on the side — otherwise pack a tape: know what 42&nbsp;cm looks like before you go.</p>
     <a class="watch" href="https://www.youtube.com/results?search_query=unhooking+flounder+safely" target="_blank" rel="noopener">Watch: unhooking flatfish</a>
   </div></div>
 
@@ -666,8 +671,8 @@
     </ul>
   </div>
 
-  <div class="dogbox" role="note">
-    <h2>🐾 Dog rules at the mark</h2>
+  <details class="dogbox">
+    <summary><h2>🐾 Fishing with a dog?</h2></summary>
     <ul>
       <li><b>Baited hooks never touch the ground.</b> A hook in rag smells like dinner; a swallowed hook is an emergency vet job. Rig in hand or in the bucket, always.</li>
       <li><b>Bait bucket stays lidded</b> — a tub of ragworm is irresistible and expensive to replace.</li>
@@ -676,7 +681,7 @@
       <li>Estuary mud that takes your boot takes a dog too — same rule for both of you: stay off the soft flats.</li>
       <li>Salt water drunk from the shallows = a sick dog in the tent later. Bring fresh water and offer it often.</li>
     </ul>
-  </div>
+  </details>
 </div>
 
 
@@ -753,7 +758,7 @@
     <tr><td><b>School bass</b></td><td>Young, smaller bass travelling in groups</td></tr>
     <tr><td><b>Flattie</b></td><td>Any flatfish, usually flounder</td></tr>
     <tr><td><b>Strike</b></td><td>Lifting the rod to set the hook</td></tr>
-    <tr><td><b>Casting weight</b></td><td>The weight range a rod is built to throw (yours: 5–40 g)</td></tr>
+    <tr><td><b>Casting weight</b></td><td>The weight range a rod is built to throw (yours: <span id="glosscast">10–30 g</span>)</td></tr>
   </table>
   </div>
 </details>
@@ -850,6 +855,7 @@
       '<div>Max lead<b>'+(g.maxLead? g.maxLead[1]+' ('+g.maxLead[0]+'g)':'—')+'</b></div>'+
       '<div>Hooklength<b>'+g.hook+' lb</b></div>'+
       '<div>Mark<b>'+(VENUES[state.venue]?VENUES[state.venue].chip:'—')+'</b></div>';
+    document.getElementById('glosscast').textContent=g.rod.min+'–'+g.rod.max+' g';
     document.getElementById('norodnote').hidden=!NOROD;
   }
 
@@ -932,7 +938,7 @@
     westbank:{name:'West Bank / Spike Island, Widnes',chip:'West Bank',lat:53.3459,lng:-2.7418,conf:'anec',region:'S',
       why:'the better-documented upper-Mersey mark',
       blurb:'The forum-documented upper-Mersey stretch: \u201cdecent-size eels and flatties, a few whiting in winter.\u201d Own car park at Spike Island. Same rules as Pickerings: only fishes on decent flooding tides, sea species only, eels back.',
-      stats:[['Ground','tidal mud/banks'],['Window','flood to HW, bigger tides'],['Confidence','anecdotal forum reports'],['Parking','Spike Island car park'],['Tide table','Liverpool (Gladstone)'],['Drive','~10 min from Runcorn']],
+      stats:[['Ground','tidal mud/banks'],['Window','flood to HW, bigger tides'],['Confidence','anecdotal forum reports'],['Parking','Spike Island car park'],['Tide table','Liverpool (Gladstone)']],
       hazard:'Soft mud, fast gutters — bank fishing only.',
       subs:[['Spike Island shore','main fished stretch near the car park','anec']],
       fit:{light:['g','close-range flounder/eel ledgering'],lure:['r','no'],bass:['y','outside chance'],beach:['y','unnecessary']},
