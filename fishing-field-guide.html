@@ -226,13 +226,13 @@
   .deck{background:#fff;border:1.5px solid var(--ink);padding:16px 18px;margin:18px 0}
   .deck h3{font-family:'Archivo',sans-serif;font-stretch:75%;font-weight:800;font-size:.95rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
   .deck .row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
-  .deck select,.deck input[type=number]{font:inherit;padding:8px 10px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:3px}
+  .deck select,.deck input[type=number],.locker select,.locker input{font:inherit;padding:8px 10px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:3px}
   .derived{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));border:1.5px solid var(--ink)}
   .derived div{padding:8px 10px;border-right:1px solid #d8ddd4;font-size:.85rem}
   .derived b{display:block;font-family:'Archivo',sans-serif;font-stretch:80%;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--teal)}
   .whynote{font-size:.8rem;color:#3c4c56;margin-top:6px}
   body.night .deck{background:#140708}
-  body.night .deck select,body.night .deck input{background:#0a0405;color:#e03d3d;border-color:#e03d3d}
+  body.night .deck select,body.night .deck input,body.night .locker select,body.night .locker input{background:#0a0405;color:#e03d3d;border-color:#e03d3d}
   body.night .derived div{border-color:#3a1414}
   body.night .whynote{color:#c05050}
   #firstvisit .q{font-weight:600;font-size:.9rem;margin:10px 0 2px}
@@ -280,6 +280,19 @@
   details.ref summary::after{content:' +';color:var(--teal)}
   details.ref[open] summary::after{content:' \2212'}
   .credits p{font-size:.9rem;max-width:70ch;margin:8px 0}
+
+  /* ---------- gear locker ---------- */
+  /* ponytail: selects/inputs reuse the .deck rules above, so night mode is already handled. */
+  .locker p{font-size:.9rem;max-width:70ch;margin:8px 0}
+  .locker .row{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .locker h4{font-family:'Archivo',sans-serif;font-stretch:75%;font-weight:800;text-transform:uppercase;font-size:.78rem;letter-spacing:.05em;color:var(--teal);margin:14px 0 0}
+  .locker ul{list-style:none;margin:2px 0 0;max-width:70ch}
+  .locker li{display:flex;justify-content:space-between;gap:12px;align-items:baseline;border-bottom:1px solid var(--faint);padding:6px 0;font-size:.9rem}
+  .locker .spec{color:var(--teal);font-size:.85rem}
+  .locker .kill{background:none;border:none;color:var(--buoy);cursor:pointer;font:inherit;font-size:.85rem;padding:0 2px}
+  .locker .msg{font-size:.85rem;color:var(--buoy);margin:6px 0 0}
+  .locker button.act{font:inherit;font-size:.85rem;padding:8px 12px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:3px;cursor:pointer}
+  body.night .locker button.act{background:#0a0405;color:#e03d3d;border-color:#e03d3d}
   @media print{details.ref{display:block}details.ref summary::after{content:''}}
 </style>
 </head>
@@ -332,6 +345,15 @@
     <p class="whynote" id="norodnote" hidden>No rod yet — the numbers on this page assume a generic light spinning rod (10–30g), the sensible first buy for these marks.</p>
     <p class="whynote" id="savedline" hidden>Saved on this device · <a href="#" id="resetprofile">reset</a></p>
   </div>
+
+  <details class="ref"><summary>My gear locker</summary>
+    <div class="locker">
+      <p>The selects above are <b>what you're fishing today</b>. The locker is <b>what's actually in the bag</b> — rods, reels, line, leads, hooks, rigs, lures. Keeping the two apart means the compatibility checks coming next can tell you what works together and what you're missing, instead of assuming you own the ideal kit.</p>
+      <p>Bait isn't here on purpose: it's bought per session, not owned. It belongs on a trip list, not in a locker.</p>
+      <p class="whynote">Stored on this device only — nothing is sent anywhere. Export writes a JSON file you keep; import reads one back, so the locker survives a new phone or a cleared browser.</p>
+      <div id="lockerui"></div>
+    </div>
+  </details>
 
   <div class="chips" id="chips" role="tablist" aria-label="Choose a fishing mark"></div>
   <div class="mapjump">
@@ -836,6 +858,67 @@
   var LEADS=[[14,'0.5oz'],[21,'0.75oz'],[28,'1oz'],[35,'1.25oz'],[42,'1.5oz'],[57,'2oz'],[85,'3oz'],[113,'4oz'],[142,'5oz'],[170,'6oz']];
   var CLASSNAMES={light:'Light spinning',lure:'Lure rod',bass:'Bass rod',beach:'Beachcaster'};
 
+  /* ========== GEAR LOCKER: schemas + seed catalogue (④a — stores only; rules land in ④b) ========== */
+  var TYPES={
+    rod:       {label:'Rod',        spec:function(i){return i.min_g+'–'+i.max_g+'g'},
+                fields:[['min_g','Min cast weight (g)','number'],['max_g','Max cast weight (g)','number']]},
+    reel:      {label:'Reel',       spec:function(i){return i.size_class+' size'},
+                fields:[['size_class','Size class (e.g. 4000)','text']]},
+    line:      {label:'Main line',  spec:function(i){return i.type+' '+i.lb+'lb'+(i.mm?' ('+i.mm+'mm)':'')},
+                fields:[['type','braid or mono','text'],['lb','Breaking strain (lb)','number'],['mm','Diameter (mm)','text']]},
+    hooklength:{label:'Hooklength', spec:function(i){return i.lb+'lb'},
+                fields:[['lb','Breaking strain (lb)','number']]},
+    lead:      {label:'Lead',       spec:function(i){return i.g+'g'+(i.wired?' · wired':'')},
+                fields:[['g','Weight (g)','number'],['wired','Wired','bool']]},
+    hook:      {label:'Hook',       spec:function(i){return i.pattern+' size '+i.size},
+                fields:[['pattern','Pattern (e.g. Aberdeen)','text'],['size','Size (e.g. 1/0)','text']]},
+    rig:       {label:'Rig',        spec:function(i){return 'hook '+i.hook_size+' · up to '+i.lead_rating+'g'},
+                fields:[['hook_size','Hook size','text'],['lead_rating','Max lead (g)','number']]},
+    lure:      {label:'Lure',       spec:function(i){return i.g+'g '+i.style},
+                fields:[['g','Weight (g)','number'],['style','Style (e.g. metal)','text']]}
+  };
+  /* Generic specs only — never brands (rejected list). Leads derive from the LEADS table above. */
+  var CATALOGUE=[
+    {id:'c-rod1',kind:'rod',label:'Light spinning rod',min_g:10,max_g:30},
+    {id:'c-rod2',kind:'rod',label:'Light spinning rod (softer)',min_g:5,max_g:20},
+    {id:'c-rod3',kind:'rod',label:'Lure rod',min_g:7,max_g:28},
+    {id:'c-rod4',kind:'rod',label:'Travel rod, short tip',min_g:15,max_g:40},
+    {id:'c-rod5',kind:'rod',label:'Bass rod',min_g:20,max_g:60},
+    {id:'c-rod6',kind:'rod',label:'Beachcaster',min_g:100,max_g:170},
+    {id:'c-reel1',kind:'reel',label:'Fixed spool, small',size_class:'2500'},
+    {id:'c-reel2',kind:'reel',label:'Fixed spool, light',size_class:'3000'},
+    {id:'c-reel3',kind:'reel',label:'Fixed spool, all-round',size_class:'4000'},
+    {id:'c-reel4',kind:'reel',label:'Fixed spool, surf',size_class:'6000'},
+    {id:'c-reel5',kind:'reel',label:'Fixed spool, big surf',size_class:'8000'},
+    {id:'c-line1',kind:'line',label:'Braid',type:'braid',lb:15,mm:'0.12'},
+    {id:'c-line2',kind:'line',label:'Braid',type:'braid',lb:20,mm:'0.15'},
+    {id:'c-line3',kind:'line',label:'Braid',type:'braid',lb:30,mm:'0.20'},
+    {id:'c-line4',kind:'line',label:'Mono',type:'mono',lb:12,mm:'0.30'},
+    {id:'c-line5',kind:'line',label:'Mono',type:'mono',lb:15,mm:'0.35'},
+    {id:'c-line6',kind:'line',label:'Mono shock leader',type:'mono',lb:30,mm:'0.50'},
+    {id:'c-hl1',kind:'hooklength',label:'Fluorocarbon',lb:8},
+    {id:'c-hl2',kind:'hooklength',label:'Fluorocarbon',lb:11},
+    {id:'c-hl3',kind:'hooklength',label:'Fluorocarbon',lb:15},
+    {id:'c-hl4',kind:'hooklength',label:'Mono',lb:12},
+    {id:'c-hl5',kind:'hooklength',label:'Mono',lb:20},
+    {id:'c-hk1',kind:'hook',label:'Aberdeen',pattern:'Aberdeen',size:'4'},
+    {id:'c-hk2',kind:'hook',label:'Aberdeen',pattern:'Aberdeen',size:'2'},
+    {id:'c-hk3',kind:'hook',label:'Aberdeen',pattern:'Aberdeen',size:'1/0'},
+    {id:'c-hk4',kind:'hook',label:'Aberdeen',pattern:'Aberdeen',size:'2/0'},
+    {id:'c-hk5',kind:'hook',label:'Circle',pattern:'Circle',size:'1/0'},
+    {id:'c-hk6',kind:'hook',label:'Circle',pattern:'Circle',size:'2/0'},
+    {id:'c-rig1',kind:'rig',label:'Running ledger, light',hook_size:'1/0',lead_rating:60},
+    {id:'c-rig2',kind:'rig',label:'Running ledger, heavy',hook_size:'2/0',lead_rating:170},
+    {id:'c-rig3',kind:'rig',label:'One-hook flapper',hook_size:'1',lead_rating:113},
+    {id:'c-rig4',kind:'rig',label:'Two-hook flapper',hook_size:'2',lead_rating:113},
+    {id:'c-lure1',kind:'lure',label:'Metal',g:7,style:'metal'},
+    {id:'c-lure2',kind:'lure',label:'Metal',g:14,style:'metal'},
+    {id:'c-lure3',kind:'lure',label:'Metal',g:21,style:'metal'},
+    {id:'c-lure4',kind:'lure',label:'Soft shad',g:10,style:'soft'},
+    {id:'c-lure5',kind:'lure',label:'Jig head',g:7,style:'jig head'}
+  ].concat(LEADS.map(function(l){ return {id:'c-lead'+l[0],kind:'lead',label:'Plain bomb '+l[1],g:l[0],wired:false}; }))
+   .concat([85,113,142,170].map(function(g){ return {id:'c-wlead'+g,kind:'lead',label:'Wired grip lead',g:g,wired:true}; }));
+
   var state={rod:'lightgen',line:'braid15',venue:'all',cmin:10,cmax:40};
 
   /* ================= PROFILE (first visit + saved setup) ================= */
@@ -1172,10 +1255,129 @@
     location.reload(); // ponytail: reload guarantees the exact fresh-visit state, no re-render bookkeeping
   });
 
+  /* ================= GEAR LOCKER: storage + UI ================= */
+  var LOCKER=[];
+  function loadLocker(){ try{var a=JSON.parse(localStorage.getItem('efg-locker')); return Array.isArray(a)?a.filter(validItem):[]}catch(e){return []} }
+  function saveLocker(){ try{localStorage.setItem('efg-locker',JSON.stringify(LOCKER))}catch(e){} } // ponytail: silent failure is correct — file:// and blocked storage still work for the session
+  function validItem(i){ return !!i && typeof i==='object' && !!TYPES[i.kind] && typeof i.label==='string' }
+  function uid(){ return 'g'+Date.now().toString(36)+Math.random().toString(36).slice(2,6) }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]}) }
+  function specOf(i){ try{ return TYPES[i.kind].spec(i) }catch(e){ return '' } }
+  function lkmsg(s){ var m=document.getElementById('lkmsg'); if(m) m.textContent=s||''; }
+
+  function renderLockerList(){
+    var box=document.getElementById('lockerlist'); if(!box) return;
+    var html='';
+    Object.keys(TYPES).forEach(function(k){
+      var items=LOCKER.filter(function(i){return i.kind===k}); if(!items.length) return;
+      html+='<h4>'+esc(TYPES[k].label)+'</h4><ul>';
+      items.forEach(function(i){
+        html+='<li><span>'+esc(i.label)+' <span class="spec">'+esc(specOf(i))+'</span></span>'+
+              '<button type="button" class="kill" data-id="'+esc(i.id)+'">remove &times;</button></li>';
+      });
+      html+='</ul>';
+    });
+    box.innerHTML=html||'<p class="whynote">Locker empty. Add what you own below — or import a locker you exported earlier.</p>';
+  }
+  function fillCat(){
+    var k=document.getElementById('lktype').value, s=document.getElementById('lkitem');
+    s.innerHTML='';
+    CATALOGUE.filter(function(i){return i.kind===k}).forEach(function(i){
+      var o=document.createElement('option'); o.value=i.id; o.textContent=i.label+' — '+specOf(i); s.appendChild(o);
+    });
+  }
+  function fillCustom(){
+    var k=document.getElementById('lktype').value, box=document.getElementById('lkcustom'), h=
+      '<input id="lkclabel" type="text" placeholder="Name it, e.g. '+esc(TYPES[k].label.toLowerCase())+' in the shed" aria-label="Custom item name" style="flex:1 1 170px">';
+    TYPES[k].fields.forEach(function(f){
+      h+= f[2]==='bool'
+        ? '<select id="lkc_'+f[0]+'" aria-label="'+esc(f[1])+'"><option value="">'+esc(f[1])+': no</option><option value="1">'+esc(f[1])+': yes</option></select>'
+        : '<input id="lkc_'+f[0]+'" type="'+f[2]+'" placeholder="'+esc(f[1])+'" aria-label="'+esc(f[1])+'" style="width:150px">';
+    });
+    box.innerHTML=h+'<button type="button" class="act" id="lkaddc">Add custom</button>';
+    document.getElementById('lkaddc').addEventListener('click',addCustom);
+  }
+  function addFromCat(){
+    var id=document.getElementById('lkitem').value, src=null;
+    CATALOGUE.forEach(function(i){ if(i.id===id) src=i; });
+    if(!src) return;
+    var copy={}; for(var f in src) copy[f]=src[f];
+    copy.id=uid();
+    LOCKER.push(copy); saveLocker(); renderLockerList(); lkmsg('Added '+src.label+'.');
+  }
+  function addCustom(){
+    var k=document.getElementById('lktype').value,
+        label=(document.getElementById('lkclabel').value||'').trim();
+    if(!label){ lkmsg('Give it a name first.'); return; }
+    var it={id:uid(),kind:k,label:label,custom:true}, bad='';
+    TYPES[k].fields.forEach(function(f){
+      var v=document.getElementById('lkc_'+f[0]).value;
+      if(f[2]==='number'){ if(v===''||isNaN(+v)) bad=f[1]; it[f[0]]=+v||0; }
+      else if(f[2]==='bool') it[f[0]]=!!v;
+      else it[f[0]]=String(v).trim();
+    });
+    if(bad){ lkmsg('Needs a number for: '+bad+'.'); return; }
+    LOCKER.push(it); saveLocker(); renderLockerList();
+    document.getElementById('lkclabel').value='';
+    lkmsg('Added '+label+'.');
+  }
+  function exportLocker(){
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([JSON.stringify(LOCKER,null,2)],{type:'application/json'}));
+    a.download='gear-locker.json'; a.click(); URL.revokeObjectURL(a.href);
+    lkmsg(LOCKER.length+' item'+(LOCKER.length===1?'':'s')+' exported.');
+  }
+  function importLocker(e){
+    var f=e.target.files&&e.target.files[0]; if(!f) return;
+    var r=new FileReader();
+    r.onload=function(){
+      var data;
+      try{ data=JSON.parse(r.result); }catch(err){ lkmsg('That file isn’t valid JSON — locker unchanged.'); return; }
+      if(!Array.isArray(data)){ lkmsg('That file isn’t a gear locker — locker unchanged.'); return; }
+      var ok=data.filter(validItem);
+      if(!ok.length){ lkmsg('No usable gear items in that file — locker unchanged.'); return; }
+      LOCKER=ok.map(function(i){ if(!i.id) i.id=uid(); return i; });
+      saveLocker(); renderLockerList();
+      lkmsg('Imported '+ok.length+' item'+(ok.length===1?'':'s')+
+            (ok.length<data.length? ' · '+(data.length-ok.length)+' skipped (unknown type)':'')+'.');
+    };
+    r.readAsText(f); e.target.value='';
+  }
+  function buildLocker(){
+    var host=document.getElementById('lockerui'); if(!host) return;
+    host.innerHTML=
+      '<div id="lockerlist"></div>'+
+      '<div class="row"><select id="lktype" aria-label="Item type"></select>'+
+      '<select id="lkitem" aria-label="Item from catalogue" style="flex:1 1 190px"></select>'+
+      '<button type="button" class="act" id="lkadd">Add to locker</button></div>'+
+      '<p class="whynote">Not on the list? Describe it — every check works from the spec, never the brand.</p>'+
+      '<div class="row" id="lkcustom"></div>'+
+      '<div class="row"><button type="button" class="act" id="lkexport">Export JSON</button>'+
+      '<label class="act" for="lkimport" style="cursor:pointer">Import JSON'+
+      '<input type="file" id="lkimport" accept="application/json,.json" hidden></label></div>'+
+      '<p class="msg" id="lkmsg" role="status"></p>';
+    var ts=document.getElementById('lktype');
+    Object.keys(TYPES).forEach(function(k){
+      var o=document.createElement('option'); o.value=k; o.textContent=TYPES[k].label; ts.appendChild(o);
+    });
+    ts.addEventListener('change',function(){ fillCat(); fillCustom(); lkmsg(''); });
+    document.getElementById('lkadd').addEventListener('click',addFromCat);
+    document.getElementById('lkexport').addEventListener('click',exportLocker);
+    document.getElementById('lkimport').addEventListener('change',importLocker);
+    host.addEventListener('click',function(e){
+      var b=e.target.closest? e.target.closest('.kill') : null; if(!b) return;
+      var id=b.getAttribute('data-id');
+      LOCKER=LOCKER.filter(function(i){ return i.id!==id; });
+      saveLocker(); renderLockerList(); lkmsg('Removed.');
+    });
+    fillCat(); fillCustom(); renderLockerList();
+  }
+
   initMap();
   select(state.venue);
   if(PROF&&PROF.answered){ try{document.getElementById('savedline').hidden=false}catch(e){} }
   buildFirstVisit();
+  LOCKER=loadLocker(); buildLocker();
   INIT_DONE=true;
 </script>
 

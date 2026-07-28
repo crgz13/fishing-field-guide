@@ -93,7 +93,16 @@ Current state: one self-contained file, `fishing-field-guide.html` (~80KB), no b
    ~40–50 generic items + add-custom by type. Item schemas: rod{min_g,max_g},
    reel{size_class}, line{type,lb,mm}, hooklength{lb}, lead{g,wired}, hook{pattern,size},
    rig{hook_size,lead_rating}, lure{g,style}, bait{name}. Bait is SESSION-level, not
-   locker-level (decided). ~10 pairwise/chain rules, each returns g/y/r + reason:
+   locker-level (decided) — now stated in the locker's own copy, not just here.
+   Split into three cycles: **④(a) locker ✅ done** — schemas + 51-item generic catalogue
+   (leads generated from the LEADS table, so the two can't drift) + "My gear locker" as a
+   closed details in PLAN + localStorage `efg-locker` + native JSON export/import with
+   visible rejection of bad files. Stores only; no rules. Single file kept (91→105KB).
+   NOTE: the item-kind key is `kind`, NOT `type` — `type` belongs to line{type,…} and the
+   two collided. ④(b) rules + rig-chain verdicts — needs per-venue run/ground data that
+   does not exist yet, so those are NEW claimed facts: source them or estimate-tag them,
+   never invent them. ④(c) computed gap list replaces the hardcoded buygap box.
+   ~10 pairwise/chain rules, each returns g/y/r + reason:
    rod↔lead(+12g), rod↔reel, reel↔line capacity, line↔hooklength weak-link, line↔lead
    shock-leader rule (hard red >57g without one), hook↔bait, lead↔venue run,
    bait/lure↔venue+month via species calendar, rig↔ground snags. Verdict renders on the
