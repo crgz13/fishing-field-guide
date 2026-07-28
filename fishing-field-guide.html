@@ -281,6 +281,21 @@
   details.ref[open] summary::after{content:' \2212'}
   .credits p{font-size:.9rem;max-width:70ch;margin:8px 0}
 
+  /* ---------- rig check (④b verdicts) ---------- */
+  .rigcheck{padding:0 0 26px}
+  .rc-intro{font-size:.85rem;color:#3c4c56;max-width:70ch;margin-bottom:10px}
+  .rigcheck .row{display:flex;flex-wrap:wrap;gap:8px}
+  .rigcheck select{font:inherit;font-size:.85rem;padding:7px 9px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:3px}
+  .rigwhy{border-left:6px solid var(--ink);background:#fff;padding:12px 16px;margin-top:12px;max-width:70ch}
+  .rigwhy h4{font-family:'Archivo',sans-serif;font-stretch:75%;font-weight:800;text-transform:uppercase;font-size:.85rem;letter-spacing:.05em}
+  .rigwhy li{list-style:none;font-size:.88rem;margin:8px 0}
+  .rigwhy .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px}
+  #seg-reel,#seg-line,#seg-lead,#seg-hooklength,#seg-hook,#seg-bait{cursor:pointer}
+  body.night .rigcheck select{background:#0a0405;color:#e03d3d;border-color:#e03d3d}
+  body.night .rc-intro{color:#c05050}
+  body.night .rigwhy{background:#140708}
+  @media print{.rigcheck .row{display:none}}
+
   /* ---------- gear locker ---------- */
   /* ponytail: selects/inputs reuse the .deck rules above, so night mode is already handled. */
   .locker p{font-size:.9rem;max-width:70ch;margin:8px 0}
@@ -445,16 +460,16 @@
   <!-- water line -->
   <path d="M0 200 Q 60 192 120 200 T 240 200 T 360 200 T 480 200 T 600 200 T 720 200 T 840 200 T 960 200" fill="none" stroke="#3d6b6a" stroke-width="2" opacity=".5"/>
   <!-- main line -->
-  <line x1="60" y1="110" x2="330" y2="110" stroke="#1c2b36" stroke-width="3"/>
+  <line id="seg-line" data-slot="line" tabindex="0" x1="60" y1="110" x2="330" y2="110" stroke="#1c2b36" stroke-width="3"/>
   <!-- reel -->
-  <circle cx="45" cy="110" r="26" fill="#fff" stroke="#1c2b36" stroke-width="3"/>
+  <circle id="seg-reel" data-slot="reel" tabindex="0" cx="45" cy="110" r="26" fill="#fff" stroke="#1c2b36" stroke-width="3"/>
   <circle cx="45" cy="110" r="9" fill="#3d6b6a"/>
   <text x="45" y="165" text-anchor="middle" font-size="13" font-weight="700">REEL</text>
   <text x="45" y="181" text-anchor="middle" font-size="11" fill="#3c4c56">braid 15 lb</text>
   <!-- sliding snap link + lead -->
   <rect x="180" y="96" width="14" height="28" rx="6" fill="#fff" stroke="#1c2b36" stroke-width="3"/>
   <line x1="187" y1="124" x2="187" y2="150" stroke="#1c2b36" stroke-width="3"/>
-  <path d="M187 150 l-14 34 q14 12 28 0 z" fill="#c9b892" stroke="#1c2b36" stroke-width="3"/>
+  <path id="seg-lead" data-slot="lead" tabindex="0" d="M187 150 l-14 34 q14 12 28 0 z" fill="#c9b892" stroke="#1c2b36" stroke-width="3"/>
   <line x1="176" y1="184" x2="166" y2="204" stroke="#1c2b36" stroke-width="2.5"/>
   <line x1="198" y1="184" x2="208" y2="204" stroke="#1c2b36" stroke-width="2.5"/>
   <text x="187" y="228" text-anchor="middle" font-size="13" font-weight="700">1 oz GRIP LEAD</text>
@@ -468,7 +483,7 @@
   <text x="361" y="140" text-anchor="middle" font-size="12" font-weight="700">SWIVEL</text>
   <text x="361" y="156" text-anchor="middle" font-size="11" fill="#3c4c56">uni knot each side</text>
   <!-- hooklength -->
-  <line x1="378" y1="110" x2="700" y2="110" stroke="#3d6b6a" stroke-width="2.5" stroke-dasharray="1 0"/>
+  <line id="seg-hooklength" data-slot="hooklength" tabindex="0" x1="378" y1="110" x2="700" y2="110" stroke="#3d6b6a" stroke-width="2.5" stroke-dasharray="1 0"/>
   <text x="540" y="92" text-anchor="middle" font-size="12" fill="#3c4c56">50 cm fluorocarbon 10–12 lb (the weak link, on purpose)</text>
   <!-- attractor beads -->
   <circle cx="640" cy="110" r="6" fill="#d14d28"/>
@@ -476,9 +491,9 @@
   <circle cx="672" cy="110" r="6" fill="#3d6b6a"/>
   <text x="656" y="140" text-anchor="middle" font-size="12" font-weight="700">BRIGHT BEADS</text>
   <!-- hook + worm -->
-  <path d="M700 110 v40 a18 18 0 0 0 36 0 v-8" fill="none" stroke="#1c2b36" stroke-width="3.5"/>
+  <path id="seg-hook" data-slot="hook" tabindex="0" d="M700 110 v40 a18 18 0 0 0 36 0 v-8" fill="none" stroke="#1c2b36" stroke-width="3.5"/>
   <path d="M736 142 l-6 10" stroke="#1c2b36" stroke-width="3.5"/>
-  <path d="M700 112 q10 8 4 20 q-6 12 2 20" fill="none" stroke="#b0563c" stroke-width="7" stroke-linecap="round"/>
+  <path id="seg-bait" data-slot="bait" tabindex="0" d="M700 112 q10 8 4 20 q-6 12 2 20" fill="none" stroke="#b0563c" stroke-width="7" stroke-linecap="round"/>
   <path d="M706 152 q8 8 2 16 q8 2 14 -4" fill="none" stroke="#b0563c" stroke-width="5" stroke-linecap="round"/>
   <text x="770" y="130" font-size="13" font-weight="700">ABERDEEN size 4</text>
   <text x="770" y="147" font-size="11" fill="#3c4c56">ragworm up the shank,</text>
@@ -486,6 +501,12 @@
 </svg>
 </div>
 <p class="wrap rig-caption"><strong>The spine of everything:</strong> the running ledger. The lead anchors; the line slides through the link so a fish never feels the weight; the fluoro section is deliberately the weakest so snags cost a hook, not the rig. Every bait session on this guide is a variation of this one chain.</p>
+
+<div class="wrap rigcheck">
+  <p class="rc-intro">The labels above are the worked example this guide teaches. To check <b>your</b> version of the chain, fill in what you're actually using — each link on the diagram turns green, amber or red, and tapping it says why. Leave anything blank and it simply isn't judged.</p>
+  <div class="row" id="rigslots"></div>
+  <div id="rigwhy" aria-live="polite"></div>
+</div>
 
 <!-- ================= PHASE 1 ================= -->
 <section class="wrap" id="phase1">
@@ -896,6 +917,8 @@
     {id:'c-line4',kind:'line',label:'Mono',type:'mono',lb:12,mm:'0.30'},
     {id:'c-line5',kind:'line',label:'Mono',type:'mono',lb:15,mm:'0.35'},
     {id:'c-line6',kind:'line',label:'Mono shock leader',type:'mono',lb:30,mm:'0.50'},
+    {id:'c-line7',kind:'line',label:'Mono shock leader',type:'mono',lb:50,mm:'0.60'},
+    {id:'c-line8',kind:'line',label:'Mono shock leader',type:'mono',lb:60,mm:'0.70'},
     {id:'c-hl1',kind:'hooklength',label:'Fluorocarbon',lb:8},
     {id:'c-hl2',kind:'hooklength',label:'Fluorocarbon',lb:11},
     {id:'c-hl3',kind:'hooklength',label:'Fluorocarbon',lb:15},
@@ -918,6 +941,125 @@
     {id:'c-lure5',kind:'lure',label:'Jig head',g:7,style:'jig head'}
   ].concat(LEADS.map(function(l){ return {id:'c-lead'+l[0],kind:'lead',label:'Plain bomb '+l[1],g:l[0],wired:false}; }))
    .concat([85,113,142,170].map(function(g){ return {id:'c-wlead'+g,kind:'lead',label:'Wired grip lead',g:g,wired:true}; }));
+
+  /* ========== ④b RULES ENGINE ==========
+     GROUND is a RE-LABELLING of each venue's existing sourced "Ground" stat — no new
+     claims: 'snaggy'/'mussel' → snaggy; rock/blocks/slag/groynes → mixed; 'clean' or
+     sand-only → clean; mud → soft. Each class carries its venue's existing badge.     */
+  var GROUND={hodbarrow:'mixed',silecroft:'clean',askam:'mixed',newbrighton:'mixed',
+              otterspool:'snaggy',thurstaston:'soft',pickerings:'snaggy',westbank:'soft'};
+  /* RUN holds a figure ONLY where a source gives one. Decision A: silent everywhere else —
+     a guessed holding weight is a safety-adjacent invention about a real tidal mark.   */
+  var RUN={newbrighton:{min:142,why:'New Brighton’s own note: 5–6oz to hold mid-tide.'}};
+  /* Species lists copied from the bait table's "Best for" column — same wording, no new
+     claims. Only species that appear in the venue calendars can be judged against them. */
+  var BAITS={
+    'Fresh ragworm':{species:'*',hooks:['4','2','1/0']},
+    'Lugworm':{species:['Flounder','Dab','Whiting'],hooks:['4','2','1/0']},
+    'Mackerel strip':{species:['Whiting'],hooks:['2','1/0','2/0']},
+    'Raw king prawn':{species:['Flounder','Bass','School bass'],hooks:['2','1/0']},
+    'Gulp Sandworm':{species:['Flounder','Bass','School bass'],hooks:['4','2','1/0']},
+    'Squid strip':{species:['Whiting','Dab'],hooks:['2','1/0','2/0']},
+    'Bacon':{species:['Flounder'],hooks:['4','2']}
+  };
+  var VCOL={g:'#4a7d52',y:'#e0a52c',r:'#c33a1e'};  // the .fit-g/.fit-y/.fit-r vocabulary
+  var MONTHNAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var RIG={reel:null,lead:null,hooklength:null,hook:null,bait:null,leader:null};
+
+  function groundStat(k){ var v=VENUES[k],s=''; (v&&v.stats||[]).forEach(function(p){ if(p[0]==='Ground') s=p[1]; }); return s; }
+
+  /* Each rule: null when it cannot honestly judge (slot unset, or no sourced data). */
+  var RULES=[
+    {id:'rod-lead',slots:['lead'],fn:function(R,g){
+      if(!R.lead) return null;
+      var cap=g.rod.max, safe=cap-12;
+      if(R.lead.g<=safe) return {v:'g',why:R.lead.g+'g sits inside the rod’s '+cap+'g ceiling with the ~12g rig-and-bait allowance still spare.'};
+      if(R.lead.g<=cap) return {v:'y',why:R.lead.g+'g is under the '+cap+'g ceiling but leaves nothing for the ~12g of rig and bait — you are casting at the limit.'};
+      return {v:'r',why:R.lead.g+'g is over the rod’s '+cap+'g casting ceiling. That is crack-off and broken-rod territory.'};
+    }},
+    {id:'shock-leader',slots:['lead'],fn:function(R,g){
+      if(!R.lead) return null;
+      if(R.lead.g<=57) return {v:'g',why:'Under 57g (2oz) — no shock leader needed.'};
+      // leads are sold in nominal ounces — round, don't ceil, or a true 5oz asks for 6oz of leader
+      var oz=Math.round(R.lead.g/28.35), need=oz*10, have=R.leader?R.leader.lb:g.line.lb;
+      if(have>=need) return {v:'g',why:'Casting '+R.lead.g+'g needs about '+need+'lb at the lead (10lb per oz); your '+(R.leader?have+'lb leader':have+'lb main line')+' covers it.'};
+      return {v:'r',why:'SHOCK LEADER MANDATORY. Casting '+R.lead.g+'g on '+have+'lb needs about '+need+'lb (10lb per ounce of lead). Without one the lead can snap off mid-cast — that is how anglers and bystanders get hurt.'};
+    }},
+    {id:'weak-link',slots:['hooklength'],fn:function(R,g){
+      if(!R.hooklength) return null;
+      var main=g.line.lb, hl=R.hooklength.lb;
+      if(hl<=main*0.8) return {v:'g',why:hl+'lb under '+main+'lb main line — a snag breaks at the hook and costs you one hook, not the whole rig.'};
+      if(hl<main) return {v:'y',why:hl+'lb against '+main+'lb main is close: the weak link is only just the weakest. About 25% below the main line is the rule.'};
+      return {v:'r',why:hl+'lb equals or beats the '+main+'lb main line — a snag now breaks mid-line, dumping lead, rig and yards of line into the sea.'};
+    }},
+    {id:'rod-reel',slots:['reel'],fn:function(R,g){
+      if(!R.reel) return null;
+      var n=parseInt(R.reel.size_class,10)||0, cls=g.rod.cls||'light', nm=CLASSNAMES[cls].toLowerCase();
+      var want=cls==='beach'?[6000,8000]:cls==='bass'?[4000,6000]:[2500,4000];
+      if(n>=want[0]&&n<=want[1]) return {v:'g',why:'A '+n+' reel is the usual match for a '+nm+' rod.'};
+      var off=n<want[0]?want[0]/n:n/want[1];
+      if(off<=2) return {v:'y',why:'A '+n+' on a '+nm+' rod is off the usual '+want[0]+'–'+want[1]+' pairing — it fishes, but it balances badly.'};
+      return {v:'r',why:'A '+n+' is a long way off the '+want[0]+'–'+want[1]+' a '+nm+' rod is built around.'};
+    }},
+    {id:'reel-line',slots:['reel'],fn:function(R,g){
+      if(!R.reel) return null;
+      var n=parseInt(R.reel.size_class,10)||0;
+      if(g.line.type==='braid') return {v:'g',why:'Braid is thin — a '+n+' spool holds far more than you will ever cast.'};
+      if(g.line.lb>=15&&n<=3000) return {v:'y',why:g.line.lb+'lb mono on a '+n+' spool: less capacity and more coil memory. Fine close in, tight for distance.'};
+      return {v:'g',why:g.line.lb+'lb mono suits a '+n+' spool.'};
+    }},
+    {id:'hook-bait',slots:['hook','bait'],fn:function(R){
+      if(!R.hook||!R.bait) return null;
+      var b=BAITS[R.bait.label]; if(!b) return null;
+      if(b.hooks.indexOf(String(R.hook.size))>=0) return {v:'g',why:R.bait.label+' sits well on a size '+R.hook.size+'.'};
+      return {v:'y',why:R.bait.label+' is usually fished on '+b.hooks.join(', ')+' — a '+R.hook.size+' still catches, but the bait sits worse on it.'};
+    }},
+    {id:'venue-run',slots:['lead'],fn:function(R,g,k){
+      var run=RUN[k]; if(!run||!R.lead) return null;   // decision A: no figure, no verdict
+      if(R.lead.g>=run.min) return {v:'g',why:run.why+' Your '+R.lead.g+'g holds.'};
+      return {v:'y',why:run.why+' '+R.lead.g+'g will roll mid-tide — fish the low-water window this mark is judged on, or step up.'};
+    }},
+    {id:'ground',slots:['lead'],fn:function(R,g,k){
+      var gr=GROUND[k]; if(!gr||!R.lead) return null;
+      var gs=groundStat(k);
+      if(gr==='snaggy') return R.lead.wired
+        ? {v:'y',why:'Ground here is '+gs+'. A wired grip lead digs into exactly that — a plain bomb pulls free instead of leaving lead, rig and line behind.'}
+        : {v:'g',why:'Ground here is '+gs+'. A plain bomb pulls free of snags rather than anchoring in them.'};
+      return {v:'g',why:'Ground here is '+gs+' — nothing in it argues against this lead.'};
+    }},
+    {id:'bait-month',slots:['bait'],fn:function(R,g,k){
+      if(!R.bait) return null;
+      var b=BAITS[R.bait.label], v=VENUES[k]; if(!b||!v||!v.species) return null;
+      var m=new Date().getMonth(), best=null, names=[];
+      v.species.forEach(function(row){
+        if(b.species!=='*' && b.species.indexOf(row[0])<0) return;
+        names.push(row[0]);
+        var c=row[1].charAt(m);
+        if(c==='p') best='p'; else if(c==='m'&&best!=='p') best='m'; else if(!best) best='n';
+      });
+      var est=' Month bands are calibrated estimates — see the calendar’s estimate tag.';
+      if(!names.length) return {v:'y',why:R.bait.label+' does not target anything this mark’s calendar lists.'+est};
+      var mn=MONTHNAMES[m], who=names.slice(0,3).join(' / ');
+      if(best==='p') return {v:'g',why:mn+' is prime for '+who+' here.'+est};
+      if(best==='m') return {v:'y',why:mn+' is only a possible month for '+who+' here.'+est};
+      return {v:'r',why:'The calendar puts '+who+' as unlikely here in '+mn+'.'+est};
+    }}
+  ];
+
+  var WORST={g:0,y:1,r:2};
+  function judge(){
+    var g=gearCalc(), k=state.venue, out={};
+    RULES.forEach(function(rule){
+      var res=rule.fn(RIG,g,k); if(!res) return;
+      rule.slots.forEach(function(s){
+        (out[s]=out[s]||[]).push({id:rule.id,v:res.v,why:res.why});
+      });
+    });
+    Object.keys(out).forEach(function(s){
+      out[s].worst=out[s].reduce(function(a,r){ return WORST[r.v]>WORST[a]?r.v:a; },'g');
+    });
+    return out;
+  }
 
   var state={rod:'lightgen',line:'braid15',venue:'all',cmin:10,cmax:40};
 
@@ -1163,6 +1305,7 @@
       b.classList.toggle('active',on); b.setAttribute('aria-selected',on?'true':'false');
     });
     if(MAP&&MARKERS[key]) MAP.panTo(MARKERS[key].getLatLng());
+    paintRig();   // venue-dependent rules (run, ground, bait month) re-judge
     writeHash();
     saveProfile();
   }
@@ -1198,8 +1341,8 @@
   Object.keys(LINES).forEach(function(k){var o=document.createElement('option');o.value=k;o.textContent=LINES[k].label;ls.appendChild(o);});
   ls.value=state.line;
   function customVis(){document.getElementById('customrod').style.display = state.rod==='custom'?'inline':'none';}
-  rs.addEventListener('change',function(){state.rod=rs.value;NOROD=false;customVis();select(state.venue);});
-  ls.addEventListener('change',function(){state.line=ls.value;select(state.venue);});
+  rs.addEventListener('change',function(){state.rod=rs.value;NOROD=false;customVis();select(state.venue);defaultRig();buildRig();});
+  ls.addEventListener('change',function(){state.line=ls.value;select(state.venue);defaultRig();buildRig();});
   document.getElementById('cmin').addEventListener('input',function(){state.cmin=+this.value||1;select(state.venue);});
   document.getElementById('cmax').addEventListener('input',function(){state.cmax=+this.value||2;select(state.venue);});
   document.getElementById('cmin').value=state.cmin; document.getElementById('cmax').value=state.cmax;
@@ -1373,11 +1516,109 @@
     fillCat(); fillCustom(); renderLockerList();
   }
 
+  /* ================= ④b RIG CHECK UI ================= */
+  var SLOTS=[['lead','Lead'],['hooklength','Hooklength'],['hook','Hook'],['reel','Reel'],['leader','Shock leader'],['bait','Bait']];
+  var SEGSTROKE={};   // original stroke per segment, so an unjudged link is restored exactly
+  var OPENSLOT=null;
+
+  function slotOptions(kind){
+    // locker first, then catalogue — same objects the rules read
+    var own=LOCKER.filter(function(i){return i.kind===kind});
+    var cat=CATALOGUE.filter(function(i){return i.kind===kind});
+    return [own,cat];
+  }
+  /* Defaults ARE the rig this page teaches: derived max lead, derived hooklength,
+     the Aberdeen 4 the diagram names. So an untouched page judges its own advice. */
+  function defaultRig(){
+    var g=gearCalc(), lead=null, hl=null, hook=null;
+    CATALOGUE.forEach(function(i){
+      if(i.kind==='lead'&&!i.wired&&g.maxLead&&i.g===g.maxLead[0]) lead=i;
+      if(i.kind==='hooklength'&&i.lb<=g.hook&&(!hl||i.lb>hl.lb)) hl=i;
+      if(i.id==='c-hk1') hook=i;
+    });
+    RIG.lead=lead; RIG.hooklength=hl; RIG.hook=hook;
+  }
+  function buildRig(){
+    var host=document.getElementById('rigslots'); if(!host) return;
+    host.innerHTML='';
+    SLOTS.forEach(function(s){
+      var sel=document.createElement('select');
+      sel.setAttribute('aria-label',s[1]);
+      sel.innerHTML='<option value="">'+s[1]+': not set</option>';
+      if(s[0]==='bait'){
+        Object.keys(BAITS).forEach(function(b){ sel.innerHTML+='<option value="'+b+'">'+b+'</option>'; });
+      }else{
+        var kind = s[0]==='leader' ? 'line' : s[0];
+        var pair=slotOptions(kind), grp=['In your locker','Catalogue'];
+        pair.forEach(function(list,n){
+          if(!list.length) return;
+          var og='<optgroup label="'+grp[n]+'">';
+          list.forEach(function(i){ og+='<option value="'+esc(i.id)+'">'+esc(i.label)+' — '+esc(specOf(i))+'</option>'; });
+          sel.innerHTML+=og+'</optgroup>';
+        });
+      }
+      sel.addEventListener('change',function(){
+        var val=sel.value;
+        if(!val){ RIG[s[0]]=null; }
+        else if(s[0]==='bait'){ RIG[s[0]]={label:val}; }
+        else {
+          var found=null;
+          LOCKER.concat(CATALOGUE).forEach(function(i){ if(i.id===val&&!found) found=i; });
+          RIG[s[0]]=found;
+        }
+        paintRig();
+      });
+      if(RIG[s[0]]) sel.value = s[0]==='bait' ? RIG[s[0]].label : RIG[s[0]].id;
+      host.appendChild(sel);
+    });
+    // remember original strokes once, then judge
+    SLOTS.concat([['line','Main line']]).forEach(function(s){
+      var el=document.getElementById('seg-'+s[0]);
+      if(el&&!(s[0] in SEGSTROKE)) SEGSTROKE[s[0]]=el.getAttribute('stroke');
+    });
+    ['reel','line','lead','hooklength','hook','bait'].forEach(function(k){
+      var el=document.getElementById('seg-'+k); if(!el) return;
+      if(!(k in SEGSTROKE)) SEGSTROKE[k]=el.getAttribute('stroke');
+      el.setAttribute('role','button');
+      el.addEventListener('click',function(){ showWhy(k); });
+      el.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); showWhy(k); } });
+    });
+    paintRig();
+  }
+  function paintRig(){
+    var res=judge();
+    ['reel','line','lead','hooklength','hook','bait'].forEach(function(k){
+      var el=document.getElementById('seg-'+k); if(!el) return;
+      if(!(k in SEGSTROKE)) SEGSTROKE[k]=el.getAttribute('stroke');
+      var r=res[k];
+      // ponytail: restoring the original attribute keeps the night-mode [stroke=…] selectors matching
+      if(r&&r.worst) el.setAttribute('stroke',VCOL[r.worst]);
+      else el.setAttribute('stroke',SEGSTROKE[k]);
+      el.setAttribute('aria-label',(SLOTS.filter(function(s){return s[0]===k})[0]||[k,k])[1]+
+        (r&&r.worst?': '+({g:'ok',y:'check this',r:'problem'})[r.worst]:': not judged'));
+    });
+    if(OPENSLOT) showWhy(OPENSLOT,res);
+  }
+  function showWhy(k,res){
+    res=res||judge();
+    OPENSLOT=k;
+    var box=document.getElementById('rigwhy'), r=res[k];
+    var name=(SLOTS.filter(function(s){return s[0]===k})[0]||['','Main line'])[1];
+    var chosen = k==='line' ? gearCalc().line.label : (RIG[k]? RIG[k].label+(specOf(RIG[k])?' ('+specOf(RIG[k])+')':'') : null);
+    var h='<div class="rigwhy"><h4>'+esc(name)+(chosen?' — '+esc(chosen):'')+'</h4>';
+    if(!r) h+='<p style="font-size:.88rem;margin:0">Nothing to judge here yet'+(chosen?'':' — set it above')+'.</p>';
+    else { h+='<ul>'; r.forEach(function(x){
+        h+='<li><span class="dot" style="background:'+VCOL[x.v]+'"></span>'+esc(x.why)+'</li>';
+      }); h+='</ul>'; }
+    box.innerHTML=h+'</div>';
+  }
+
   initMap();
   select(state.venue);
   if(PROF&&PROF.answered){ try{document.getElementById('savedline').hidden=false}catch(e){} }
   buildFirstVisit();
   LOCKER=loadLocker(); buildLocker();
+  defaultRig(); buildRig();
   INIT_DONE=true;
 </script>
 

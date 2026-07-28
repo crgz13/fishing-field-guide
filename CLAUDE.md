@@ -100,8 +100,18 @@ Current state: one self-contained file, `fishing-field-guide.html` (~80KB), no b
    visible rejection of bad files. Stores only; no rules. Single file kept (91→105KB).
    NOTE: the item-kind key is `kind`, NOT `type` — `type` belongs to line{type,…} and the
    two collided. ④(b) rules + rig-chain verdicts — needs per-venue run/ground data that
-   does not exist yet, so those are NEW claimed facts: source them or estimate-tag them,
-   never invent them. ④(c) computed gap list replaces the hardcoded buygap box.
+   does not exist yet — resolved in **④(b) ✅ done**: GROUND is a re-labelling of each
+   venue's existing sourced "Ground" stat (snaggy/mixed/clean/soft, no new claims, badge
+   inherited); RUN carries a figure ONLY where a source gives one — today New Brighton
+   alone ("5–6oz to hold mid-tide") — and the rule stays SILENT elsewhere rather than
+   estimating a holding weight (**decision A**; a guessed holding weight is a
+   safety-adjacent invention about a real tidal mark). 9 rules render as link colours on
+   the rig-chain SVG, tap/keyboard for reasons; unjudged links keep their original stroke.
+   NOTE: a beachcaster at its own derived 142g max lead on the default 15lb line is
+   correctly RED (needs ~50lb shock leader) — that is the safety rule working, do not
+   "fix" it to make defaults all-green. Shock-leader maths rounds to nominal ounces
+   (142g = 5oz = 50lb); ceil() wrongly demanded 60lb.
+   ④(c) computed gap list replaces the hardcoded buygap box.
    ~10 pairwise/chain rules, each returns g/y/r + reason:
    rod↔lead(+12g), rod↔reel, reel↔line capacity, line↔hooklength weak-link, line↔lead
    shock-leader rule (hard red >57g without one), hook↔bait, lead↔venue run,
