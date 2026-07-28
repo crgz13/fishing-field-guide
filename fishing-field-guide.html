@@ -144,6 +144,11 @@
   .fishgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
   .fishgrid figure{margin:0}
   .danger-card{border-left:5px solid var(--buoy)}
+  .fishgrid .fullcard{grid-column:1/-1}
+  .fishgrid .fullcard svg{max-width:230px}
+  .fishgrid .fullcard figcaption{max-width:76ch}
+  .fa{margin:6px 0 0 18px}
+  .fa li{margin:5px 0}
 
   /* ---------- dog box ---------- */
   .dogbox{background:#fff;border:1.5px solid var(--ink);border-left:6px solid var(--sand);padding:18px 22px;margin:0 0 6px}
@@ -704,7 +709,7 @@
 
   <div class="step"><div class="stepnum">11</div><div>
     <h3>Land, unhook, release (or keep)</h3>
-    <p><b>Wet your hands first.</b> Lay a flounder flat, grip gently across the body, back the hook out the way it came — pliers for anything deep (eels especially). Going back: hold it upright in the shallows until it kicks. Keeping one: dispatch immediately with a firm knock to the head, and know the size rules — bass minimum is 42&nbsp;cm with strict bag limits; undersized anything goes back. Many rod bags have a printed measure on the side — otherwise pack a tape: know what 42&nbsp;cm looks like before you go.</p>
+    <p><b>Wet your hands first.</b> Lay a flounder flat, grip gently across the body, back the hook out the way it came — pliers for anything deep (eels especially). Going back: hold it upright in the shallows until it kicks. Keeping one: dispatch immediately with a firm knock to the head, and know the size rules — bass minimum is 42&nbsp;cm with strict bag limits; undersized anything goes back. Many rod bags have a printed measure on the side — otherwise pack a tape: know what 42&nbsp;cm looks like before you go. If the hook finds <b>you</b> instead of the fish, the <a href="#fishid">hook-in-skin card</a> in KNOW is the drill.</p>
     <a class="watch" href="https://www.youtube.com/results?search_query=unhooking+flounder+safely" target="_blank" rel="noopener">Watch: unhooking flatfish</a>
   </div></div>
 
@@ -787,7 +792,34 @@
       </svg>
       <figcaption>Small sandy fish with a <b>black spiky dorsal flag</b> — venomous spines, buries itself in wet sand (Silecroft especially). Never handle: cut the hooklength if needed. <b>Sting first aid: immerse in water as hot as bearable (~40–45°C) for 30+ minutes</b> — heat breaks down the venom. Not cold water.</figcaption>
     </figure>
+    <figure class="danger-card fullcard" aria-label="Hook in skin first aid">
+      <svg viewBox="0 0 230 120" font-family="Archivo, sans-serif">
+        <rect x="10" y="58" width="210" height="32" fill="#e0d4b4"/>
+        <line x1="10" y1="58" x2="220" y2="58" stroke="#1c2b36" stroke-width="3"/>
+        <text x="20" y="80" font-size="9" fill="#8a7a6a" letter-spacing="1">SKIN</text>
+        <path d="M168 6 q14 -4 24 2" fill="none" stroke="#3d6b6a" stroke-width="2.5"/>
+        <circle cx="168" cy="16" r="6" fill="none" stroke="#1c2b36" stroke-width="3"/>
+        <path d="M168 22 V52 q0 34 -26 34 q-26 0 -26 -14 q0 -8 10 -6" fill="none" stroke="#1c2b36" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M126 66 L115 69" stroke="#d14d28" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="166" cy="59" r="3" fill="#d14d28"/>
+        <text x="115" y="112" text-anchor="middle" font-size="12" font-weight="800" fill="#d14d28">HOOK IN SKIN — NEVER YANK</text>
+      </svg>
+      <figcaption>Here the point is in past the <b>barb (red)</b> — the case that matters.
+      <ul class="fa">
+        <li><b>Barb still showing?</b> Nothing is stuck under the skin, so the NHS “do not take it out” rule is not the one you are in. <b>Once the hook is out</b>, treat it as a puncture: clean and cover it, as below.</li>
+        <li><b>Barb out of sight — stop. Never yank.</b> Cut the line so nothing can pull on it, leave the hook where it is, and go to A&amp;E. The NHS rule for anything stuck in a wound is <b>do not try to take it out</b>. Can’t tell which it is? Treat it as buried.</li>
+        <li><b>In or near an eye:</b> don’t touch it and don’t try to remove it. The NHS lists a sharp object piercing the eye as <b>A&amp;E or 999</b> — treat anything that close to an eye the same way, and don’t drive yourself.</li>
+        <li><b>Every hook wound:</b> rinse it with tap or bottled water, pat it dry, cover it. Ring <b>111</b> if it is still dirty after cleaning, if it turns red, swollen or more painful or pus appears, or if you are not sure you are up to date with tetanus jabs.</li>
+        <li><b>Before you fish: crush the barb flat with pliers.</b> No barb, no buried barb — and pliers are already on the kit list. (That one is angling practice, not medical advice.)</li>
+      </ul></figcaption>
+    </figure>
   </div>
+  <p class="checked">Hook-in-skin first aid verified against NHS
+  <a href="https://www.nhs.uk/conditions/cuts-and-grazes/" target="_blank" rel="noopener">Cuts and grazes</a>,
+  <a href="https://www.nhs.uk/conditions/eye-injuries/" target="_blank" rel="noopener">Eye injuries</a> and
+  <a href="https://www.nhs.uk/conditions/tetanus/" target="_blank" rel="noopener">Tetanus</a> on 28 Jul 2026.
+  This card deliberately teaches <b>no way to get a buried barb out</b> — that is a job for A&amp;E, not a beach.
+  If you are ever unsure, ring 111 and ask.</p>
 
   <h3 class="sizeh">Can I keep it?</h3>
   <p class="sizeintro">Measure <b>nose tip to tail tip</b>, fish flat, mouth closed. Under the
@@ -828,6 +860,7 @@
       <li>Greasy rocks + running tide = fish from the beach or solid standings, not the outer rocks.</li>
       <li>Tell someone where you are. Take the headtorch even for “daylight” sessions.</li>
       <li><b>Weever fish sting:</b> hot water immersion (~40–45°C, 30+ min), remove visible spines, seek help if it worsens. Wear footwear on wet sand.</li>
+      <li><b>Hook in your skin:</b> barb still showing — clean and cover it. Barb out of sight — cut the line, leave the hook alone, A&amp;E. Never yank it. <a href="#fishid">Full card in fish ID</a>.</li>
       <li>Discarded line kills wildlife (and dogs). Every scrap of trimmings goes in a pocket, home, and cut into pieces before the bin.</li>
     </ul>
   </div>

@@ -279,7 +279,28 @@ Current state: one self-contained file, `fishing-field-guide.html` (~80KB), no b
    the chosen rod) but invisible until the chain displayed the rod's name. Any new
    handler that changes state.rod or state.line must end with that pair; the venue
    ("where") buttons don't need it because `select()` already calls `paintRig()`.
-   **Remaining ⑤ (any order):** hook-in-skin first aid card, share-config button,
+   **hook-in-skin first aid ✅ done** — third danger-card (full-width `.fullcard`,
+   `grid-column:1/-1`; five bullets don't fit a 230px grid cell) + one safety-box bullet +
+   one aftercare pointer clause + its own scoped stamp. **The size-limits fail-closed rule
+   extends to medical content, and it bit four times**: the spec's "back it out the way it
+   came" was DROPPED (no NHS page sanctions self-removal — /conditions/splinters/ is a
+   404; the aftercare sentence saying exactly that is about a flounder and does not
+   transfer to human skin under a "verified" stamp), sea-water-infection dropped (NHS
+   grounds tetanus risk in soil/manure only), "tape the hook flat" dropped (St John's
+   page is JS-rendered — empty to curl, so unusable as a transcription source), and the
+   stamp says "Hook-in-skin first aid verified…" NOT "First-aid points verified…" because
+   the wider wording, sitting below the card row, would have falsely stamped the weever
+   hot-water protocol with three pages that never mention it. The card teaches NO removal
+   technique for a buried barb (cut the line, leave it, A&E) — a medical procedure is not
+   tackle, so string-yank lives nowhere, not even reference. Crush-the-barb prevention
+   ships labelled "(angling practice, not medical advice)" — provenance split inside one
+   bullet. "Go to A&E" deliberately narrows NHS's "Call 999 or go to A&E": the NHS
+   attribution covers only the do-not-remove rule (matched verbatim); do-not-drive kept
+   only on the eye branch where the NHS box plainly applies. Skin-band fill reuses the
+   flounder's `#e0d4b4` so night mode recolours it with zero new palette rules. Review
+   re-fetched all three pages independently: 13 claims matched, 3 absences confirmed,
+   0 fails.
+   **Remaining ⑤ (any order):** share-config button,
    print stylesheet ("tonight's session" one-pager).
 
 ## Explicitly rejected (do not add)
