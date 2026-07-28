@@ -1664,11 +1664,11 @@
     var rrow=document.getElementById('fvrod');
     Object.keys(RODS).forEach(function(k){
       var b=document.createElement('button'); b.type='button'; b.textContent=RODS[k].label;
-      b.addEventListener('click',function(){NOROD=false;state.rod=k;rs.value=k;customVis();select(state.venue);mark(rrow,b,'rod');});
+      b.addEventListener('click',function(){NOROD=false;state.rod=k;rs.value=k;customVis();select(state.venue);defaultRig();buildRig();mark(rrow,b,'rod');});
       rrow.appendChild(b);
     });
     var norodbtn=document.createElement('button'); norodbtn.type='button'; norodbtn.textContent='No rod yet';
-    norodbtn.addEventListener('click',function(){NOROD=true;state.rod='lightgen';rs.value='lightgen';customVis();select(state.venue);mark(rrow,norodbtn,'rod');});
+    norodbtn.addEventListener('click',function(){NOROD=true;state.rod='lightgen';rs.value='lightgen';customVis();select(state.venue);defaultRig();buildRig();mark(rrow,norodbtn,'rod');});
     rrow.appendChild(norodbtn);
     document.getElementById('fvskip').addEventListener('click',function(){saveProfile();card.remove();});
   }

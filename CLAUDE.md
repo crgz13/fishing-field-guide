@@ -273,7 +273,12 @@ Current state: one self-contained file, `fishing-field-guide.html` (~80KB), no b
    Verified: 64 assertions incl. 6 rod classes × 9 venues with row dots and segment strokes
    agreeing, and the mono-only leader rule re-checked 4 ways (bare/mono50/braid80/untyped).
    A green dot on an unset Shock leader under 57g is CORRECT — the rule's own words are
-   "no shock leader needed", and green means ok.
+   "no shock leader needed", and green means ok. Review found (own commit, per the
+   split-ride-along rule): the FIRST-VISIT card's rod buttons never ran
+   `defaultRig();buildRig();` — pre-existing (the default lead already went stale against
+   the chosen rod) but invisible until the chain displayed the rod's name. Any new
+   handler that changes state.rod or state.line must end with that pair; the venue
+   ("where") buttons don't need it because `select()` already calls `paintRig()`.
    **Remaining ⑤ (any order):** hook-in-skin first aid card, share-config button,
    print stylesheet ("tonight's session" one-pager).
 
