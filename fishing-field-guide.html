@@ -950,7 +950,7 @@
     'mono12': {label:'Mono 12lb',           lb:12, type:'mono'},
     'mono15': {label:'Mono 15lb',           lb:15, type:'mono'}
   };
-  var LEADS=[[14,'0.5oz'],[21,'0.75oz'],[28,'1oz'],[35,'1.25oz'],[42,'1.5oz'],[57,'2oz'],[85,'3oz'],[113,'4oz'],[142,'5oz'],[170,'6oz']];
+  var LEADS=[[7,'0.25oz'],[14,'0.5oz'],[21,'0.75oz'],[28,'1oz'],[35,'1.25oz'],[42,'1.5oz'],[57,'2oz'],[85,'3oz'],[113,'4oz'],[142,'5oz'],[170,'6oz'],[227,'8oz']];
   var CLASSNAMES={light:'Light spinning',lure:'Lure rod',bass:'Bass rod',beach:'Beachcaster'};
 
   /* ========== GEAR LOCKER: schemas + seed catalogue (④a — stores only; rules land in ④b) ========== */
@@ -972,49 +972,74 @@
     lure:      {label:'Lure',       spec:function(i){return i.g+'g '+i.style},
                 fields:[['g','Weight (g)','number'],['style','Style (e.g. metal)','text']]}
   };
-  /* Generic specs only — never brands (rejected list). Leads derive from the LEADS table above. */
+  /* `band` is a UI grouping only — smallest setup to biggest. It is NOT a rod class and no
+     rule reads it: classes still come from clsOf(). Bands render as <optgroup> labels. */
+  var BANDS=[['ul','Ultralight / LRF'],['light','Light &amp; lure'],['bass','Bass'],
+             ['beach','Beach'],['heavy','Heavy beach']];
+  /* Generic specs only — never brands (rejected list). Leads derive from the LEADS table above.
+     Ordered smallest → biggest within each kind, so each band group reads in ascending size. */
   var CATALOGUE=[
-    {id:'c-rod1',kind:'rod',label:'Light spinning rod',min_g:10,max_g:30},
-    {id:'c-rod2',kind:'rod',label:'Light spinning rod (softer)',min_g:5,max_g:20},
-    {id:'c-rod3',kind:'rod',label:'Lure rod',min_g:7,max_g:28},
-    {id:'c-rod4',kind:'rod',label:'Travel rod, short tip',min_g:15,max_g:40},
-    {id:'c-rod5',kind:'rod',label:'Bass rod',min_g:20,max_g:60},
-    {id:'c-rod6',kind:'rod',label:'Beachcaster',min_g:100,max_g:170},
-    {id:'c-reel1',kind:'reel',label:'Fixed spool, small',size_class:'2500'},
-    {id:'c-reel2',kind:'reel',label:'Fixed spool, light',size_class:'3000'},
-    {id:'c-reel3',kind:'reel',label:'Fixed spool, all-round',size_class:'4000'},
-    {id:'c-reel4',kind:'reel',label:'Fixed spool, surf',size_class:'6000'},
-    {id:'c-reel5',kind:'reel',label:'Fixed spool, big surf',size_class:'8000'},
-    {id:'c-line1',kind:'line',label:'Braid',type:'braid',lb:15,mm:'0.12'},
-    {id:'c-line2',kind:'line',label:'Braid',type:'braid',lb:20,mm:'0.15'},
-    {id:'c-line3',kind:'line',label:'Braid',type:'braid',lb:30,mm:'0.20'},
-    {id:'c-line4',kind:'line',label:'Mono',type:'mono',lb:12,mm:'0.30'},
-    {id:'c-line5',kind:'line',label:'Mono',type:'mono',lb:15,mm:'0.35'},
-    {id:'c-line6',kind:'line',label:'Mono shock leader',type:'mono',lb:30,mm:'0.50'},
-    {id:'c-line7',kind:'line',label:'Mono shock leader',type:'mono',lb:50,mm:'0.60'},
-    {id:'c-line8',kind:'line',label:'Mono shock leader',type:'mono',lb:60,mm:'0.70'},
-    {id:'c-hl1',kind:'hooklength',label:'Fluorocarbon',lb:8},
-    {id:'c-hl2',kind:'hooklength',label:'Fluorocarbon',lb:11},
-    {id:'c-hl3',kind:'hooklength',label:'Fluorocarbon',lb:15},
-    {id:'c-hl4',kind:'hooklength',label:'Mono',lb:12},
-    {id:'c-hl5',kind:'hooklength',label:'Mono',lb:20},
-    {id:'c-hk1',kind:'hook',label:'Aberdeen',pattern:'Aberdeen',size:'4'},
-    {id:'c-hk2',kind:'hook',label:'Aberdeen',pattern:'Aberdeen',size:'2'},
-    {id:'c-hk3',kind:'hook',label:'Aberdeen',pattern:'Aberdeen',size:'1/0'},
-    {id:'c-hk4',kind:'hook',label:'Aberdeen',pattern:'Aberdeen',size:'2/0'},
-    {id:'c-hk5',kind:'hook',label:'Circle',pattern:'Circle',size:'1/0'},
-    {id:'c-hk6',kind:'hook',label:'Circle',pattern:'Circle',size:'2/0'},
-    {id:'c-rig1',kind:'rig',label:'Running ledger, light',hook_size:'1/0',lead_rating:60},
-    {id:'c-rig2',kind:'rig',label:'Running ledger, heavy',hook_size:'2/0',lead_rating:170},
-    {id:'c-rig3',kind:'rig',label:'One-hook flapper',hook_size:'1',lead_rating:113},
-    {id:'c-rig4',kind:'rig',label:'Two-hook flapper',hook_size:'2',lead_rating:113},
-    {id:'c-lure1',kind:'lure',label:'Metal',g:7,style:'metal'},
-    {id:'c-lure2',kind:'lure',label:'Metal',g:14,style:'metal'},
-    {id:'c-lure3',kind:'lure',label:'Metal',g:21,style:'metal'},
-    {id:'c-lure4',kind:'lure',label:'Soft shad',g:10,style:'soft'},
-    {id:'c-lure5',kind:'lure',label:'Jig head',g:7,style:'jig head'}
+    {id:'c-rod0',kind:'rod',band:'ul',label:'Ultralight / LRF rod',min_g:1,max_g:10},
+    {id:'c-rod2',kind:'rod',band:'light',label:'Light spinning rod (softer)',min_g:5,max_g:20},
+    {id:'c-rod3',kind:'rod',band:'light',label:'Lure rod',min_g:7,max_g:28},
+    {id:'c-rod1',kind:'rod',band:'light',label:'Light spinning rod',min_g:10,max_g:30},
+    {id:'c-rod4',kind:'rod',band:'light',label:'Travel rod, short tip',min_g:15,max_g:40},
+    {id:'c-rod5',kind:'rod',band:'bass',label:'Bass rod',min_g:20,max_g:60},
+    {id:'c-rod7',kind:'rod',band:'beach',label:'Rough-ground / light beach rod',min_g:56,max_g:113},
+    {id:'c-rod6',kind:'rod',band:'beach',label:'Beachcaster',min_g:100,max_g:170},
+    {id:'c-rod8',kind:'rod',band:'heavy',label:'Heavy beachcaster',min_g:150,max_g:227},
+    {id:'c-reel0',kind:'reel',band:'ul',label:'Fixed spool, ultralight',size_class:'2000'},
+    {id:'c-reel1',kind:'reel',band:'light',label:'Fixed spool, small',size_class:'2500'},
+    {id:'c-reel2',kind:'reel',band:'light',label:'Fixed spool, light',size_class:'3000'},
+    {id:'c-reel3',kind:'reel',band:'bass',label:'Fixed spool, all-round',size_class:'4000'},
+    {id:'c-reel4',kind:'reel',band:'beach',label:'Fixed spool, surf',size_class:'6000'},
+    {id:'c-reel5',kind:'reel',band:'beach',label:'Fixed spool, big surf',size_class:'8000'},
+    {id:'c-reel6',kind:'reel',band:'heavy',label:'Fixed spool, heavy surf',size_class:'10000'},
+    {id:'c-line0',kind:'line',band:'ul',label:'Braid',type:'braid',lb:8,mm:'0.08'},
+    {id:'c-line4',kind:'line',band:'light',label:'Mono',type:'mono',lb:12,mm:'0.30'},
+    {id:'c-line1',kind:'line',band:'light',label:'Braid',type:'braid',lb:15,mm:'0.12'},
+    {id:'c-line5',kind:'line',band:'light',label:'Mono',type:'mono',lb:15,mm:'0.35'},
+    {id:'c-line2',kind:'line',band:'bass',label:'Braid',type:'braid',lb:20,mm:'0.15'},
+    {id:'c-line9',kind:'line',band:'heavy',label:'Mono',type:'mono',lb:18,mm:'0.40'},
+    {id:'c-line3',kind:'line',band:'beach',label:'Braid',type:'braid',lb:30,mm:'0.20'},
+    {id:'c-line6',kind:'line',band:'beach',label:'Mono shock leader',type:'mono',lb:30,mm:'0.50'},
+    {id:'c-line10',kind:'line',band:'beach',label:'Mono shock leader',type:'mono',lb:40,mm:'0.55'},
+    {id:'c-line7',kind:'line',band:'beach',label:'Mono shock leader',type:'mono',lb:50,mm:'0.60'},
+    {id:'c-line8',kind:'line',band:'beach',label:'Mono shock leader',type:'mono',lb:60,mm:'0.70'},
+    {id:'c-line11',kind:'line',band:'heavy',label:'Mono shock leader',type:'mono',lb:80,mm:'0.80'},
+    {id:'c-hl0',kind:'hooklength',band:'ul',label:'Fluorocarbon',lb:4},
+    {id:'c-hl6',kind:'hooklength',band:'ul',label:'Fluorocarbon',lb:6},
+    {id:'c-hl1',kind:'hooklength',band:'light',label:'Fluorocarbon',lb:8},
+    {id:'c-hl2',kind:'hooklength',band:'light',label:'Fluorocarbon',lb:11},
+    {id:'c-hl4',kind:'hooklength',band:'light',label:'Mono',lb:12},
+    {id:'c-hl3',kind:'hooklength',band:'bass',label:'Fluorocarbon',lb:15},
+    {id:'c-hl5',kind:'hooklength',band:'beach',label:'Mono',lb:20},
+    {id:'c-hk0',kind:'hook',band:'ul',label:'Aberdeen',pattern:'Aberdeen',size:'8'},
+    {id:'c-hk7',kind:'hook',band:'ul',label:'Aberdeen',pattern:'Aberdeen',size:'6'},
+    {id:'c-hk1',kind:'hook',band:'light',label:'Aberdeen',pattern:'Aberdeen',size:'4'},
+    {id:'c-hk2',kind:'hook',band:'light',label:'Aberdeen',pattern:'Aberdeen',size:'2'},
+    {id:'c-hk3',kind:'hook',band:'bass',label:'Aberdeen',pattern:'Aberdeen',size:'1/0'},
+    {id:'c-hk5',kind:'hook',band:'bass',label:'Circle',pattern:'Circle',size:'1/0'},
+    {id:'c-hk4',kind:'hook',band:'beach',label:'Aberdeen',pattern:'Aberdeen',size:'2/0'},
+    {id:'c-hk6',kind:'hook',band:'beach',label:'Circle',pattern:'Circle',size:'2/0'},
+    {id:'c-hk8',kind:'hook',band:'heavy',label:'Aberdeen',pattern:'Aberdeen',size:'3/0'},
+    {id:'c-rig1',kind:'rig',band:'light',label:'Running ledger, light',hook_size:'1/0',lead_rating:60},
+    {id:'c-rig3',kind:'rig',band:'beach',label:'One-hook flapper',hook_size:'1',lead_rating:113},
+    {id:'c-rig4',kind:'rig',band:'beach',label:'Two-hook flapper',hook_size:'2',lead_rating:113},
+    {id:'c-rig2',kind:'rig',band:'beach',label:'Running ledger, heavy',hook_size:'2/0',lead_rating:170},
+    {id:'c-rig5',kind:'rig',band:'heavy',label:'Pulley rig',hook_size:'3/0',lead_rating:227},
+    {id:'c-lure6',kind:'lure',band:'ul',label:'Jig head',g:2,style:'jig head'},
+    {id:'c-lure7',kind:'lure',band:'ul',label:'Soft shad',g:3,style:'soft'},
+    {id:'c-lure8',kind:'lure',band:'ul',label:'Metal',g:5,style:'metal'},
+    {id:'c-lure1',kind:'lure',band:'light',label:'Metal',g:7,style:'metal'},
+    {id:'c-lure5',kind:'lure',band:'light',label:'Jig head',g:7,style:'jig head'},
+    {id:'c-lure4',kind:'lure',band:'light',label:'Soft shad',g:10,style:'soft'},
+    {id:'c-lure2',kind:'lure',band:'light',label:'Metal',g:14,style:'metal'},
+    {id:'c-lure3',kind:'lure',band:'light',label:'Metal',g:21,style:'metal'},
+    {id:'c-lure9',kind:'lure',band:'bass',label:'Metal',g:28,style:'metal'},
+    {id:'c-lure10',kind:'lure',band:'bass',label:'Metal',g:40,style:'metal'}
   ].concat(LEADS.map(function(l){ return {id:'c-lead'+l[0],kind:'lead',label:'Plain bomb '+l[1],g:l[0],wired:false}; }))
-   .concat([85,113,142,170].map(function(g){ return {id:'c-wlead'+g,kind:'lead',label:'Wired grip lead',g:g,wired:true}; }));
+   .concat([85,113,142,170,227].map(function(g){ return {id:'c-wlead'+g,kind:'lead',label:'Wired grip lead',g:g,wired:true}; }));
 
   /* ========== ④b RULES ENGINE ==========
      GROUND is a RE-LABELLING of each venue's existing sourced "Ground" stat — no new
@@ -1038,7 +1063,11 @@
   };
   var VCOL={g:'#4a7d52',y:'#e0a52c',r:'#c33a1e'};  // the .fit-g/.fit-y/.fit-r vocabulary
   /* Shared by the rules AND ④c's gap list — one source each, so the two can't drift. */
-  var REELBAND={light:[2500,4000],lure:[2500,4000],bass:[4000,6000],beach:[6000,8000]};
+  /* ponytail: the light band reaches down to 2000 rather than gaining a fifth rod class —
+     a true 1000-size LRF reel therefore still scores amber here. Splitting 'ultralight' out
+     of clsOf() means writing an ultralight verdict for all 8 marks: 8 new claims needing
+     sources. Do that the day the guide has ultralight venue data, not before. */
+  var REELBAND={light:[2000,4000],lure:[2000,4000],bass:[4000,6000],beach:[6000,10000]};
   // leads are sold in nominal ounces — round, don't ceil, or a true 5oz asks for 6oz of leader
   function leaderLb(g){ return Math.round(g/28.35)*10; }
   var MONTHNAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -1318,6 +1347,10 @@
      Every line is derived — locker first, then a generic catalogue spec. No prices and no
      brands (both on the rejected list): the shops line is where availability belongs. */
   var GAPROD={light:'c-rod1',lure:'c-rod3',bass:'c-rod5',beach:'c-rod6'};
+  /* Named, not "first catalogue reel inside the band": REELBAND is deliberately tolerant of
+     gear you already own (2000 on a light rod fishes), but what we tell you to BUY should be
+     the middle of the pairing, not the smallest size the rule will wave through. */
+  var GAPREEL={light:'c-reel1',lure:'c-reel1',bass:'c-reel3',beach:'c-reel4'};
   function catItem(id){ var f=null; CATALOGUE.forEach(function(i){ if(i.id===id) f=i; }); return f; }
   function ownedRod(cls){
     var f=null;
@@ -1346,7 +1379,7 @@
         : 'Cast weight is what makes a rod right or wrong at a mark; the class follows from it.'));
 
     var inBand=function(i){ var n=parseInt(i.size_class,10)||0; return n>=band[0]&&n<=band[1]; };
-    out.push(mkNeed(owned('reel',inBand), fromCat('reel',inBand),
+    out.push(mkNeed(owned('reel',inBand), catItem(GAPREEL[cls])||catItem(GAPREEL.light),
       'A '+band[0]+'–'+band[1]+' reel is the usual match for a '+nm+'.'));
 
     if(cls==='lure'){                    // a lure setup carries no ledger lead, rig or leader
@@ -1648,10 +1681,16 @@
   }
   function fillCat(){
     var k=document.getElementById('lktype').value, s=document.getElementById('lkitem');
-    s.innerHTML='';
-    CATALOGUE.filter(function(i){return i.kind===k}).forEach(function(i){
-      var o=document.createElement('option'); o.value=i.id; o.textContent=i.label+' — '+specOf(i); s.appendChild(o);
+    var mine=CATALOGUE.filter(function(i){return i.kind===k}), html='';
+    function opts(list){ return list.map(function(i){
+      return '<option value="'+esc(i.id)+'">'+esc(i.label+' — '+specOf(i))+'</option>'; }).join(''); }
+    BANDS.forEach(function(b){                       // smallest setup first, biggest last
+      var in_b=mine.filter(function(i){return i.band===b[0]});
+      if(in_b.length) html+='<optgroup label="'+b[1]+'">'+opts(in_b)+'</optgroup>';
     });
+    // leads carry no band — their labels already ARE the sizes, so one flat list reads better
+    html+=opts(mine.filter(function(i){return !i.band}));
+    s.innerHTML=html;
   }
   function fillCustom(){
     var k=document.getElementById('lktype').value, box=document.getElementById('lkcustom'), h=

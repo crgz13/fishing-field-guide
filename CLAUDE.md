@@ -3,7 +3,9 @@
 ## What this is
 A beginners' interactive guide to shore/estuary fishing in NW England (Mersey, Dee, Duddon).
 Built for Craig (novice, based near Runcorn, Rigged & Ready World Traveller 5–40g travel rod,
-RR3000 reel, 15lb braid) but being generalised for strangers to use.
+RR3000 reel, 15lb braid) but being generalised for strangers to use. Stated direction
+(2026-07-28): grow into a UK-wide fishing-trip research workhorse — venue expansion is a
+future item, but new features should not assume the current eight marks are the ceiling.
 Current state: one self-contained file, `fishing-field-guide.html` (~80KB), no build step.
 
 ## Non-negotiable design principles (do not regress these)
@@ -143,6 +145,27 @@ Current state: one self-contained file, `fishing-field-guide.html` (~80KB), no b
    bait/lure↔venue+month via species calendar, rig↔ground snags. Verdict renders on the
    rig-chain diagram (colour per link, tap for reason). Computed gap list replaces the
    hardcoded buygap box. Persistence: localStorage + JSON export/import (always available).
+   **④(a)+ catalogue range ✅ done** — 51→76 items spanning ultralight/LRF (1–10g rod,
+   2000 reel, 8lb braid, 4/6lb fluoro, hooks 8/6, 2–5g lures) through the 60–100g hole
+   (2–4oz rough-ground rod + the 40lb shock leader that chain was missing) to an 8oz
+   heavy tier (150–227g rod, 10000 reel, 80lb mono shock, pulley rig, 8oz leads).
+   Justified by the stated direction: the page is meant to become a UK-wide trip-research
+   workhorse, so the catalogue is not capped by the current eight marks' needs. Decisions:
+   `band` is a UI grouping (native <optgroup>, smallest→biggest) and NO rule reads it —
+   classes still come only from `clsOf()`; REELBAND light AND lure widened 2500→2000
+   (identical twins, same rationale) and beach 8000→10000, with a `ponytail:` comment
+   naming the accepted ceiling (a true 1000-size LRF reel scores amber — the fix is a
+   fifth rod class costing 8 new venue claims; wait for ultralight venue data). `GAPREEL`
+   exists because widening the band would otherwise have changed BUY advice (fromCat's
+   first-in-band would recommend a 2000 to light-rod users): rules stay tolerant of owned
+   gear, recommendations stay the middle of the pairing — parity with pre-change advice
+   machine-verified. The pulley rig is catalogue-only like the flappers: the gap list's
+   rig line is hardcoded to the heavy running ledger (one-rig pedagogy), do not route it
+   through a generic finder. LEADS gained 7g (0.25oz — a 5–20g rod now derives 7g instead
+   of "—") and 227g (8oz); the 8oz lead can never be ADVISED (needs a 239g+ rod; even the
+   227g rod derives 170g) — it exists so owned gear gets judged, not to be recommended.
+   Spec errata recorded honestly: the spec's "heavy rod + 4000 reel = red" acceptance
+   criterion was wrong in fact (it is and was amber — the beach band's floor never moved).
 ⑤ Seven independent items; **catch log ✅ done**. A logged catch is a THIRD provenance
    class — user-authored fact, beside the synthesised bands and the sourced windows — and
    renders as a ▴ overlay on the calendar that **never changes a band symbol**: n=1 argues
