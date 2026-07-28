@@ -984,9 +984,13 @@
     {id:'shock-leader',slots:['lead'],fn:function(R,g){
       if(!R.lead) return null;
       if(R.lead.g<=57) return {v:'g',why:'Under 57g (2oz) — no shock leader needed.'};
-      var need=leaderLb(R.lead.g), have=R.leader?R.leader.lb:g.line.lb;
-      if(have>=need) return {v:'g',why:'Casting '+R.lead.g+'g needs about '+need+'lb at the lead (10lb per oz); your '+(R.leader?have+'lb leader':have+'lb main line')+' covers it.'};
-      return {v:'r',why:'SHOCK LEADER MANDATORY. Casting '+R.lead.g+'g on '+have+'lb needs about '+need+'lb (10lb per ounce of lead). Without one the lead can snap off mid-cast — that is how anglers and bystanders get hurt.'};
+      var need=leaderLb(R.lead.g);
+      // mono only, and fail closed on an untyped item: a shock leader has to stretch to
+      // absorb the cast, and braid cannot. Strength alone is not the test.
+      var ldr=R.leader&&R.leader.type==='mono'?R.leader:null, have=ldr?ldr.lb:g.line.lb;
+      var note=(R.leader&&!ldr)?' Note: '+R.leader.label+' is not mono, so it is not acting as the shock leader — only mono stretches enough to absorb the cast.':'';
+      if(have>=need) return {v:'g',why:'Casting '+R.lead.g+'g needs about '+need+'lb at the lead (10lb per oz); your '+(ldr?have+'lb leader':have+'lb main line')+' covers it.'+note};
+      return {v:'r',why:'SHOCK LEADER MANDATORY. Casting '+R.lead.g+'g on '+have+'lb needs about '+need+'lb (10lb per ounce of lead). Without one the lead can snap off mid-cast — that is how anglers and bystanders get hurt.'+note};
     }},
     {id:'weak-link',slots:['hooklength'],fn:function(R,g){
       if(!R.hooklength) return null;
