@@ -997,12 +997,12 @@
     }},
     {id:'rod-reel',slots:['reel'],fn:function(R,g){
       if(!R.reel) return null;
-      var n=parseInt(R.reel.size_class,10)||0, cls=g.rod.cls||'light', nm=CLASSNAMES[cls].toLowerCase();
+      var n=parseInt(R.reel.size_class,10)||0, cls=g.rod.cls||'light', nm=rodName(cls);
       var want=REELBAND[cls]||REELBAND.light;
-      if(n>=want[0]&&n<=want[1]) return {v:'g',why:'A '+n+' reel is the usual match for a '+nm+' rod.'};
+      if(n>=want[0]&&n<=want[1]) return {v:'g',why:'A '+n+' reel is the usual match for a '+nm+'.'};
       var off=n<want[0]?want[0]/n:n/want[1];
-      if(off<=2) return {v:'y',why:'A '+n+' on a '+nm+' rod is off the usual '+want[0]+'–'+want[1]+' pairing — it fishes, but it balances badly.'};
-      return {v:'r',why:'A '+n+' is a long way off the '+want[0]+'–'+want[1]+' a '+nm+' rod is built around.'};
+      if(off<=2) return {v:'y',why:'A '+n+' on a '+nm+' is off the usual '+want[0]+'–'+want[1]+' pairing — it fishes, but it balances badly.'};
+      return {v:'r',why:'A '+n+' is a long way off the '+want[0]+'–'+want[1]+' a '+nm+' is built around.'};
     }},
     {id:'reel-line',slots:['reel'],fn:function(R,g){
       if(!R.reel) return null;
