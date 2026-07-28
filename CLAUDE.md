@@ -111,7 +111,26 @@ Current state: one self-contained file, `fishing-field-guide.html` (~80KB), no b
    correctly RED (needs ~50lb shock leader) — that is the safety rule working, do not
    "fix" it to make defaults all-green. Shock-leader maths rounds to nominal ounces
    (142g = 5oz = 50lb); ceil() wrongly demanded 60lb.
-   ④(c) computed gap list replaces the hardcoded buygap box.
+   **④(c) ✅ done** — the hardcoded buy-lists are gone; `gapNeeds(class,venue)` computes
+   rod/reel/leader/lead/rig (or lures, for a lure target), checking the LOCKER first
+   ("✓ in your locker") then naming a generic catalogue spec ("to add"); all-owned flips
+   the headline. Decisions: **£ price hints dropped** (price/availability is on the
+   rejected list — the shops line is where that belongs) and the old box's **flapper
+   suggestion replaced by the heavy running ledger** (recommending a flapper contradicted
+   the one-rig pedagogy — computing the list surfaced it). Rod rest dropped: not
+   representable spec-based. `REELBAND` + `leaderLb()` are shared by the rules and the gap
+   list so the two can't drift (the LEADS/catalogue trick again). Locker rods are classed
+   by `clsOf()`, the same thresholds `rodOf()` uses for custom rods. The lure↔month verdict
+   (deferred from ④b) renders here, reading only calendar rows this guide already calls
+   lure quarry ("bass"), always carrying the estimate-provenance sentence. TWO BUGS THIS
+   FIXED, do not reintroduce: the old box crashed to "you'd add:undefined" whenever the
+   target class was `light` (no `light` key in `buy` — reachable with a lure rod at
+   Pickerings/West Bank); and an owned **shock leader must be mono** — matching on
+   breaking strain alone let a 50lb braid score a green ✓ against the one rule CLAUDE.md
+   calls mandatory, and braid cannot stretch. `mkNeed` is named that way because a local
+   `var need` inside the shock-leader rule would shadow a global `need()`.
+   Known gap left open: `lockerChanged()` re-renders the gap list but not `buildRig()`,
+   so the rig selects stay stale until reload.
    ~10 pairwise/chain rules, each returns g/y/r + reason:
    rod↔lead(+12g), rod↔reel, reel↔line capacity, line↔hooklength weak-link, line↔lead
    shock-leader rule (hard red >57g without one), hook↔bait, lead↔venue run,
