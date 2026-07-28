@@ -143,10 +143,25 @@ Current state: one self-contained file, `fishing-field-guide.html` (~80KB), no b
    bait/lure↔venue+month via species calendar, rig↔ground snags. Verdict renders on the
    rig-chain diagram (colour per link, tap for reason). Computed gap list replaces the
    hardcoded buygap box. Persistence: localStorage + JSON export/import (always available).
-⑤ **Later:** catch log (per-session diary, export/import, overlays user data on calendar),
-   dawn/dusk computed offline from mark coords, "should I go" via Open-Meteo wind/waves
-   (degrade to manual entry offline), size-limits table in fish ID, hook-in-skin first aid
-   card, share-config button, print stylesheet ("tonight's session" one-pager).
+⑤ Seven independent items; **catch log ✅ done**. A logged catch is a THIRD provenance
+   class — user-authored fact, beside the synthesised bands and the sourced windows — and
+   renders as a ▴ overlay on the calendar that **never changes a band symbol**: n=1 argues
+   with a calibrated estimate in neither direction, so the overlay is catches-only and
+   blanks/unlisted-venue sessions list in the diary but never mark the table (the copy says
+   why, both directions). Species match strips parentheticals ("eel" hits "Eel (release)");
+   venue 'all' on the table means caught-at-any-mark, and `validEntry` REJECTS 'all' as an
+   entry venue (an imported 'all' would mark every mark at once) and fails closed on bad
+   dates/unknown marks. The ▴ key in the legend stays hidden until a marker exists. The
+   details sits after the legend paragraph, not directly under the table — the legend's
+   -18px top margin overlaps the table. The log form re-defaults date/mark to the venue
+   being viewed on details-open, guarded on species+notes being empty so it can't stomp a
+   half-filled form. localStorage `efg-log` + JSON export/import, locker patterns verbatim.
+   No stats/"your best month" — recomputing bands from a handful of sessions is the exact
+   flattening the estimate tag prevents.
+   **Remaining ⑤ (any order):** dawn/dusk computed offline from mark coords, "should I go"
+   via Open-Meteo wind/waves (degrade to manual entry offline), size-limits table in fish
+   ID, hook-in-skin first aid card, share-config button, print stylesheet ("tonight's
+   session" one-pager).
 
 ## Explicitly rejected (do not add)
 - Live tide APIs (no reliable free source; wrong tide data is worse than a link),

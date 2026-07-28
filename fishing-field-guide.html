@@ -163,6 +163,9 @@
   .cal .m{color:var(--sand);font-size:1.05rem}
   .cal .n{color:#c9cfc6;font-size:1.05rem}
   .legend{font-size:.83rem;color:#3c4c56;margin:-18px 0 26px}
+  /* your own catches: --ink, deliberately none of the three band colours — a different
+     layer of the table, not a fourth band. */
+  .cal .caught{color:var(--ink);font-size:.8rem;vertical-align:super;margin-left:2px}
 
   /* ---------- interactive map ---------- */
   .maplayout{display:grid;grid-template-columns:minmax(240px,340px) 1fr;gap:20px;align-items:start}
@@ -405,7 +408,16 @@
 <section class="wrap" id="seasons">
   <h2 class="phase">What's biting when — <span id="calvenue">all venues</span> <span class="badge b-est">estimate</span><small>This table follows the mark selected above.</small></h2>
   <div class="scroll" id="calwrap"></div>
-  <p class="legend">● prime &nbsp;·&nbsp; ◐ possible &nbsp;·&nbsp; ○ unlikely. Local and yearly variation applies — the calendar says what to <em>target</em>, not what's guaranteed. <b>Every row here is an estimate.</b> The month bands were calibrated from each mark's own notes and the research credited in the venue panel — not from catch records. Where a venue's notes name a hard window (Hodbarrow's April–September, Silecroft's October codling), that window is the sourced fact and the row follows it.</p>
+  <p class="legend">● prime &nbsp;·&nbsp; ◐ possible &nbsp;·&nbsp; ○ unlikely. Local and yearly variation applies — the calendar says what to <em>target</em>, not what's guaranteed. <b>Every row here is an estimate.</b> The month bands were calibrated from each mark's own notes and the research credited in the venue panel — not from catch records. Where a venue's notes name a hard window (Hodbarrow's April–September, Silecroft's October codling), that window is the sourced fact and the row follows it. <span id="callegend2" hidden><b>▴ you've caught this here</b>, from your log below — a record of your own sessions, not a correction to the bands.</span></p>
+
+  <details class="ref"><summary>My catch log</summary>
+    <div class="locker"><!-- ponytail: same form/list/night-mode styling as the locker, same shape of UI -->
+      <p>A diary of your sessions at these marks. Log a trip and a <b>▴</b> appears on the calendar above wherever you've caught that species, at that mark, in that month.</p>
+      <p>The marker <b>never changes a band</b>. One good afternoon isn't evidence a month is prime, and a blank day isn't evidence it isn't — the bands stay what they are and your catches sit on top of them. Blank sessions are worth logging anyway; they just don't mark the table.</p>
+      <p class="whynote">Stored on this device only — nothing is sent anywhere. Export writes a JSON file you keep; import reads one back, so the log survives a new phone or a cleared browser.</p>
+      <div id="logui"></div>
+    </div>
+  </details>
 </section>
 
 <!-- ================= KIT ================= -->
@@ -1226,13 +1238,18 @@
   function renderCal(key){
     var v=VENUES[key];
     var h='<table class="cal"><tr><th>Species</th><th>J</th><th>F</th><th>M</th><th>A</th><th>M</th><th>J</th><th>J</th><th>A</th><th>S</th><th>O</th><th>N</th><th>D</th></tr>';
+    var any=false;
     v.species.forEach(function(row){
       h+='<tr><td><b>'+row[0]+'</b></td>';
-      for(var i=0;i<12;i++){var s=SYM[row[1][i]];h+='<td class="'+s[1]+'">'+s[0]+'</td>';}
+      for(var i=0;i<12;i++){
+        var s=SYM[row[1][i]], c=caughtAt(key,row[0],i); if(c) any=true;
+        h+='<td class="'+s[1]+'">'+s[0]+(c?'<span class="caught" title="you’ve caught this here">▴</span>':'')+'</td>';
+      }
       h+='</tr>';
     });
     document.getElementById('calwrap').innerHTML=h+'</table>';
     document.getElementById('calvenue').textContent=v.name;
+    document.getElementById('callegend2').hidden=!any;  // the key only shows once a marker does
   }
 
   /* ========== ④c COMPUTED GAP LIST ==========
@@ -1612,6 +1629,131 @@
     fillCat(); fillCustom(); renderLockerList();
   }
 
+  /* ================= ⑤ CATCH LOG: storage + overlay + UI =================
+     A logged catch is a THIRD provenance class: user-authored fact, next to the calendar's
+     Claude-synthesised bands and the venues' sourced windows. It renders as an overlay
+     marker and NEVER changes a band symbol — n=1 does not get to argue with a calibrated
+     estimate, in either direction. Two layers, never merged. */
+  var LOG=[];
+  function loadLog(){ try{var a=JSON.parse(localStorage.getItem('efg-log')); return Array.isArray(a)?a.filter(validEntry):[]}catch(e){return []} }
+  function saveLog(){ try{localStorage.setItem('efg-log',JSON.stringify(LOG))}catch(e){} }
+  // fails closed on a bad date or an unknown mark; 'all' is rejected outright — an imported
+  // entry claiming it would mark every mark at once.
+  function validEntry(e){ return !!e && typeof e==='object' && typeof e.date==='string' &&
+    /^\d{4}-\d{2}-\d{2}$/.test(e.date) && (e.venue==='other'||(!!VENUES[e.venue]&&e.venue!=='all')) &&
+    typeof e.species==='string' }
+  function pad2(n){ return (n<10?'0':'')+n }
+  function todayISO(){ var d=new Date(); return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate()) }
+  // a logged "eel" and the row "Eel (release)" are the same fish
+  function normSp(s){ return String(s).replace(/\(.*\)/,'').trim().toLowerCase() }
+  function lgmsg(s){ var m=document.getElementById('lgmsg'); if(m) m.textContent=s||''; }
+  function logChanged(msg){ saveLog(); renderLogList(); renderCal(state.venue); lgmsg(msg); }
+
+  /* Has this species been caught at this mark in this month? 'all' means any mark — the
+     same scope that table already carries. 'other' never marks: it is not one of these marks.
+     Month comes off the string, not Date(): no parsing, no timezone drift. */
+  function caughtAt(key,species,m){
+    var sp=normSp(species), hit=false;
+    LOG.forEach(function(e){
+      if(hit||e.venue==='other') return;
+      if(key!=='all'&&e.venue!==key) return;
+      if(+e.date.slice(5,7)-1!==m) return;
+      if(normSp(e.species)===sp) hit=true;
+    });
+    return hit;
+  }
+  function speciesList(){
+    var seen={}, out=[];
+    Object.keys(VENUES).forEach(function(k){
+      VENUES[k].species.forEach(function(r){ if(!seen[r[0]]){ seen[r[0]]=1; out.push(r[0]); } });
+    });
+    return out.sort();
+  }
+  function renderLogList(){
+    var box=document.getElementById('loglist'); if(!box) return;
+    var rows=LOG.slice().sort(function(a,b){ return a.date<b.date?1:a.date>b.date?-1:0 }), html='';
+    rows.forEach(function(e){
+      html+='<li><span><b>'+esc(e.date)+'</b> · '+esc(e.venue==='other'?'somewhere else':VENUES[e.venue].name)+' · '+
+            (e.species? esc(e.species) : '<i>blank session</i>')+
+            (e.notes? ' <span class="spec">'+esc(e.notes)+'</span>' : '')+'</span>'+
+            '<button type="button" class="kill" data-id="'+esc(e.id)+'">remove &times;</button></li>';
+    });
+    box.innerHTML=rows.length? '<ul>'+html+'</ul>'
+      : '<p class="whynote">No sessions logged yet. Add one below — blanks included: a blank day is still a day you learned the mark.</p>';
+  }
+  function addSession(){
+    var d=document.getElementById('lgdate').value, v=document.getElementById('lgvenue').value,
+        sp=(document.getElementById('lgspecies').value||'').trim();
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(d)){ lgmsg('Pick a date first.'); return; }
+    LOG.push({id:uid(),date:d,venue:v,species:sp,notes:(document.getElementById('lgnotes').value||'').trim()});
+    document.getElementById('lgspecies').value=''; document.getElementById('lgnotes').value='';
+    // not an error — an unlisted species still logs, it just has no row to mark
+    var known = !sp || v==='other' || VENUES[v].species.some(function(r){ return normSp(r[0])===normSp(sp) });
+    logChanged('Session logged.'+(known?'':' No calendar row for '+sp+' at this mark, so it lists but doesn’t mark the table.'));
+  }
+  function exportLog(){
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([JSON.stringify(LOG,null,2)],{type:'application/json'}));
+    a.download='catch-log.json'; a.click(); URL.revokeObjectURL(a.href);
+    lgmsg(LOG.length+' session'+(LOG.length===1?'':'s')+' exported.');
+  }
+  function importLog(e){
+    var f=e.target.files&&e.target.files[0]; if(!f) return;
+    var r=new FileReader();
+    r.onload=function(){
+      var data;
+      try{ data=JSON.parse(r.result); }catch(err){ lgmsg('That file isn’t valid JSON — log unchanged.'); return; }
+      if(!Array.isArray(data)){ lgmsg('That file isn’t a catch log — log unchanged.'); return; }
+      var ok=data.filter(validEntry);
+      if(!ok.length){ lgmsg('No usable sessions in that file — log unchanged.'); return; }
+      LOG=ok.map(function(i){ if(!i.id) i.id=uid(); return i; });
+      logChanged('Imported '+ok.length+' session'+(ok.length===1?'':'s')+
+        (ok.length<data.length? ' · '+(data.length-ok.length)+' skipped (bad date or unknown mark)':'')+'.');
+    };
+    r.readAsText(f); e.target.value='';
+  }
+  // 'all' is not a mark you can fish, so it can never be the default here
+  function logDefaults(){
+    document.getElementById('lgdate').value=todayISO();
+    document.getElementById('lgvenue').value = state.venue==='all'?'hodbarrow':state.venue;
+  }
+  function buildLog(){
+    var host=document.getElementById('logui'); if(!host) return;
+    var vopt='', sopt='';
+    Object.keys(VENUES).forEach(function(k){ if(k!=='all') vopt+='<option value="'+k+'">'+esc(VENUES[k].name)+'</option>'; });
+    vopt+='<option value="other">somewhere else</option>';
+    speciesList().forEach(function(s){ sopt+='<option value="'+esc(s)+'"></option>'; });
+    host.innerHTML=
+      '<div id="loglist"></div>'+
+      '<div class="row"><input type="date" id="lgdate" aria-label="Date fished">'+
+      '<select id="lgvenue" aria-label="Mark" style="flex:1 1 190px">'+vopt+'</select></div>'+
+      '<div class="row"><input type="text" id="lgspecies" list="lgsplist" autocomplete="off" placeholder="Species — leave blank for a blank session" aria-label="Species caught" style="flex:1 1 200px">'+
+      '<datalist id="lgsplist">'+sopt+'</datalist>'+
+      '<input type="text" id="lgnotes" placeholder="Notes — tide, bait, what you learned" aria-label="Notes" style="flex:1 1 200px"></div>'+
+      '<div class="row"><button type="button" class="act" id="lgadd">Add session</button>'+
+      '<button type="button" class="act" id="lgexport">Export JSON</button>'+
+      '<label class="act" for="lgimport" style="cursor:pointer">Import JSON'+
+      '<input type="file" id="lgimport" accept="application/json,.json" hidden></label></div>'+
+      '<p class="msg" id="lgmsg" role="status"></p>';
+    logDefaults();
+    /* the mark you were looking at is the right default, but only while nothing is typed —
+       re-defaulting under a half-filled form would quietly log the wrong session. */
+    host.parentNode.parentNode.addEventListener('toggle',function(){
+      if(host.parentNode.parentNode.open && !document.getElementById('lgspecies').value
+         && !document.getElementById('lgnotes').value) logDefaults();
+    });
+    document.getElementById('lgadd').addEventListener('click',addSession);
+    document.getElementById('lgexport').addEventListener('click',exportLog);
+    document.getElementById('lgimport').addEventListener('change',importLog);
+    host.addEventListener('click',function(e){
+      var b=e.target.closest? e.target.closest('.kill') : null; if(!b) return;
+      var id=b.getAttribute('data-id');
+      LOG=LOG.filter(function(i){ return i.id!==id; });
+      logChanged('Removed.');
+    });
+    renderLogList();
+  }
+
   /* ================= ④b RIG CHECK UI ================= */
   var SLOTS=[['lead','Lead'],['hooklength','Hooklength'],['hook','Hook'],['reel','Reel'],['leader','Shock leader'],['bait','Bait']];
   var SEGSTROKE={};   // original stroke per segment, so an unjudged link is restored exactly
@@ -1714,11 +1856,13 @@
   }
 
   LOCKER=loadLocker();   // before the first render: the gap list judges against owned gear
+  LOG=loadLog();         // ditto: select() renders the calendar, which reads the log
   initMap();
   select(state.venue);
   if(PROF&&PROF.answered){ try{document.getElementById('savedline').hidden=false}catch(e){} }
   buildFirstVisit();
   buildLocker();
+  buildLog();
   defaultRig(); buildRig();
   INIT_DONE=true;
 </script>
