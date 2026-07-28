@@ -200,7 +200,9 @@ Current state: one self-contained file, `fishing-field-guide.html` (~80KB), no b
    NOT sunrise-sunset.org, which showed a systematic 2–3 min rise/set bias; 15/16 values
    exact, worst 1 min. Regression anchors (UTC, civil/rise/set/civil): Hodbarrow 15 Jan
    2026 = 07:43 08:25 16:21 17:03 · 15 Jul = 03:08 03:59 20:38 21:29; New Brighton
-   15 Jan = 07:39 08:20 16:24 17:04 · 15 Jul = 03:14 04:02 20:33 21:21.
+   15 Jan = 07:39 08:20 16:24 17:04 · 15 Jul = 03:14 04:02 20:33 21:22.
+   (21:22 corrects a transcription error in the original anchor: raw value 1281.53 min
+   rounds to 21:22 — sunCalc itself was and is right; only this line was off by one.)
    **"should I go" / weather check ✅ done** — closed details.ref in PLAN after #vpanel.
    **It judges comfort, never safety**: verdict vocabulary is exactly kind / workable /
    hard work (never "safe"/"go"), and the mandatory tide sentence — weather is the
