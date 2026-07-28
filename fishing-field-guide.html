@@ -290,17 +290,35 @@
   /* ---------- rig check (④b verdicts) ---------- */
   .rigcheck{padding:0 0 26px}
   .rc-intro{font-size:.85rem;color:#3c4c56;max-width:70ch;margin-bottom:10px}
-  .rigcheck .row{display:flex;flex-wrap:wrap;gap:8px}
-  .rigcheck select{font:inherit;font-size:.85rem;padding:7px 9px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:3px}
+  .rigcheck select{font:inherit;font-size:.85rem;padding:7px 9px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:3px;max-width:100%}
+  /* the chain reads top-to-bottom in the order the tackle runs: the container's left
+     border is the spine, each link taps it with a short tick. */
+  .chain{border-left:2px solid var(--ink);max-width:70ch}
+  /* grid, not flex: a long read-only value wraps inside its own column instead of
+     dropping under the label and losing the alignment down the chain. */
+  .chain .link{display:grid;grid-template-columns:120px minmax(0,1fr);align-items:center;gap:4px 10px;position:relative;padding:6px 0 6px 18px}
+  .chain .link::before{content:'';position:absolute;left:0;top:50%;width:11px;height:2px;background:var(--ink)}
+  .lname{font-family:'Archivo',sans-serif;font-stretch:75%;font-weight:800;text-transform:uppercase;
+         font-size:.8rem;letter-spacing:.05em;line-height:1.3;background:none;border:0;padding:0;
+         color:var(--ink);cursor:pointer;flex:0 0 120px;text-align:left}
+  .lname:hover span:last-child,.lname:focus span:last-child{text-decoration:underline}
+  .lfix{font-size:.85rem;margin:0;color:#3c4c56}
+  .lfix i{font-style:normal;font-size:.78rem;opacity:.75}
   .rigwhy{border-left:6px solid var(--ink);background:#fff;padding:12px 16px;margin-top:12px;max-width:70ch}
   .rigwhy h4{font-family:'Archivo',sans-serif;font-stretch:75%;font-weight:800;text-transform:uppercase;font-size:.85rem;letter-spacing:.05em}
   .rigwhy li{list-style:none;font-size:.88rem;margin:8px 0}
-  .rigwhy .dot,.buygap .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px}
+  .rigwhy p{font-size:.88rem;margin:0}
+  .rigwhy .dot,.buygap .dot,.chain .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px}
+  .chain .dot.dotoff{background:transparent;box-shadow:inset 0 0 0 2px #94a39c}
   #seg-reel,#seg-line,#seg-lead,#seg-hooklength,#seg-hook,#seg-bait{cursor:pointer}
   body.night .rigcheck select{background:#0a0405;color:#e03d3d;border-color:#e03d3d}
-  body.night .rc-intro{color:#c05050}
+  body.night .rc-intro,body.night .lfix{color:#c05050}
+  body.night .chain{border-color:#e03d3d}
+  body.night .chain .link::before{background:#e03d3d}
+  body.night .lname{color:#e03d3d}
+  body.night .chain .dot.dotoff{box-shadow:inset 0 0 0 2px #7a2020}
   body.night .rigwhy{background:#140708}
-  @media print{.rigcheck .row{display:none}}
+  @media print{.rigcheck .chain{display:none}}
 
   /* ---------- gear locker ---------- */
   /* ponytail: selects/inputs reuse the .deck rules above, so night mode is already handled. */
@@ -502,10 +520,17 @@
 <!-- ================= DO ================= -->
 <div id="do"></div>
 <!-- ================= HERO RIG DIAGRAM ================= -->
-<div class="wrap hero-rig" role="img" aria-label="Diagram of the running ledger rig from reel to baited hook">
-<svg viewBox="0 0 900 240" xmlns="http://www.w3.org/2000/svg" font-family="Archivo, sans-serif">
+<div class="wrap hero-rig" role="img" aria-label="Diagram of the running ledger rig from rod and reel to baited hook">
+<svg viewBox="-120 0 1020 240" xmlns="http://www.w3.org/2000/svg" font-family="Archivo, sans-serif">
   <!-- water line -->
-  <path d="M0 200 Q 60 192 120 200 T 240 200 T 360 200 T 480 200 T 600 200 T 720 200 T 840 200 T 960 200" fill="none" stroke="#3d6b6a" stroke-width="2" opacity=".5"/>
+  <path d="M-120 200 Q -60 192 0 200 T 120 200 T 240 200 T 360 200 T 480 200 T 600 200 T 720 200 T 840 200 T 960 200" fill="none" stroke="#3d6b6a" stroke-width="2" opacity=".5"/>
+  <!-- rod butt: drawn before the reel so the reel sits on it. Decorative — no segment,
+       no rule, not tappable. The sub-label is the only part of this diagram that is
+       YOUR gear rather than the worked example. -->
+  <line x1="-105" y1="110" x2="28" y2="110" stroke="#1c2b36" stroke-width="13" stroke-linecap="round"/>
+  <line x1="-97" y1="110" x2="-42" y2="110" stroke="#c9b892" stroke-width="8" stroke-linecap="round"/>
+  <text x="-45" y="74" text-anchor="middle" font-size="13" font-weight="700">ROD</text>
+  <text id="rodbuttname" x="-45" y="90" text-anchor="middle" font-size="11" fill="#3c4c56">light spinning</text>
   <!-- main line -->
   <line id="seg-line" data-slot="line" tabindex="0" x1="60" y1="110" x2="330" y2="110" stroke="#1c2b36" stroke-width="3"/>
   <!-- reel -->
@@ -550,8 +575,8 @@
 <p class="wrap rig-caption"><strong>The spine of everything:</strong> the running ledger. The lead anchors; the line slides through the link so a fish never feels the weight; the fluoro section is deliberately the weakest so snags cost a hook, not the rig. Every bait session on this guide is a variation of this one chain.</p>
 
 <div class="wrap rigcheck">
-  <p class="rc-intro">The labels above are the worked example this guide teaches. To check <b>your</b> version of the chain, fill in what you're actually using — each link on the diagram turns green, amber or red, and tapping it says why. Leave anything blank and it simply isn't judged.</p>
-  <div class="row" id="rigslots"></div>
+  <p class="rc-intro">The diagram is the worked example this guide teaches — only the rod name under it is yours. To check <b>your</b> version, work down the chain below: it runs in the order the tackle does, rod to hook. Fill in what you're actually using and each link turns green, amber or red, on the list and on the diagram; tap any link for the reason. Leave anything blank and it simply isn't judged.</p>
+  <div class="chain" id="rigslots"></div>
   <div id="rigwhy" aria-live="polite"></div>
 </div>
 
@@ -1084,7 +1109,9 @@
       if(R.lead.g<=cap) return {v:'y',why:R.lead.g+'g is under the '+cap+'g ceiling but leaves nothing for the ~12g of rig and bait — you are casting at the limit.'};
       return {v:'r',why:R.lead.g+'g is over the rod’s '+cap+'g casting ceiling. That is crack-off and broken-rod territory.'};
     }},
-    {id:'shock-leader',slots:['lead'],fn:function(R,g){
+    /* two slots: the verdict is about the lead's weight, but it is also the only thing
+       said about the leader — show it where the user set each. Same verdict, two places. */
+    {id:'shock-leader',slots:['lead','leader'],fn:function(R,g){
       if(!R.lead) return null;
       if(R.lead.g<=57) return {v:'g',why:'Under 57g (2oz) — no shock leader needed.'};
       var need=leaderLb(R.lead.g);
@@ -1903,10 +1930,26 @@
   }
 
   /* ================= ④b RIG CHECK UI ================= */
-  var SLOTS=[['lead','Lead'],['hooklength','Hooklength'],['hook','Hook'],['reel','Reel'],['leader','Shock leader'],['bait','Bait']];
+  /* The chain in the order the tackle actually runs, rod to hook. Third field: 1 = you set
+     it here, 0 = it comes from your PLAN setup and is shown read-only. Rod and main line
+     carry no verdict of their own — what they're paired WITH is what gets judged. */
+  var CHAIN=[['rod','Rod',0],['reel','Reel',1],['line','Main line',0],['leader','Shock leader',1],
+             ['lead','Lead',1],['hooklength','Hooklength',1],['hook','Hook',1],['bait','Bait',1]];
+  var SEGS=['reel','line','lead','hooklength','hook','bait'];   // the SVG has no rod or leader segment
+  var VWORD={g:'ok',y:'check this',r:'problem'};
+  /* The ends are judged through their pairings, so point at where the verdict lives
+     instead of saying "nothing to judge" over a link that plainly matters. */
+  var ENDWHY={
+    rod:'The rod itself carries no verdict here — what it is paired with does. Its casting ceiling is judged on <b>Lead</b> (ceiling minus ~12g of rig and bait) and its size pairing on <b>Reel</b>. Change the rod in PLAN.',
+    line:'The main line carries no verdict here — what it is paired with does. It is judged on <b>Hooklength</b> (the weak link must break first) and on <b>Lead</b> and <b>Shock leader</b> (casting weight needs about 10lb of mono per ounce). Change the line in PLAN.'
+  };
   var SEGSTROKE={};   // original stroke per segment, so an unjudged link is restored exactly
   var OPENSLOT=null;
   var SEGWIRED=false; // the SVG segments are wired once — buildRig() re-runs on every change
+
+  function slotName(k){ var n=k; CHAIN.forEach(function(c){ if(c[0]===k) n=c[1]; }); return n; }
+  // "Aberdeen" + spec "Aberdeen size 4" would read "Aberdeen — Aberdeen size 4"
+  function optLabel(i){ var s=specOf(i); return !s? i.label : s.indexOf(i.label)===0? s : i.label+' — '+s; }
 
   function slotOptions(kind){
     // locker first, then catalogue — same objects the rules read
@@ -1925,47 +1968,64 @@
     });
     RIG.lead=lead; RIG.hooklength=hl; RIG.hook=hook;
   }
+  function slotSelect(k,name){
+    var sel=document.createElement('select');
+    sel.setAttribute('aria-label',name);
+    sel.innerHTML='<option value="">not set</option>';
+    if(k==='bait'){
+      Object.keys(BAITS).forEach(function(b){ sel.innerHTML+='<option value="'+esc(b)+'">'+esc(b)+'</option>'; });
+    }else{
+      var kind = k==='leader' ? 'line' : k;
+      var pair=slotOptions(kind), grp=['In your locker','Catalogue'];
+      pair.forEach(function(list,n){
+        if(!list.length) return;
+        var og='<optgroup label="'+grp[n]+'">';
+        list.forEach(function(i){ og+='<option value="'+esc(i.id)+'">'+esc(optLabel(i))+'</option>'; });
+        sel.innerHTML+=og+'</optgroup>';
+      });
+    }
+    sel.addEventListener('change',function(){
+      var val=sel.value;
+      if(!val){ RIG[k]=null; }
+      else if(k==='bait'){ RIG[k]={label:val}; }
+      else {
+        var found=null;
+        LOCKER.concat(CATALOGUE).forEach(function(i){ if(i.id===val&&!found) found=i; });
+        RIG[k]=found;
+      }
+      paintRig();
+    });
+    if(RIG[k]) sel.value = k==='bait' ? RIG[k].label : RIG[k].id;
+    return sel;
+  }
   function buildRig(){
     var host=document.getElementById('rigslots'); if(!host) return;
+    var g=gearCalc();
     host.innerHTML='';
-    SLOTS.forEach(function(s){
-      var sel=document.createElement('select');
-      sel.setAttribute('aria-label',s[1]);
-      sel.innerHTML='<option value="">'+s[1]+': not set</option>';
-      if(s[0]==='bait'){
-        Object.keys(BAITS).forEach(function(b){ sel.innerHTML+='<option value="'+b+'">'+b+'</option>'; });
-      }else{
-        var kind = s[0]==='leader' ? 'line' : s[0];
-        var pair=slotOptions(kind), grp=['In your locker','Catalogue'];
-        pair.forEach(function(list,n){
-          if(!list.length) return;
-          var og='<optgroup label="'+grp[n]+'">';
-          list.forEach(function(i){ og+='<option value="'+esc(i.id)+'">'+esc(i.label)+' — '+esc(specOf(i))+'</option>'; });
-          sel.innerHTML+=og+'</optgroup>';
-        });
+    /* rebuilt whole on every rod/line/locker change, so these listeners die with the
+       nodes — no SEGWIRED guard needed here, unlike the static SVG below. */
+    CHAIN.forEach(function(c){
+      var row=document.createElement('div');
+      row.className='link'; row.setAttribute('data-slot',c[0]);
+      var btn=document.createElement('button');
+      btn.type='button'; btn.className='lname';
+      btn.innerHTML='<span class="dot dotoff"></span><span>'+esc(c[1])+'</span>';
+      btn.addEventListener('click',function(){ showWhy(c[0]); });
+      row.appendChild(btn);
+      if(c[2]){ row.appendChild(slotSelect(c[0],c[1])); }
+      else{
+        var p=document.createElement('p'); p.className='lfix';
+        p.innerHTML=esc(c[0]==='rod'? g.rod.label : g.line.label)+' <i>from your setup — change it in PLAN</i>';
+        row.appendChild(p);
       }
-      sel.addEventListener('change',function(){
-        var val=sel.value;
-        if(!val){ RIG[s[0]]=null; }
-        else if(s[0]==='bait'){ RIG[s[0]]={label:val}; }
-        else {
-          var found=null;
-          LOCKER.concat(CATALOGUE).forEach(function(i){ if(i.id===val&&!found) found=i; });
-          RIG[s[0]]=found;
-        }
-        paintRig();
-      });
-      if(RIG[s[0]]) sel.value = s[0]==='bait' ? RIG[s[0]].label : RIG[s[0]].id;
-      host.appendChild(sel);
+      host.appendChild(row);
     });
+    var rb=document.getElementById('rodbuttname');
+    if(rb) rb.textContent=(CLASSNAMES[g.rod.cls]||'your rod').toLowerCase();
     // remember original strokes once, then judge
-    SLOTS.concat([['line','Main line']]).forEach(function(s){
-      var el=document.getElementById('seg-'+s[0]);
-      if(el&&!(s[0] in SEGSTROKE)) SEGSTROKE[s[0]]=el.getAttribute('stroke');
-    });
     if(!SEGWIRED){
       SEGWIRED=true;
-      ['reel','line','lead','hooklength','hook','bait'].forEach(function(k){
+      SEGS.forEach(function(k){
         var el=document.getElementById('seg-'+k); if(!el) return;
         if(!(k in SEGSTROKE)) SEGSTROKE[k]=el.getAttribute('stroke');
         el.setAttribute('role','button');
@@ -1977,29 +2037,37 @@
   }
   function paintRig(){
     var res=judge();
-    ['reel','line','lead','hooklength','hook','bait'].forEach(function(k){
+    SEGS.forEach(function(k){
       var el=document.getElementById('seg-'+k); if(!el) return;
       if(!(k in SEGSTROKE)) SEGSTROKE[k]=el.getAttribute('stroke');
       var r=res[k];
       // ponytail: restoring the original attribute keeps the night-mode [stroke=…] selectors matching
       if(r&&r.worst) el.setAttribute('stroke',VCOL[r.worst]);
       else el.setAttribute('stroke',SEGSTROKE[k]);
-      el.setAttribute('aria-label',(SLOTS.filter(function(s){return s[0]===k})[0]||[k,k])[1]+
-        (r&&r.worst?': '+({g:'ok',y:'check this',r:'problem'})[r.worst]:': not judged'));
+      el.setAttribute('aria-label',slotName(k)+(r&&r.worst?': '+VWORD[r.worst]:': not judged'));
+    });
+    CHAIN.forEach(function(c){
+      var row=document.querySelector('.chain .link[data-slot="'+c[0]+'"]'); if(!row) return;
+      var dot=row.querySelector('.dot'), r=res[c[0]];
+      dot.className = r&&r.worst ? 'dot' : 'dot dotoff';
+      dot.style.background = r&&r.worst ? VCOL[r.worst] : '';
+      row.querySelector('.lname').setAttribute('aria-label',
+        c[1]+(r&&r.worst?': '+VWORD[r.worst]:': not judged')+' — why?');
     });
     if(OPENSLOT) showWhy(OPENSLOT,res);
   }
   function showWhy(k,res){
     res=res||judge();
     OPENSLOT=k;
-    var box=document.getElementById('rigwhy'), r=res[k];
-    var name=(SLOTS.filter(function(s){return s[0]===k})[0]||['','Main line'])[1];
-    var chosen = k==='line' ? gearCalc().line.label : (RIG[k]? RIG[k].label+(specOf(RIG[k])?' ('+specOf(RIG[k])+')':'') : null);
-    var h='<div class="rigwhy"><h4>'+esc(name)+(chosen?' — '+esc(chosen):'')+'</h4>';
-    if(!r) h+='<p style="font-size:.88rem;margin:0">Nothing to judge here yet'+(chosen?'':' — set it above')+'.</p>';
-    else { h+='<ul>'; r.forEach(function(x){
+    var box=document.getElementById('rigwhy'), r=res[k], g=gearCalc();
+    var chosen = k==='rod' ? g.rod.label : k==='line' ? g.line.label
+               : (RIG[k]? RIG[k].label+(specOf(RIG[k])?' ('+specOf(RIG[k])+')':'') : null);
+    var h='<div class="rigwhy"><h4>'+esc(slotName(k))+(chosen?' — '+esc(chosen):'')+'</h4>';
+    if(r){ h+='<ul>'; r.forEach(function(x){
         h+='<li><span class="dot" style="background:'+VCOL[x.v]+'"></span>'+esc(x.why)+'</li>';
       }); h+='</ul>'; }
+    else if(ENDWHY[k]) h+='<p>'+ENDWHY[k]+'</p>';
+    else h+='<p>Nothing to judge here yet'+(chosen?'':' — set it in the chain above')+'.</p>';
     box.innerHTML=h+'</div>';
   }
 

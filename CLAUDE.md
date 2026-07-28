@@ -247,6 +247,33 @@ Current state: one self-contained file, `fishing-field-guide.html` (~80KB), no b
    keep that distinction if editing). Date stamps: sizes say "verified … 28 Jul 2026",
    the page banner stays "reviewed 26 Jul" — the whole page was NOT re-reviewed, and
    bumping it would be a false stamp. Welsh Dee = one NRW pointer sentence, no table.
+   **rig-chain presentation ✅ done** — the ④(b) checker was a flex row of six unordered
+   dropdowns that LOST their slot name once filled (a default page showed three unlabelled
+   boxes), started mid-air at the reel, and painted verdicts only on the diagram, which
+   scrolls away from the controls on a phone. Now a vertical `.chain` list in the order the
+   tackle runs: **Rod → Reel → Main line → Shock leader → Lead → Hooklength → Hook → Bait**,
+   each row `label · control · verdict dot`, tap for the same why the diagram taps give.
+   Decisions: **CSS grid, not flex** (`120px minmax(0,1fr)`) — a long read-only value wraps
+   inside its own column instead of dropping under the label and breaking alignment down the
+   chain; **rod + main line are read-only rows** fed from the PLAN setup, and they carry NO
+   verdict of their own — what they are PAIRED with is what gets judged, so their dots stay
+   hollow and `ENDWHY` points at where the verdict actually lives (this replaced main line's
+   old "nothing to judge here yet", which was false over a link that plainly matters);
+   **the shock-leader rule gained a second slot** (`slots:['lead','leader']`) so the verdict
+   also shows where the user sets the leader — same verdict in two places, NOT a new
+   judgement, and `paintRig()` still iterates only the six `seg-` ids so the SVG is
+   untouched. The diagram gained a **rod butt** left of the reel (viewBox `0 0 900 240` →
+   `-120 0 1020 240`, water path extended to -120 or it would stop short); its sub-label is
+   the ONLY dynamic text in the diagram, which is why the intro now says "only the rod name
+   under it is yours". Option labels de-duped ("Aberdeen size 4", not "Aberdeen — Aberdeen
+   size 4"). `SLOTS` is gone, replaced by `CHAIN` (third field 1 = editable here, 0 = from
+   PLAN); `SEGS` and `VWORD` are shared so the segment and row aria-labels can't drift.
+   The chain rows are rebuilt whole on every change, so their listeners die with the nodes —
+   **do NOT put them behind SEGWIRED**, that guard is only for the static SVG segments.
+   Verified: 64 assertions incl. 6 rod classes × 9 venues with row dots and segment strokes
+   agreeing, and the mono-only leader rule re-checked 4 ways (bare/mono50/braid80/untyped).
+   A green dot on an unset Shock leader under 57g is CORRECT — the rule's own words are
+   "no shock leader needed", and green means ok.
    **Remaining ⑤ (any order):** hook-in-skin first aid card, share-config button,
    print stylesheet ("tonight's session" one-pager).
 
