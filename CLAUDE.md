@@ -203,8 +203,27 @@ Current state: one self-contained file, `fishing-field-guide.html` (~80KB), no b
    `facing` field exists and wind direction renders as a plain fact ("6–17 mph WSW") —
    Decision A again: silent beats invented. Any future attempt must verify bearings
    per-mark against imagery, the two known-bad ones first.
-   **Remaining ⑤ (any order):** size-limits table in fish ID, hook-in-skin first aid
-   card, share-config button, print stylesheet ("tonight's session" one-pager).
+   **size-limits table ✅ done** — static "Can I keep it?" table in fish ID (#fishid),
+   visible not collapsed (a legal minimum behind a toggle is the wrong disclosure level),
+   zero JS/storage/network. **The fail-closed rule for regulatory numbers**: no
+   remembered value ever ships — every size was transcribed at build time from raw
+   NWIFCA/gov.uk HTML (summarisers are NOT a source: the review caught WebFetch's model
+   inverting the Schedule 2 heading), and the review re-fetched and re-matched every
+   number independently. Verbatim: "Schedule 2 also applies to all persons fishing in
+   the district, unless fishing under the authority of a fishing vessel licence issued
+   by the MMO" — i.e. Schedule 2 DOES apply to shore anglers (bass 42, cod 35, mackerel
+   20, plaice 27, whiting 27); Schedule 1 (all fishers) gives dab 15, flounder 25,
+   thick-lip grey mullet 20, conger 58. Eel row is release-not-a-size (gov.uk: "Any
+   eels you catch (except conger eels) must be released alive"), with the conger 58 cm
+   disambiguation clause; red mullet 15 cm disambiguates the mullet row — both clauses
+   sourced in the same build, the notes column carries nothing unsourced. Bass row is
+   numerically identical to the PLAN regs box (42 cm · 3/day · C&R 1 Feb–31 Mar),
+   machine-checked. Weever row = never keep/never handle (safety stance, not a statute —
+   keep that distinction if editing). Date stamps: sizes say "verified … 28 Jul 2026",
+   the page banner stays "reviewed 26 Jul" — the whole page was NOT re-reviewed, and
+   bumping it would be a false stamp. Welsh Dee = one NRW pointer sentence, no table.
+   **Remaining ⑤ (any order):** hook-in-skin first aid card, share-config button,
+   print stylesheet ("tonight's session" one-pager).
 
 ## Explicitly rejected (do not add)
 - Live tide APIs (no reliable free source; wrong tide data is worse than a link),
