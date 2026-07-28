@@ -1499,8 +1499,8 @@
   function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]}) }
   function specOf(i){ try{ return TYPES[i.kind].spec(i) }catch(e){ return '' } }
   function lkmsg(s){ var m=document.getElementById('lkmsg'); if(m) m.textContent=s||''; }
-  // one exit from every locker mutation — the gap list reads the locker, so it re-renders here
-  function lockerChanged(msg){ saveLocker(); renderLockerList(); renderBuyGap(); lkmsg(msg); }
+  // one exit from every locker mutation — the gap list and the rig slots both read the locker
+  function lockerChanged(msg){ saveLocker(); renderLockerList(); renderBuyGap(); buildRig(); lkmsg(msg); }
 
   function renderLockerList(){
     var box=document.getElementById('lockerlist'); if(!box) return;
@@ -1612,6 +1612,7 @@
   var SLOTS=[['lead','Lead'],['hooklength','Hooklength'],['hook','Hook'],['reel','Reel'],['leader','Shock leader'],['bait','Bait']];
   var SEGSTROKE={};   // original stroke per segment, so an unjudged link is restored exactly
   var OPENSLOT=null;
+  var SEGWIRED=false; // the SVG segments are wired once — buildRig() re-runs on every change
 
   function slotOptions(kind){
     // locker first, then catalogue — same objects the rules read
@@ -1668,13 +1669,16 @@
       var el=document.getElementById('seg-'+s[0]);
       if(el&&!(s[0] in SEGSTROKE)) SEGSTROKE[s[0]]=el.getAttribute('stroke');
     });
-    ['reel','line','lead','hooklength','hook','bait'].forEach(function(k){
-      var el=document.getElementById('seg-'+k); if(!el) return;
-      if(!(k in SEGSTROKE)) SEGSTROKE[k]=el.getAttribute('stroke');
-      el.setAttribute('role','button');
-      el.addEventListener('click',function(){ showWhy(k); });
-      el.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); showWhy(k); } });
-    });
+    if(!SEGWIRED){
+      SEGWIRED=true;
+      ['reel','line','lead','hooklength','hook','bait'].forEach(function(k){
+        var el=document.getElementById('seg-'+k); if(!el) return;
+        if(!(k in SEGSTROKE)) SEGSTROKE[k]=el.getAttribute('stroke');
+        el.setAttribute('role','button');
+        el.addEventListener('click',function(){ showWhy(k); });
+        el.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); showWhy(k); } });
+      });
+    }
     paintRig();
   }
   function paintRig(){
