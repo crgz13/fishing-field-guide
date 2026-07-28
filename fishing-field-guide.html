@@ -311,6 +311,10 @@
   .locker li{display:flex;justify-content:space-between;gap:12px;align-items:baseline;border-bottom:1px solid var(--faint);padding:6px 0;font-size:.9rem}
   .locker .spec{color:var(--teal);font-size:.85rem}
   .locker .kill{background:none;border:none;color:var(--buoy);cursor:pointer;font:inherit;font-size:.85rem;padding:0 2px}
+  .wxband{border-collapse:collapse;margin:10px 0;font-size:.85rem}
+  .wxband td{border:1px solid #d8ddd4;padding:6px 10px;vertical-align:top}
+  body.night .wxband td{border-color:#3a1414}
+  @media print{#wxctl{display:none}}
   .locker .msg{font-size:.85rem;color:var(--buoy);margin:6px 0 0}
   .locker button.act{font:inherit;font-size:.85rem;padding:8px 12px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:3px;cursor:pointer}
   body.night .locker button.act{background:#0a0405;color:#e03d3d;border-color:#e03d3d}
@@ -400,6 +404,25 @@
 
   <div class="vpanel" id="vpanel" aria-live="polite"></div>
   <div id="buygap"></div>
+
+  <details class="ref"><summary>Weather check</summary>
+    <div class="locker"><!-- ponytail: locker/log form styling again, same shape of UI -->
+      <p><b>Weather is the comfort axis. Tides are the safety axis.</b> Nothing in this box
+      overrides a cut-off warning, a causeway time or a hazard note — and this guide carries
+      no live tide data on purpose, because wrong tide data is worse than a link. A kind
+      forecast is not permission to walk onto Duddon or Dee sand.</p>
+      <table class="wxband">
+        <tr><td><span class="fit fit-g"></span><b>under 10 mph</b></td><td>kind — light-rod weather, bites are easy to read</td></tr>
+        <tr><td><span class="fit fit-y"></span><b>10–20 mph</b></td><td>workable — casting distance and bite detection both suffer</td></tr>
+        <tr><td><span class="fit fit-r"></span><b>over 20 mph</b>, or gusts over 28</td><td>hard work on light gear — a heavier rod and lead, or another day</td></tr>
+      </table>
+      <p class="whynote">Rule-of-thumb bands, synthesised for this guide — not measurements,
+      and not venue data. They describe light shore gear, not what the sea is doing.</p>
+      <p>Type a wind speed in from any forecast app, or fetch one. <b>Nothing is requested
+      until you press fetch</b>, and nothing is stored.</p>
+      <div id="wxui"></div>
+    </div>
+  </details>
 
   <div class="regs">
     <h3>Rules that apply everywhere here (2026)</h3>
@@ -1467,6 +1490,7 @@
       b.classList.toggle('active',on); b.setAttribute('aria-selected',on?'true':'false');
     });
     if(MAP&&MARKERS[key]) MAP.panTo(MARKERS[key].getLatLng());
+    wxClear();    // a wind verdict is fetched for one mark; it does not travel to the next
     paintRig();   // venue-dependent rules (run, ground, bait month) re-judge
     writeHash();
     saveProfile();
@@ -1904,6 +1928,132 @@
     box.innerHTML=h+'</div>';
   }
 
+  /* ⑤ WEATHER CHECK — comfort, never safety. The verdict words are only ever
+     kind / workable / hard work; nothing here may read as permission to go. */
+  var WXDATE=null;   // independent of SUNDATE on purpose — coupling them would surprise both ways
+  var WXPTS=['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
+  function wxDir(deg){ return WXPTS[Math.round(deg/22.5)%16] }
+  /* The one judgment. Manual entry and a fetched forecast both come through here, so the
+     offline path cannot drift from the online one. Bands are the static table's bands. */
+  function wxBand(mph,gust){
+    if(mph>20||gust>28) return ['r','hard work',(mph>20?'over 20 mph sustained':'gusting over 28')+' — a heavier rod and lead, or another day'];
+    if(mph>=10) return ['y','workable','casting distance and bite detection both suffer'];
+    return ['g','kind','light-rod weather'];
+  }
+  // sunCalc works in UTC minutes, so the slice is done in UTC and only rendered in local time
+  function wxWindow(key,s){
+    var v=VENUES[key], y=+s.slice(0,4), mo=+s.slice(5,7), dy=+s.slice(8,10);
+    var a=sunCalc(v.lat,v.lng,y,mo,dy,96,1), b=sunCalc(v.lat,v.lng,y,mo,dy,96,0);
+    return (a===null||b===null)? null : [a/60,b/60];
+  }
+  /* Every rendered verdict is a generation. The waves fetch resolves later, so it checks the
+     generation before appending — otherwise typing a wind by hand right after a fetch would
+     land fetched wave data under a hand-typed verdict. */
+  var WXGEN=0;
+  function wxSay(band,detail,stamp){
+    WXGEN++;
+    document.getElementById('wxout').innerHTML='<p><span class="fit fit-'+band[0]+'"></span><b>'+
+      esc(band[1])+'</b> — '+esc(band[2])+'</p><p style="font-size:.9rem">'+esc(detail)+'</p>'+
+      (stamp?'<p class="whynote">'+esc(stamp)+'</p>':'');
+  }
+  function wxManual(){
+    var mph=parseFloat(document.getElementById('wxmph').value),
+        gust=parseFloat(document.getElementById('wxgust').value),
+        dir=document.getElementById('wxdir').value;
+    if(!isFinite(mph)||mph<0){ wxmsg('Type a wind speed in mph first.'); return; }
+    if(!isFinite(gust)) gust=0;
+    wxmsg('');
+    wxSay(wxBand(mph,gust), 'wind '+mph+' mph'+(dir?' '+dir:'')+(gust?', gusts to '+gust:'')+' — as you typed it.','');
+  }
+  function wxmsg(s){ var m=document.getElementById('wxmsg'); if(m) m.textContent=s||''; }
+  /* A fetched verdict belongs to the mark it was fetched for, so changing mark drops it —
+     a Hodbarrow wind must never sit on screen under Otterspool. WXGEN++ also orphans any
+     waves request still in flight. */
+  function wxClear(){
+    var o=document.getElementById('wxout'); if(!o) return;
+    WXGEN++; o.innerHTML=''; wxmsg('');
+  }
+  function wxFetch(){
+    var key=state.venue;
+    if(key==='all'){ wxmsg('Pick a mark first — wind is judged at a place.'); return; }
+    var s=WXDATE||todayISO(), win=wxWindow(key,s), v=VENUES[key];
+    if(!win){ wxmsg('No daylight window for that date.'); return; }
+    wxmsg('Fetching…');
+    var u='https://api.open-meteo.com/v1/forecast?latitude='+v.lat+'&longitude='+v.lng+
+      '&hourly=wind_speed_10m,wind_gusts_10m,wind_direction_10m&wind_speed_unit=mph&timezone=UTC'+
+      '&start_date='+s+'&end_date='+s;
+    fetch(u).then(function(r){
+      // an out-of-range date is a 400, not an empty payload — say which it is
+      if(!r.ok) throw new Error(r.status===400?'range':'http');
+      return r.json();
+    }).then(function(d){
+      var H=d&&d.hourly; if(!H||!H.time||!H.time.length) throw new Error('empty');
+      var mphs=[],gusts=[],dirs=[];
+      H.time.forEach(function(t,i){
+        var hr=+t.slice(11,13);
+        if(hr<Math.floor(win[0])||hr>Math.floor(win[1])) return;   // daylight hours only
+        if(H.wind_speed_10m[i]!=null) mphs.push(H.wind_speed_10m[i]);
+        if(H.wind_gusts_10m[i]!=null) gusts.push(H.wind_gusts_10m[i]);
+        if(H.wind_direction_10m[i]!=null) dirs.push(H.wind_direction_10m[i]);
+      });
+      if(!mphs.length) throw new Error('empty');
+      var lo=Math.round(Math.min.apply(null,mphs)), hi=Math.round(Math.max.apply(null,mphs)),
+          gu=gusts.length?Math.round(Math.max.apply(null,gusts)):0;
+      // banded on the windiest hour in the window — the worst you'd actually stand in
+      wxmsg('');
+      wxSay(wxBand(hi,gu),
+        'wind '+(lo===hi?hi:lo+'–'+hi)+' mph'+(dirs.length?' '+wxDir(dirs[Math.floor(dirs.length/2)]):'')+
+        (gu?', gusts to '+gu:'')+' at '+v.name+', between first light and last light on '+s+'.',
+        'Open-Meteo, fetched '+new Date().toLocaleTimeString('en-GB',{timeZone:'Europe/London',hour:'2-digit',minute:'2-digit'})+
+        '. Banded on the windiest hour in that window.');
+      wxWaves(v,s,win);
+    }).catch(function(e){
+      wxmsg(e&&e.message==='range'
+        ? 'No forecast for that date — Open-Meteo reaches about a fortnight ahead. Type the wind in from any app instead.'
+        : 'Couldn’t reach the forecast — type the wind in from any app instead.');
+    });
+  }
+  /* Waves are shown as a fact and judged by no rule. The upper-estuary marks (West Bank,
+     Pickerings) have no marine grid point, so the line is simply absent there. */
+  function wxWaves(v,s,win){
+    var gen=WXGEN;
+    fetch('https://marine-api.open-meteo.com/v1/marine?latitude='+v.lat+'&longitude='+v.lng+
+      '&hourly=wave_height&timezone=UTC&start_date='+s+'&end_date='+s)
+      .then(function(r){ return r.ok?r.json():null })
+      .then(function(d){
+        if(gen!==WXGEN) return;   // a newer verdict is on screen; these waves are not its facts
+        if(!d||!d.hourly||!d.hourly.wave_height) return;
+        var w=d.hourly.wave_height.filter(function(x,i){
+          var hr=+d.hourly.time[i].slice(11,13);
+          return x!=null && hr>=Math.floor(win[0]) && hr<=Math.floor(win[1]);
+        });
+        if(!w.length) return;
+        var el=document.createElement('p'); el.style.fontSize='.9rem';
+        el.textContent='Waves ~'+Math.max.apply(null,w).toFixed(1)+' m at the nearest marine point — a fact, not part of the verdict.';
+        document.getElementById('wxout').appendChild(el);
+      }).catch(function(){});
+  }
+  function buildWx(){
+    var host=document.getElementById('wxui'); if(!host) return;
+    var dopt='<option value="">direction (optional)</option>';
+    ['N','NE','E','SE','S','SW','W','NW'].forEach(function(p){ dopt+='<option value="'+p+'">'+p+'</option>' });
+    host.innerHTML=
+      '<div id="wxctl">'+
+      '<div class="row"><input type="number" id="wxmph" min="0" step="1" placeholder="wind mph" aria-label="Wind speed in mph" style="flex:0 1 120px">'+
+      '<input type="number" id="wxgust" min="0" step="1" placeholder="gust mph" aria-label="Gust speed in mph" style="flex:0 1 120px">'+
+      '<select id="wxdir" aria-label="Wind direction">'+dopt+'</select>'+
+      '<button type="button" class="act" id="wxjudge">Judge this wind</button></div>'+
+      '<div class="row"><input type="date" id="wxdate" aria-label="Date to fetch a forecast for">'+
+      '<button type="button" class="act" id="wxget">Fetch forecast for this mark</button></div>'+
+      '</div><p class="msg" id="wxmsg" role="status"></p><div id="wxout" aria-live="polite"></div>';
+    document.getElementById('wxdate').value=todayISO();
+    document.getElementById('wxjudge').addEventListener('click',wxManual);
+    document.getElementById('wxget').addEventListener('click',wxFetch);
+    document.getElementById('wxdate').addEventListener('change',function(e){
+      WXDATE=/^\d{4}-\d{2}-\d{2}$/.test(e.target.value)? e.target.value : null;
+    });
+  }
+
   /* Wired once on the static panel, not per render — renderPanel() rebuilds its innerHTML on
      every venue change and would otherwise stack handlers (the SEGWIRED lesson). Only the
      times span is rewritten: re-rendering the panel would drop focus out of the picker and
@@ -1922,6 +2072,7 @@
   buildFirstVisit();
   buildLocker();
   buildLog();
+  buildWx();
   defaultRig(); buildRig();
   INIT_DONE=true;
 </script>

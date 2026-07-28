@@ -178,10 +178,33 @@ Current state: one self-contained file, `fishing-field-guide.html` (~80KB), no b
    exact, worst 1 min. Regression anchors (UTC, civil/rise/set/civil): Hodbarrow 15 Jan
    2026 = 07:43 08:25 16:21 17:03 · 15 Jul = 03:08 03:59 20:38 21:29; New Brighton
    15 Jan = 07:39 08:20 16:24 17:04 · 15 Jul = 03:14 04:02 20:33 21:21.
-   **Remaining ⑤ (any order):** "should I go" via Open-Meteo wind/waves (degrade to
-   manual entry offline — Open-Meteo approved by Craig 28 Jul 2026 as the first live API
-   beyond map tiles), size-limits table in fish ID, hook-in-skin first aid card,
-   share-config button, print stylesheet ("tonight's session" one-pager).
+   **"should I go" / weather check ✅ done** — closed details.ref in PLAN after #vpanel.
+   **It judges comfort, never safety**: verdict vocabulary is exactly kind / workable /
+   hard work (never "safe"/"go"), and the mandatory tide sentence — weather is the
+   comfort axis, tides are the safety axis, no live tide data on purpose — is static HTML
+   beside a static band table (<10 / 10–20 / >20 mph, gusts >28) carrying the
+   "rule-of-thumb bands, synthesised" provenance line, all readable JS-off. **Fetch is
+   button-only**: zero requests on page load and a full chip sweep fires none; Open-Meteo
+   (first live API beyond tiles, approved 28 Jul 2026), coords-in-URL is fine (public
+   venue data, not personal). Manual entry is always present and shares `wxBand()` with
+   the fetched path so offline can't drift. Forecast requested with `timezone=UTC` and
+   sliced in UTC because `sunCalc` returns UTC minutes — format-only-local; getting this
+   wrong shifts the daylight window an hour all summer while looking plausible. Banded on
+   the windiest daylight hour (the copy says so). Waves are a fact judged by no rule,
+   absent where the marine grid is null (West Bank + Pickerings verified all-null).
+   `WXGEN` generation counter stops late wave responses landing under a newer verdict;
+   `wxClear()` in `select()` drops a verdict on venue change (fetched for one mark, does
+   not travel) and the fetched line names its mark. Out-of-range date (HTTP 400) gets its
+   own message — Open-Meteo reaches ~a fortnight.
+   **APPROVED DEVIATION — onshore/offshore gloss dropped.** OSM coastline normals were
+   computed for all 8 marks (Overpass, seaward = tangent+90°): right at 6, WRONG at
+   New Brighton (101° E — promontory corner; truth ≈ N/NW) and West Bank (358° N — the
+   north bank must face S). A wrong gloss says "offshore" into an onshore blow, so no
+   `facing` field exists and wind direction renders as a plain fact ("6–17 mph WSW") —
+   Decision A again: silent beats invented. Any future attempt must verify bearings
+   per-mark against imagery, the two known-bad ones first.
+   **Remaining ⑤ (any order):** size-limits table in fish ID, hook-in-skin first aid
+   card, share-config button, print stylesheet ("tonight's session" one-pager).
 
 ## Explicitly rejected (do not add)
 - Live tide APIs (no reliable free source; wrong tide data is worse than a link),
