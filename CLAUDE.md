@@ -85,8 +85,10 @@ Current state: one self-contained file, `fishing-field-guide.html` (~80KB), no b
    "Sources & credits" lives as a details.ref at the end of LOOK UP (reference material
    belongs in reference sections), naming Claude as synthesiser of the month bands and
    crediting the venue research as other people's work; footer points at it.
-③ **Hosting:** GitHub Pages, one canonical URL; raw-file sharing becomes offline fallback.
-   Also stabilises localStorage vs file:// inconsistency.
+③ **Hosting** ✅ done — GitHub Pages live at https://crgz13.github.io/fishing-field-guide/
+   (index redirect + README since baseline; localStorage stabilised by the hosted URL).
+   Closed by a canonical <link> in the head and a footer pointer so the raw file — now the
+   offline fallback — names the live URL as visible text that survives print and offline.
 ④ **Gear inventory + compatibility engine:** spec-based (never brand-based). Seed catalogue
    ~40–50 generic items + add-custom by type. Item schemas: rod{min_g,max_g},
    reel{size_class}, line{type,lb,mm}, hooklength{lb}, lead{g,wired}, hook{pattern,size},
