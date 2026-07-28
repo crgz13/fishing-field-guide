@@ -186,6 +186,9 @@
   .vpanel{background:#fff;border:1.5px solid var(--ink);padding:16px 18px}
   .vpanel h3{font-family:'Archivo',sans-serif;font-stretch:62%;font-weight:900;text-transform:uppercase;font-size:1.4rem}
   .vpanel .why{color:var(--teal);font-weight:600;font-size:.88rem;margin-bottom:8px}
+  .vpanel .sun{font-size:.9rem;margin:10px 0 0;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  /* the picker is a control; the date it chose is already spelled out in the line itself */
+  @media print{#sunpick{display:none}}
   .vstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0;border:1.5px solid var(--ink);margin:10px 0}
   .vstats div{padding:8px 10px;border-right:1px solid #d8ddd4;border-bottom:1px solid #d8ddd4;font-size:.82rem}
   .vstats b{display:block;font-family:'Archivo',sans-serif;font-stretch:80%;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--teal)}
@@ -229,13 +232,13 @@
   .deck{background:#fff;border:1.5px solid var(--ink);padding:16px 18px;margin:18px 0}
   .deck h3{font-family:'Archivo',sans-serif;font-stretch:75%;font-weight:800;font-size:.95rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
   .deck .row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
-  .deck select,.deck input[type=number],.locker select,.locker input{font:inherit;padding:8px 10px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:3px}
+  .deck select,.deck input[type=number],.locker select,.locker input,.vpanel input{font:inherit;padding:8px 10px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:3px}
   .derived{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));border:1.5px solid var(--ink)}
   .derived div{padding:8px 10px;border-right:1px solid #d8ddd4;font-size:.85rem}
   .derived b{display:block;font-family:'Archivo',sans-serif;font-stretch:80%;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--teal)}
   .whynote{font-size:.8rem;color:#3c4c56;margin-top:6px}
   body.night .deck{background:#140708}
-  body.night .deck select,body.night .deck input,body.night .locker select,body.night .locker input{background:#0a0405;color:#e03d3d;border-color:#e03d3d}
+  body.night .deck select,body.night .deck input,body.night .locker select,body.night .locker input,body.night .vpanel input{background:#0a0405;color:#e03d3d;border-color:#e03d3d}
   body.night .derived div{border-color:#3a1414}
   body.night .whynote{color:#c05050}
   #firstvisit .q{font-weight:600;font-size:.9rem;margin:10px 0 2px}
@@ -1355,16 +1358,62 @@
     el.innerHTML=h+'<p style="margin-top:6px">Or simply fish it on your rod\u2019s terms: '+mine[1]+'.</p></div>';
   }
 
+  /* SUN TIMES (⑤) — NOAA solar algorithm. Pure maths: no network, no dependency, offline.
+     Returns minutes after 00:00 UTC on that date, or null if the sun never reaches the
+     angle (impossible at these latitudes — the guard only keeps NaN off the page).
+     zen 90.833 = sunrise/sunset (refraction + solar radius); 96 = civil twilight. */
+  function sunCalc(lat,lng,y,mo,dy,zen,rise){
+    var rad=Math.PI/180, yy=y, mm=mo;
+    if(mm<=2){ yy-=1; mm+=12; }
+    var A=Math.floor(yy/100), B=2-A+Math.floor(A/4);
+    var jd=Math.floor(365.25*(yy+4716))+Math.floor(30.6001*(mm+1))+dy+B-1524.5;
+    var mins=720, i;
+    for(i=0;i<2;i++){   // second pass re-reads the sun's position at the first estimate
+      var t=(jd+mins/1440-2451545)/36525;
+      var L0=(280.46646+t*(36000.76983+t*0.0003032))%360;
+      var M=357.52911+t*(35999.05029-0.0001537*t);
+      var ec=0.016708634-t*(0.000042037+0.0000001267*t);
+      var C=Math.sin(M*rad)*(1.914602-t*(0.004817+0.000014*t))+Math.sin(2*M*rad)*(0.019993-0.000101*t)+Math.sin(3*M*rad)*0.000289;
+      var om=125.04-1934.136*t;
+      var lam=(L0+C-0.00569-0.00478*Math.sin(om*rad))*rad;
+      var ob=(23+(26+(21.448-t*(46.815+t*(0.00059-t*0.001813)))/60)/60+0.00256*Math.cos(om*rad))*rad;
+      var dec=Math.asin(Math.sin(ob)*Math.sin(lam)), yv=Math.tan(ob/2)*Math.tan(ob/2);
+      var eq=4/rad*(yv*Math.sin(2*L0*rad)-2*ec*Math.sin(M*rad)+4*ec*yv*Math.sin(M*rad)*Math.cos(2*L0*rad)-0.5*yv*yv*Math.sin(4*L0*rad)-1.25*ec*ec*Math.sin(2*M*rad));
+      var ha=Math.cos(zen*rad)/(Math.cos(lat*rad)*Math.cos(dec))-Math.tan(lat*rad)*Math.tan(dec);
+      if(ha>1||ha<-1) return null;
+      mins=720-4*(lng+Math.acos(ha)/rad*(rise?1:-1))-eq;
+    }
+    return mins;
+  }
+  /* Every mark is in England, so the zone is fixed and the native formatter handles
+     GMT/BST — we write no DST code of our own. */
+  function sunFmt(y,mo,dy,mins){
+    if(mins===null) return '—';
+    return new Date(Date.UTC(y,mo-1,dy)+Math.round(mins)*60000)
+      .toLocaleTimeString('en-GB',{timeZone:'Europe/London',hour:'2-digit',minute:'2-digit'});
+  }
+  var SUNDATE=null;  // the day being planned — deliberately not in the hash, profile or storage
+  function sunHTML(key){
+    var v=VENUES[key], s=SUNDATE||todayISO();
+    var y=+s.slice(0,4), mo=+s.slice(5,7), dy=+s.slice(8,10);  // off the string, not Date()
+    function f(z,r){ return sunFmt(y,mo,dy,sunCalc(v.lat,v.lng,y,mo,dy,z,r)); }
+    return new Date(Date.UTC(y,mo-1,dy)).toLocaleDateString('en-GB',{timeZone:'UTC',day:'numeric',month:'short'})+
+      ': first light '+f(96,1)+' · sunrise '+f(90.833,1)+' · sunset '+f(90.833,0)+' · last light '+f(96,0);
+  }
+
   function renderPanel(key){
     var v=VENUES[key], el=document.getElementById('vpanel');
     if(key==='all'){
-      el.innerHTML='<h3>All marks</h3><p class="why">tap a pin or chip for tactics, verdicts and sub-spots</p><p style="font-size:.95rem">Eight marks, honestly labelled: green badges are documented (Sea Angler, tackle-shop guides), amber are single-source forum knowledge to verify locally, and the red Rock Channel pin is a warning, not a destination. Verdicts below each mark show how every rod class fares there — including gear you don\u2019t own yet.</p>';
+      el.innerHTML='<h3>All marks</h3><p class="why">tap a pin or chip for tactics, verdicts and sub-spots</p><p style="font-size:.95rem">Eight marks, honestly labelled: green badges are documented (Sea Angler, tackle-shop guides), amber are single-source forum knowledge to verify locally, and the red Rock Channel pin is a warning, not a destination. Verdicts below each mark show how every rod class fares there — including gear you don\u2019t own yet.</p>'
+        +'<p class="whynote">Sun times are worked out per mark — pick one for first light, sunrise, sunset and last light on the day you’re planning.</p>';
       return;
     }
     var g=gearCalc();
     var h='<h3>'+v.name+' '+BADGE[v.conf]+'</h3><p class="why">'+v.why+'</p><p style="font-size:.95rem">'+v.blurb+'</p><div class="vstats">';
     v.stats.forEach(function(s){h+='<div><b>'+s[0]+'</b>'+s[1]+'</div>';});
-    h+='</div><ul class="verdicts">';
+    h+='</div><p class="sun"><b>Sun</b> <input type="date" id="sunpick" value="'+(SUNDATE||todayISO())+'" aria-label="Date for sun times"> <span id="suntimes">'+sunHTML(key)+'</span></p>'+
+      '<p class="whynote">Worked out from this mark’s own coordinates, against a flat horizon — high ground or a wall behind you cuts the light shorter than this. The lure work in <a href="#phase2">Phase 2 — At the water</a> is aimed at those low-light edges.</p>';
+    h+='<ul class="verdicts">';
     ['light','lure','bass','beach'].forEach(function(c){
       var f=v.fit[c], me=(c===g.rod.cls)?' \u2190 <b>your rod</b>':'';
       h+='<li><span class="fit fit-'+f[0]+'"></span><b>'+CLASSNAMES[c]+':</b> '+FITTXT[f[0]]+' — '+f[1]+me+'</li>';
@@ -1854,6 +1903,16 @@
       }); h+='</ul>'; }
     box.innerHTML=h+'</div>';
   }
+
+  /* Wired once on the static panel, not per render — renderPanel() rebuilds its innerHTML on
+     every venue change and would otherwise stack handlers (the SEGWIRED lesson). Only the
+     times span is rewritten: re-rendering the panel would drop focus out of the picker and
+     re-announce the whole aria-live region for a change of four numbers. */
+  document.getElementById('vpanel').addEventListener('change',function(e){
+    if(!e.target||e.target.id!=='sunpick') return;
+    SUNDATE=/^\d{4}-\d{2}-\d{2}$/.test(e.target.value)? e.target.value : null;  // cleared → today
+    var el=document.getElementById('suntimes'); if(el) el.textContent=sunHTML(state.venue);
+  });
 
   LOCKER=loadLocker();   // before the first render: the gap list judges against owned gear
   LOG=loadLog();         // ditto: select() renders the calendar, which reads the log

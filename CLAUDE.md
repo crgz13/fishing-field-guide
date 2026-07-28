@@ -158,10 +158,30 @@ Current state: one self-contained file, `fishing-field-guide.html` (~80KB), no b
    half-filled form. localStorage `efg-log` + JSON export/import, locker patterns verbatim.
    No stats/"your best month" — recomputing bands from a handful of sessions is the exact
    flattening the estimate tag prevents.
-   **Remaining ⑤ (any order):** dawn/dusk computed offline from mark coords, "should I go"
-   via Open-Meteo wind/waves (degrade to manual entry offline), size-limits table in fish
-   ID, hook-in-skin first aid card, share-config button, print stylesheet ("tonight's
-   session" one-pager).
+   **dawn/dusk ✅ done** — per-mark sun line in the venue panel (first light · sunrise ·
+   sunset · last light + native date picker), NOAA algorithm inline (~30 lines, two-pass),
+   pure maths, zero network. Display is pinned to Europe/London via `toLocaleTimeString`
+   — every mark is in England, the native formatter does GMT/BST, we own no DST code.
+   Decisions: the spec's "±2 min" gloss was WRONG IN KIND and was replaced (approved) by
+   the flat-horizon caveat — an almanac check validates the algorithm, not the sightline;
+   Black Combe behind Silecroft or Hodbarrow's seawall cuts real light far more than any
+   ±2 min, so the copy says "against a flat horizon… high ground or a wall behind you
+   cuts the light shorter". The spec's "dawn and dusk are the feeding windows" was an
+   unbadged claim and became a pointer to the existing Phase 2 lure copy instead — do not
+   re-add it as a bare assertion. Venue 'all' → a pointer sentence, never a number.
+   `SUNDATE` is a plain JS var — deliberately NOT in hash/profile/storage. One delegated
+   change listener on the static `#vpanel` (the SEGWIRED lesson: renderPanel rebuilds
+   innerHTML per venue) rewrites only the `#suntimes` span — a full re-render would drop
+   picker focus and re-announce the whole aria-live region. Print hides the picker only;
+   the date is spelled out in the sentence. Verified against USNO (aa.usno.navy.mil),
+   NOT sunrise-sunset.org, which showed a systematic 2–3 min rise/set bias; 15/16 values
+   exact, worst 1 min. Regression anchors (UTC, civil/rise/set/civil): Hodbarrow 15 Jan
+   2026 = 07:43 08:25 16:21 17:03 · 15 Jul = 03:08 03:59 20:38 21:29; New Brighton
+   15 Jan = 07:39 08:20 16:24 17:04 · 15 Jul = 03:14 04:02 20:33 21:21.
+   **Remaining ⑤ (any order):** "should I go" via Open-Meteo wind/waves (degrade to
+   manual entry offline — Open-Meteo approved by Craig 28 Jul 2026 as the first live API
+   beyond map tiles), size-limits table in fish ID, hook-in-skin first aid card,
+   share-config button, print stylesheet ("tonight's session" one-pager).
 
 ## Explicitly rejected (do not add)
 - Live tide APIs (no reliable free source; wrong tide data is worse than a link),
