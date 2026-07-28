@@ -80,8 +80,11 @@ Current state: one self-contained file, `fishing-field-guide.html` (~80KB), no b
    approximate stance marker" in the map caption — all pins, since restricting it to amber
    pins would imply the green ones are surveyed; confidence badge added to pin popups; ●/◐
    key added to the offline map SVG so the anecdotal signal survives offline).
-② **Start-here router** (never fished → DO; picking a day → PLAN; at the water → LOOK UP)
-   + proper credits/sources section.
+② **Start-here router** + credits/sources ✅ done — three static anchors in the header
+   (never fished → DO; picking a day → PLAN; at the water → LOOK UP), zero JS, print-hidden;
+   "Sources & credits" lives as a details.ref at the end of LOOK UP (reference material
+   belongs in reference sections), naming Claude as synthesiser of the month bands and
+   crediting the venue research as other people's work; footer points at it.
 ③ **Hosting:** GitHub Pages, one canonical URL; raw-file sharing becomes offline fallback.
    Also stabilises localStorage vs file:// inconsistency.
 ④ **Gear inventory + compatibility engine:** spec-based (never brand-based). Seed catalogue

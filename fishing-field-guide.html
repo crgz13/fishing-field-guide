@@ -53,6 +53,13 @@
   .specstrip b{display:block;font-size:1.05rem;font-weight:800}
   .checked{font-size:.8rem;color:var(--teal);max-width:70ch;margin:10px 0}
 
+  /* ---------- start-here router ---------- */
+  /* ponytail: colours are vars, so night mode needs no rule of its own. */
+  .router{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 4px}
+  .router a{flex:1 1 210px;padding:10px 12px;border:1.5px solid var(--ink);text-decoration:none;color:var(--teal);font-size:.85rem}
+  .router a>b:first-child{display:block;color:var(--ink);font-family:'Archivo',sans-serif;font-stretch:75%;font-weight:900;text-transform:uppercase;letter-spacing:.05em;font-size:.8rem;margin-bottom:2px}
+  @media print{.router{display:none}}
+
   /* ---------- rig hero diagram ---------- */
   .hero-rig{padding:26px 0 8px;overflow-x:auto}
   .hero-rig svg{min-width:760px;width:100%;height:auto;display:block}
@@ -271,6 +278,7 @@
   details.ref summary{cursor:pointer;font-family:'Archivo',sans-serif;font-stretch:62%;font-weight:900;text-transform:uppercase;font-size:clamp(1.4rem,4vw,2rem);list-style:none;padding:8px 0}
   details.ref summary::after{content:' +';color:var(--teal)}
   details.ref[open] summary::after{content:' \2212'}
+  .credits p{font-size:.9rem;max-width:70ch;margin:8px 0}
   @media print{details.ref{display:block}details.ref summary::after{content:''}}
 </style>
 </head>
@@ -295,6 +303,11 @@
       <div>Mark<b>All venues</b></div>
     </div>
     <p class="checked">Page reviewed 26 Jul 2026. Rules, phone numbers, parking and tide windows all change without notice — re-verify anything you'll rely on before you travel.</p>
+    <div class="router">
+      <a href="#do"><b>Never fished before?</b> Start at <b>Do</b> — the rig, the one knot, the first cast, in order.</a>
+      <a href="#plan"><b>Picking a day to go?</b> Start at <b>Plan</b> — gear, mark, tides, what's biting.</a>
+      <a href="#lookup"><b>At the water right now?</b> Straight to <b>Look up</b> — baits, troubleshooting, what have I caught.</a>
+    </div>
   </div>
 </header>
 
@@ -767,10 +780,19 @@
   </table>
   </div>
 </details>
+<details class="ref"><summary>Sources &amp; credits</summary>
+  <div class="credits">
+  <p><b>Venue research:</b> Sea Angler magazine (Alan Darby's Duddon pieces, via Gint's of Millom) · Turners Tackle &amp; Taskers Angling, Liverpool, for the Mersey marks · World Sea Fishing and local forums — that's the amber-badged material: single-source, worth verifying locally before you rely on it.</p>
+  <p><b>Local knowledge:</b> the four tackle shops named in the venue panels — Gint's (Millom), Lowery Tackle (Haverigg), Angling &amp; Hiking Centre (Barrow), Bonners (New Brighton). Phone numbers live with each venue rather than here.</p>
+  <p><b>Regulations:</b> <a href="https://www.nw-ifca.gov.uk/" target="_blank" rel="noopener">NWIFCA</a> and <a href="https://www.gov.uk/government/publications/bass-industry-guidance-2026/bass-fishing-guidance-2025#recreational-bass-fishing" target="_blank" rel="noopener">gov.uk bass rules</a>. Bass size, bag limit and closed season verified against gov.uk 26 Jul 2026. Reviewed annually — check both before a trip.</p>
+  <p><b>Maps:</b> Leaflet · Imagery &copy; Esri, Maxar, Earthstar Geographics · &copy; OpenStreetMap contributors.</p>
+  <p><b>Season calendar &amp; synthesis:</b> the month bands are calibrated estimates synthesised by Claude, an AI assistant, from the research above — not from catch records. That's what the <span class="badge b-est">estimate</span> tag on the calendar marks. This guide was assembled with Claude; the venue research is other people's work, credited above, and the verified / anecdotal badges say which claims stand on named research and which don't.</p>
+  </div>
+</details>
 </section>
 <footer>
   <div class="wrap">
-    Built around the gear you select · Mersey, Dee &amp; Duddon estuaries · Venue research: Sea Angler, Turners Tackle, Taskers, WSF &amp; local forums (verified vs anecdotal as badged) · 2026 bass rules baked in — re-check annually · Video buttons open YouTube searches.
+    Built around the gear you select · Mersey, Dee &amp; Duddon estuaries · Venue research: Sea Angler, Turners Tackle, Taskers, WSF &amp; local forums (verified vs anecdotal as badged) · 2026 bass rules baked in — re-check annually · Video buttons open YouTube searches · Full sources: see Sources &amp; credits under Look up.
   </div>
 </footer>
 
