@@ -129,8 +129,14 @@ Current state: one self-contained file, `fishing-field-guide.html` (~80KB), no b
    breaking strain alone let a 50lb braid score a green ✓ against the one rule CLAUDE.md
    calls mandatory, and braid cannot stretch. `mkNeed` is named that way because a local
    `var need` inside the shock-leader rule would shadow a global `need()`.
-   Known gap left open: `lockerChanged()` re-renders the gap list but not `buildRig()`,
-   so the rig selects stay stale until reload.
+   Both gaps ④(c) left open are now closed. **A shock leader must be MONO** — the rule
+   tests `type==='mono' && lb>=need` and fails closed on an untyped item, because a 50lb
+   braid is strong enough and still useless: absorbing the cast means stretching, which
+   braid cannot do. Never "simplify" this back to a strength check. `lockerChanged()`
+   now calls `buildRig()` too, so locker gear reaches the rig selects without a reload;
+   that required wiring the SVG segment listeners **once** behind `SEGWIRED`, since
+   `buildRig()` re-runs on every rod/line/locker change and was stacking a fresh
+   click/keydown pair each time (four handler calls per click after three rebuilds).
    ~10 pairwise/chain rules, each returns g/y/r + reason:
    rod↔lead(+12g), rod↔reel, reel↔line capacity, line↔hooklength weak-link, line↔lead
    shock-leader rule (hard red >57g without one), hook↔bait, lead↔venue run,
