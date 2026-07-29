@@ -1,0 +1,9 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [
+      "fishing-field-guide.html"
+    ],
+    "ignoreValues": []
+  }
+}
