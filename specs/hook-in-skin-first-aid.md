@@ -79,3 +79,40 @@ general wound care beyond the hook wound (bleeding control, etc.).
 CLAUDE.md ⑤ records: card done + the decisions above (no-removal stance, crush-the-barb
 as a new teaching claim, fail-closed NHS transcription, visible placement, no proximity
 claims).
+
+## Decisions & errata (post-build)
+Moved here from CLAUDE.md's roadmap ⑤ on 30 Jul 2026.
+
+Third danger-card (full-width `.fullcard`, `grid-column:1/-1` — five bullets do not fit a
+230px grid cell) + one safety-box bullet + one aftercare pointer clause + its own scoped
+stamp.
+
+### The size-limits fail-closed rule extends to medical content, and it bit four times
+1. **The spec's "back it out the way it came" was DROPPED.** No NHS page sanctions
+   self-removal — `/conditions/splinters/` is a 404. The aftercare sentence saying exactly
+   that is about a flounder, and does not transfer to human skin under a "verified" stamp.
+2. **Sea-water infection dropped** — NHS grounds tetanus risk in soil/manure only.
+3. **"Tape the hook flat" dropped** — the St John's page is JS-rendered, empty to `curl`,
+   so unusable as a transcription source.
+4. **The stamp says "Hook-in-skin first aid verified…", NOT "First-aid points verified…"**
+   The wider wording, sitting below the card row, would have falsely stamped the weever
+   hot-water protocol with three pages that never mention it.
+
+### The teaching stance
+The card teaches **NO removal technique for a buried barb** — cut the line, leave it, A&E.
+A medical procedure is not tackle, so the string-yank lives nowhere, **not even in
+reference**.
+
+Crush-the-barb prevention ships labelled "(angling practice, not medical advice)" —
+provenance split *inside* one bullet.
+
+"Go to A&E" deliberately narrows NHS's "Call 999 or go to A&E": the NHS attribution covers
+only the do-not-remove rule, matched verbatim. Do-not-drive is kept only on the eye branch,
+where the NHS box plainly applies.
+
+Skin-band fill reuses the flounder's `#e0d4b4`, so night mode recolours it with zero new
+palette rules.
+
+### Verification
+Review re-fetched all three pages independently: 13 claims matched, 3 absences confirmed,
+0 fails.

@@ -55,3 +55,11 @@ as conditional. Print: give it the same `@media print` treatment as `details.ref
 "checked <date>" stamps / verify links / date banner (①c) · estimate/approximate tags
 (①d) · start-here router + credits (②) · fixing the global print-closed-details bug ·
 any RODS/LINES data changes · kit inventory logic (④).
+
+## Decisions & errata (post-build)
+Moved here from CLAUDE.md's roadmap ① on 30 Jul 2026.
+
+Shipped: neutral title, kit table de-owned and de-branded, live casting-weight gloss,
+dog box demoted to a closed `<details>` toggle, no Runcorn-relative copy anywhere.
+The project brief's own "Built for Craig…" header outlived this pass and was corrected
+in the same commit that moved this note.

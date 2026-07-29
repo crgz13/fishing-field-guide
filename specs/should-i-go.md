@@ -59,3 +59,46 @@ direction (gloss only).
 CLAUDE.md: tick "should I go"; record — comfort-not-safety wording rule, the mandatory
 tide sentence, bands synthesised + labelled, `facing` bearings are map-read approximate
 data, fetch is button-only, waves fact-only.
+
+## Decisions & errata (post-build)
+Moved here from CLAUDE.md's roadmap ⑤ on 30 Jul 2026.
+
+Closed `details.ref` in PLAN, after `#vpanel`.
+
+### It judges comfort, never safety
+Verdict vocabulary is exactly **kind / workable / hard work** — never "safe", never "go".
+The mandatory tide sentence — weather is the comfort axis, tides are the safety axis, no
+live tide data on purpose — is static HTML beside a static band table
+(<10 / 10–20 / >20 mph, gusts >28) carrying the "rule-of-thumb bands, synthesised"
+provenance line. All of it readable JS-off.
+
+### Fetch is button-only
+Zero requests on page load, and a full chip sweep fires none. Open-Meteo — the first live
+API beyond map tiles, approved 28 Jul 2026. Coords-in-URL is fine here: public venue
+data, not personal. Manual entry is always present and shares `wxBand()` with the fetched
+path, so offline cannot drift.
+
+### The UTC trap
+The forecast is requested with `timezone=UTC` and sliced in UTC, because `sunCalc`
+returns UTC minutes — format-only-local. Getting this wrong shifts the daylight window an
+hour all summer **while looking plausible**. Banded on the windiest daylight hour, and the
+copy says so.
+
+Waves are a fact judged by no rule, absent where the marine grid is null (West Bank +
+Pickerings verified all-null). `WXGEN` is a generation counter that stops a late wave
+response landing under a newer verdict. `wxClear()` in `select()` drops a verdict on venue
+change — it was fetched for one mark and does not travel — and the fetched line names its
+mark. An out-of-range date (HTTP 400) gets its own message; Open-Meteo reaches about a
+fortnight.
+
+### APPROVED DEVIATION — the onshore/offshore gloss was dropped
+This supersedes the "On pass" line above, which expected a `facing` field.
+
+OSM coastline normals were computed for all 8 marks (Overpass, seaward = tangent+90°):
+right at 6, **WRONG at two** — New Brighton (101° E, a promontory corner; truth ≈ N/NW)
+and West Bank (358° N; the north bank must face S). A wrong gloss says "offshore" into an
+onshore blow, so **no `facing` field exists** and wind direction renders as a plain fact
+("6–17 mph WSW"). Decision A again: silent beats invented.
+
+Any future attempt must verify bearings per-mark against imagery — **the two known-bad
+ones first**.

@@ -84,3 +84,16 @@ per-stat inline stamps · footer rewording · any venue/regs fact changes.
 ## On pass (same commit)
 CLAUDE.md: tick ①(c) in roadmap; note the date-literal find-replace convention; print
 line in architecture is now accurate. Dismiss task chip task_fefedb94 (folded in here).
+
+## Decisions & errata (post-build)
+Moved here from CLAUDE.md's roadmap ① on 30 Jul 2026.
+
+Shipped: global "Page reviewed <date>" banner under the specstrip, per-venue "Venue
+details reviewed <date>" line, NWIFCA + gov.uk bass-rules links in the regs box.
+The same commit fixed print not expanding closed `<details>`.
+
+The stamp-wording rule this established is load-bearing and stays in CLAUDE.md
+principle 2: "reviewed <date>" means someone read the page that day; "verified against
+<source> <date>" is only for facts actually re-checked against that source. Later items
+leaned on it — size-limits kept its own "verified 28 Jul 2026" stamp while the page
+banner stayed "reviewed 26 Jul", because the whole page was not re-reviewed.

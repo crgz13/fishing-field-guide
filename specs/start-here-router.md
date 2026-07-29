@@ -83,3 +83,14 @@ field) · hosting/③.
 ## On pass (same commit)
 CLAUDE.md: tick ② in the roadmap; note the credits-section location decision
 (reference material lives in LOOK UP) if accepted as stated.
+
+## Decisions & errata (post-build)
+Moved here from CLAUDE.md's roadmap ② on 30 Jul 2026.
+
+Shipped: three static anchors in the header (never fished → DO; picking a day → PLAN;
+at the water → LOOK UP), zero JS, print-hidden.
+
+Decision: "Sources & credits" lives as a `details.ref` at the end of LOOK UP —
+reference material belongs in reference sections. It names Claude as the synthesiser of
+the month bands and credits the venue research as other people's work. The footer
+points at it.

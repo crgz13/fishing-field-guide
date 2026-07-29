@@ -76,3 +76,44 @@ facts · rod-rest/accessory schema · changing the box's trigger.
 ## On pass (same commit)
 CLAUDE.md: tick ④(c); record the price-hint drop, the running-ledger fallback (pedagogy
 fix), lure targets = calendar 'bass' rows, and REELBAND/leaderLb as shared constants.
+
+## Decisions & errata (post-build)
+Moved here from CLAUDE.md's roadmap ④(c) on 30 Jul 2026.
+
+The hardcoded buy-lists are gone. `gapNeeds(class,venue)` computes rod / reel / leader /
+lead / rig (or lures, for a lure target), checking the **LOCKER first** ("✓ in your
+locker") then naming a generic catalogue spec ("to add"). All-owned flips the headline.
+
+### Decisions
+- **£ price hints dropped** — price/availability is on the rejected list; the shops line
+  is where that belongs.
+- **The old box's flapper suggestion was replaced by the heavy running ledger.**
+  Recommending a flapper contradicted the one-rig pedagogy — computing the list is what
+  surfaced it.
+- **Rod rest dropped:** not representable spec-based.
+- `REELBAND` + `leaderLb()` are shared by the rules and the gap list so the two cannot
+  drift (the LEADS/catalogue trick again).
+- Locker rods are classed by `clsOf()`, the same thresholds `rodOf()` uses for custom rods.
+- The lure↔month verdict (deferred from ④b) renders here, reading only calendar rows
+  this guide already calls lure quarry ("bass"), always carrying the estimate-provenance
+  sentence.
+
+### Two bugs this fixed — do not reintroduce
+1. The old box crashed to "you'd add: undefined" whenever the target class was `light`
+   (no `light` key in `buy` — reachable with a lure rod at Pickerings/West Bank).
+2. **An owned shock leader must be MONO.** Matching on breaking strain alone let a 50lb
+   braid score a green ✓ against the one rule CLAUDE.md calls mandatory. The rule tests
+   `type==='mono' && lb>=need` and **fails closed on an untyped item**, because a 50lb
+   braid is strong enough and still useless: absorbing the cast means stretching, which
+   braid cannot do. Never "simplify" this back to a strength check.
+
+`mkNeed` is named that way because a local `var need` inside the shock-leader rule would
+shadow a global `need()`.
+
+### Wiring erratum
+`lockerChanged()` now calls `buildRig()` too, so locker gear reaches the rig selects
+without a reload. That required wiring the SVG segment listeners **once** behind
+`SEGWIRED`: `buildRig()` re-runs on every rod/line/locker change and was stacking a
+fresh click/keydown pair each time (four handler calls per click after three rebuilds).
+See `rig-chain-presentation.md` for the boundary — `SEGWIRED` guards the static SVG
+segments **only**.

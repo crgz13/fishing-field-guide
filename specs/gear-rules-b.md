@@ -91,3 +91,32 @@ run/ground data for other venues · any new venue fact.
 ## On pass (same commit)
 CLAUDE.md: tick ④(b); record decision A's wording and the ground-derivation map as
 the venue `ground` field's provenance.
+
+## Decisions & errata (post-build)
+Moved here from CLAUDE.md's roadmap ④(b) on 30 Jul 2026.
+
+④(b) was initially blocked: the rules needed per-venue run/ground data that did not
+exist. Resolved without inventing any:
+
+- **GROUND is a re-labelling** of each venue's existing sourced "Ground" stat
+  (snaggy / mixed / clean / soft). No new claims; the confidence badge is inherited.
+- **RUN carries a figure ONLY where a source gives one** — today New Brighton alone
+  ("5–6oz to hold mid-tide"). Everywhere else the rule stays **SILENT** rather than
+  estimating a holding weight. This is **decision A**: a guessed holding weight is a
+  safety-adjacent invention about a real tidal mark. Silent beats invented.
+  (Decision A was invoked again in ⑤ to drop the onshore/offshore gloss.)
+
+9 rules render as link colours on the rig-chain SVG, tap/keyboard for reasons; unjudged
+links keep their original stroke. ~10 pairwise/chain rules, each returning g/y/r +
+reason: rod↔lead(+12g), rod↔reel, reel↔line capacity, line↔hooklength weak-link,
+line↔lead shock-leader rule (hard red >57g without one), hook↔bait, lead↔venue run,
+bait/lure↔venue+month via the species calendar, rig↔ground snags.
+
+### Errata, load-bearing
+- **A beachcaster at its own derived 142g max lead on the default 15lb line is
+  correctly RED** (needs ~50lb shock leader). That is the safety rule working — do not
+  "fix" it to make defaults all-green.
+- **Shock-leader maths rounds to nominal ounces** (142g = 5oz = 50lb). `ceil()` wrongly
+  demanded 60lb.
+
+Both are retained in CLAUDE.md as invariants.

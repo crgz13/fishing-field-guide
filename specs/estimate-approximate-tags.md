@@ -78,3 +78,17 @@ actually sourced, not before) · re-researching any month band · any venue/regs
 ## On pass (same commit)
 CLAUDE.md: tick ①(d) — roadmap ① complete; add the provenance-vs-attestation axis rule to
 principle #2.
+
+## Decisions & errata (post-build)
+Moved here from CLAUDE.md's roadmap ① on 30 Jul 2026. Closed roadmap ①.
+
+- Table-level "estimate" badge on the season calendar, with the legend naming which
+  windows are venue-sourced. The tag sits on the table **once** while every row is
+  synthesised; it moves per-row the day a row gets its own source.
+- "Every pin is an approximate stance marker" in the map caption — **all** pins, since
+  restricting it to amber pins would imply the green ones are surveyed.
+- Confidence badge added to pin popups.
+- ●/◐ key added to the offline map SVG so the anecdotal signal survives offline.
+
+The provenance-vs-attestation orthogonality rule this pass added to principle 2 is the
+reason the catch log later became a *third* provenance class rather than a fourth badge.

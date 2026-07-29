@@ -59,3 +59,25 @@ file is the transfer) · overlaying blanks · any calendar band change from user
 CLAUDE.md: tick ⑤ catch log; record the third-provenance-class decision (overlay never
 mutates bands, catches-only), the parenthetical-stripping species match, and 'all' =
 any-venue scoping.
+
+## Decisions & errata (post-build)
+Moved here from CLAUDE.md's roadmap ⑤ on 30 Jul 2026.
+
+**A logged catch is a THIRD provenance class** — user-authored fact, beside the
+synthesised bands and the sourced windows. It renders as a ▴ overlay on the calendar
+that **never changes a band symbol**: n=1 argues with a calibrated estimate in neither
+direction. So the overlay is catches-only; blanks and unlisted-venue sessions list in the
+diary but never mark the table, and the copy says why in **both** directions.
+
+- Species match strips parentheticals ("eel" hits "Eel (release)").
+- Venue `'all'` on the table means caught-at-any-mark, and **`validEntry` REJECTS `'all'`
+  as an entry venue** — an imported `'all'` would mark every mark at once. It also fails
+  closed on bad dates and unknown marks.
+- The ▴ key in the legend stays hidden until a marker exists.
+- **Placement:** the `<details>` sits after the legend paragraph, not directly under the
+  table — the legend's `-18px` top margin overlaps the table.
+- The log form re-defaults date/mark to the venue being viewed on details-open, guarded
+  on species+notes being empty so it cannot stomp a half-filled form.
+- `localStorage efg-log` + JSON export/import, locker patterns verbatim.
+- **No stats, no "your best month".** Recomputing bands from a handful of sessions is the
+  exact flattening the estimate tag prevents.

@@ -56,3 +56,18 @@ De-Craig copy sweep incl. `<title>` and kit-table "owned" flags (①b) · "check
 stamps, verify links, global date banner (①c) · "estimate"/"approximate" tags (①d) ·
 start-here router (②) · gear inventory (④) · any profile fields beyond the five above ·
 export/import UI.
+
+## Decisions & errata (post-build)
+Moved here from CLAUDE.md's roadmap ① on 30 Jul 2026 — the narrative of shipped work
+belongs with its spec, not in the always-loaded project brief.
+
+- Shipped. Card shows once, when neither hash nor profile exists.
+- **Erratum found later (during rig-chain presentation):** the card's rod buttons never
+  ran `defaultRig();buildRig();`. Pre-existing — the default lead already went stale
+  against the chosen rod — but invisible until the chain displayed the rod's name.
+  The forward rule (any handler changing `state.rod`/`state.line` ends with that pair)
+  is retained in CLAUDE.md as an invariant.
+- `#firstvisit` is a SECOND runtime element with `class="deck"` (built by
+  `buildFirstVisit`), so a static grep for `class="deck"` finds only `#geardeck` and
+  undercounts. `.deck button.act` is safe today only because the first-visit buttons
+  are classless.

@@ -66,3 +66,26 @@ any change to derive(), presets, or the specstrip · brand/price/availability da
 ## On pass (same commit)
 CLAUDE.md: mark ④(a) done in the roadmap; record the single-file decision and the
 locker's location (closed details in PLAN).
+
+## Decisions & errata (post-build)
+Moved here from CLAUDE.md's roadmap ④ / ④(a) on 30 Jul 2026.
+
+### The ④ frame (applies to a, b, c and the range extension)
+Spec-based, **never** brand-based. Item schemas: `rod{min_g,max_g}`,
+`reel{size_class}`, `line{type,lb,mm}`, `hooklength{lb}`, `lead{g,wired}`,
+`hook{pattern,size}`, `rig{hook_size,lead_rating}`, `lure{g,style}`, `bait{name}`.
+**Bait is SESSION-level, not locker-level** (decided) — now stated in the locker's own
+copy, not just in the project brief.
+
+### ④(a) as shipped
+- Schemas + a 51-item generic catalogue. **Leads are generated from the LEADS table**,
+  so the two cannot drift.
+- "My gear locker" as a closed `<details>` in PLAN, `localStorage efg-locker`, native
+  JSON export/import with visible rejection of bad files.
+- Stores only — no rules. Those arrived in ④(b).
+- Single file kept (91→105KB at the time; the file has since grown past that, so do not
+  treat any KB figure here as current — read `du -h`).
+
+### Erratum, load-bearing
+**The item-kind key is `kind`, NOT `type`** — `type` belongs to `line{type,…}` and the
+two collided. Retained in CLAUDE.md as an invariant.

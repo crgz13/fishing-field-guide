@@ -79,3 +79,35 @@ any change to hash precedence or the recipient's first-visit flow.
 ## On pass (same commit)
 CLAUDE.md ⑤ records: share button done + decisions above (setup-hash-only with the
 privacy rationale, never-mutates, copied-only-on-resolve, canonical base even offline).
+
+## Decisions & errata (post-build)
+Moved here from CLAUDE.md's roadmap ⑤ on 30 Jul 2026.
+
+"Share this setup" in the gear deck: canonical URL + the existing hash payload, handed
+over via `navigator.share` → clipboard → visible-URL fallback.
+
+### Decisions
+- **The link carries the setup hash ONLY** (rod/line/venue/cw/nr). Locker and catch log are
+  excluded on purpose: both have their own JSON export, and **a catch log is dates-and-places
+  of a real person that must never travel silently in a URL pasted into a group chat.** The
+  visible copy says so.
+- **A share is a READ** — no `location.hash` write, no `saveProfile()`. Address bar and
+  profile are byte-identical after a click.
+- **"Copied ✓" only when the clipboard promise resolves** — the false-stamp rule in
+  miniature. The real clipboard rejecting a synthetic click proved the guard works. The
+  `navigator.share` branch claims nothing, because the OS sheet is its own confirmation and
+  a cancel is invisible.
+- **The base URL is the canonical `<link>`, even from `file://`** — read from the DOM so the
+  two cannot drift (the LEADS trick). A local path is useless to the recipient and leaks the
+  sender's directory structure. See `hosting.md`.
+
+The encoder was extracted to `hashString()`, shared by `writeHash()` and the button.
+
+Markup ships static with `hidden`; JS removes it at init end, so JS-off shows no dead
+control (the `norodnote`/`savedline` pattern).
+
+### Note for future `.deck` styling
+`#firstvisit` is a **SECOND** runtime element with `class="deck"` (built by
+`buildFirstVisit`), so a static grep for `class="deck"` finds only `#geardeck` and
+undercounts. `.deck button.act` is safe today only because the first-visit buttons are
+classless.

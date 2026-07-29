@@ -57,3 +57,36 @@ teaching surface; catalogue feeds the locker only).
 ## On pass (same commit)
 CLAUDE.md: record the range extension, both REELBAND widenings + the 1000-reel known
 ceiling, the pulley pedagogy guard, LEADS 7g/227g, and the UK-workhorse direction note.
+
+## Decisions & errata (post-build)
+Moved here from CLAUDE.md's roadmap ④(a)+ on 30 Jul 2026.
+
+51→76 items, spanning ultralight/LRF (1–10g rod, 2000 reel, 8lb braid, 4/6lb fluoro,
+hooks 8/6, 2–5g lures), through the 60–100g hole (2–4oz rough-ground rod + the 40lb
+shock leader that chain was missing), to an 8oz heavy tier (150–227g rod, 10000 reel,
+80lb mono shock, pulley rig, 8oz leads).
+
+Justified by the stated direction: the page is meant to become a UK-wide trip-research
+workhorse, so the catalogue is **not capped by the current eight marks' needs**.
+
+### Decisions
+- **`band` is a UI grouping only** (native `<optgroup>`, smallest→biggest) and **NO rule
+  reads it** — classes still come only from `clsOf()`.
+- `REELBAND` light AND lure widened 2500→2000 (identical twins, same rationale), and
+  beach 8000→10000, with a `ponytail:` comment naming the accepted ceiling: a true
+  1000-size LRF reel scores amber, and the fix is a fifth rod class costing 8 new venue
+  claims. Wait for ultralight venue data.
+- **`GAPREEL` exists** because widening the band would otherwise have changed BUY advice
+  (`fromCat`'s first-in-band would recommend a 2000 to light-rod users). Rules stay
+  tolerant of owned gear; recommendations stay the middle of the pairing. Parity with
+  pre-change advice was machine-verified.
+- **The pulley rig is catalogue-only, like the flappers.** The gap list's rig line is
+  hardcoded to the heavy running ledger (one-rig pedagogy) — do not route it through a
+  generic finder.
+- LEADS gained 7g (0.25oz — a 5–20g rod now derives 7g instead of "—") and 227g (8oz).
+  **The 8oz lead can never be ADVISED** (needs a 239g+ rod; even the 227g rod derives
+  170g) — it exists so owned gear gets judged, not to be recommended.
+
+### Spec erratum, recorded honestly
+This spec's "heavy rod + 4000 reel = red" acceptance criterion **was wrong in fact**: it
+is and was amber — the beach band's floor never moved.

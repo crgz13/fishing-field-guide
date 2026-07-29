@@ -52,3 +52,41 @@ fish-welfare essay · any JS.
 CLAUDE.md: tick size-limits; record the fail-closed rule for regulatory numbers (no
 remembered values, per-value source quotes in the build report) and the bass
 row/regs-box identity constraint.
+
+## Decisions & errata (post-build)
+Moved here from CLAUDE.md's roadmap ⑤ on 30 Jul 2026.
+
+Static "Can I keep it?" table in fish ID (`#fishid`), **visible not collapsed** — a legal
+minimum behind a toggle is the wrong disclosure level. Zero JS, storage or network.
+
+### The fail-closed rule for regulatory numbers
+**No remembered value ever ships.** Every size was transcribed at build time from raw
+NWIFCA/gov.uk HTML, and the review re-fetched and re-matched every number independently.
+**Summarisers are NOT a source** — the review caught a fetch model inverting the
+Schedule 2 heading. (This rule was later extended to medical content; see
+`hook-in-skin-first-aid.md`, where it bit four times.)
+
+### The sourcing record
+Verbatim, on Schedule 2's scope:
+
+> "Schedule 2 also applies to all persons fishing in the district, unless fishing under
+> the authority of a fishing vessel licence issued by the MMO"
+
+i.e. **Schedule 2 DOES apply to shore anglers** — bass 42, cod 35, mackerel 20,
+plaice 27, whiting 27 (cm). Schedule 1 (all fishers) gives dab 15, flounder 25,
+thick-lip grey mullet 20, conger 58.
+
+- The eel row is release-not-a-size, per gov.uk: "Any eels you catch (except conger eels)
+  must be released alive" — with the conger 58 cm disambiguation clause.
+- Red mullet 15 cm disambiguates the mullet row. Both clauses were sourced in the same
+  build; the notes column carries nothing unsourced.
+- The bass row is numerically identical to the PLAN regs box (42 cm · 3/day ·
+  C&R 1 Feb–31 Mar), machine-checked.
+- **The weever row is never-keep / never-handle — a safety stance, not a statute.**
+  Keep that distinction if editing.
+
+### Date stamps
+Sizes say "verified … 28 Jul 2026"; the page banner stayed "reviewed 26 Jul". The whole
+page was NOT re-reviewed, and bumping it would have been a false stamp.
+
+Welsh Dee = one NRW pointer sentence, no table.
