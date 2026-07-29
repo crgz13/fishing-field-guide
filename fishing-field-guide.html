@@ -242,6 +242,9 @@
   .derived div{padding:8px 10px;border-right:1px solid #d8ddd4;font-size:.85rem}
   .derived b{display:block;font-family:'Archivo',sans-serif;font-stretch:80%;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--teal)}
   .whynote{font-size:.8rem;color:#3c4c56;margin-top:6px}
+  #sharewrap p{margin-top:6px}
+  #shareout{word-break:break-all}
+  @media print{#sharewrap{display:none}}
   body.night .deck{background:#140708}
   body.night .deck select,body.night .deck input,body.night .locker select,body.night .locker input,body.night .vpanel input{background:#0a0405;color:#e03d3d;border-color:#e03d3d}
   body.night .derived div{border-color:#3a1414}
@@ -348,8 +351,8 @@
   body.night .wxband td{border-color:#3a1414}
   @media print{#wxctl{display:none}}
   .locker .msg{font-size:.85rem;color:var(--buoy);margin:6px 0 0}
-  .locker button.act{font:inherit;font-size:.85rem;padding:8px 12px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:3px;cursor:pointer}
-  body.night .locker button.act{background:#0a0405;color:#e03d3d;border-color:#e03d3d}
+  .locker button.act,.deck button.act{font:inherit;font-size:.85rem;padding:8px 12px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:3px;cursor:pointer}
+  body.night .locker button.act,body.night .deck button.act{background:#0a0405;color:#e03d3d;border-color:#e03d3d}
   @media print{details.ref{display:block}details.ref summary::after{content:''}}
 </style>
 </head>
@@ -401,6 +404,11 @@
     <p class="whynote" id="gearwhy"></p>
     <p class="whynote" id="norodnote" hidden>No rod yet — the numbers on this page assume a generic light spinning rod (10–30g), the sensible first buy for these marks.</p>
     <p class="whynote" id="savedline" hidden>Saved on this device · <a href="#" id="resetprofile">reset</a></p>
+    <div class="whynote" id="sharewrap" hidden>
+      <button type="button" class="act" id="sharebtn">Share this setup</button>
+      <span id="shareout" role="status"></span>
+      <p>The link opens this guide with your rod, line and mark already set. Your locker and catch log stay on this device — they have their own export files.</p>
+    </div>
   </div>
 
   <details class="ref"><summary>My gear locker</summary>
@@ -1626,11 +1634,15 @@
   }
   window.select=select;
 
-  function writeHash(){
-    if(!INIT_DONE) return; // keep a clean URL clean until the user changes something
-    location.hash='v='+state.venue+'&r='+state.rod+'&l='+state.line+
+  // one encoder: the address bar and the share button can't drift apart
+  function hashString(){
+    return 'v='+state.venue+'&r='+state.rod+'&l='+state.line+
       (state.rod==='custom'?('&cw='+state.cmin+'-'+state.cmax):'')+
       (NOROD?'&nr=1':'');
+  }
+  function writeHash(){
+    if(!INIT_DONE) return; // keep a clean URL clean until the user changes something
+    location.hash=hashString();
   }
   function readHash(){
     var h=location.hash.replace('#','');
@@ -1711,6 +1723,35 @@
     try{localStorage.removeItem('efg-profile')}catch(err){}
     history.replaceState(null,'',location.pathname+location.search);
     location.reload(); // ponytail: reload guarantees the exact fresh-visit state, no re-render bookkeeping
+  });
+
+  /* ================= SHARE THE SETUP =================
+     A share is a READ: no location.hash write, no saveProfile(), INIT_DONE untouched —
+     the sender's address bar and saved profile are identical before and after a click.
+     Base is the canonical link even from file:// or localhost: a local path is useless to
+     whoever you send it to, and it would leak the sender's directory structure.
+     The hash carries the SETUP only. Locker and catch log are deliberately excluded —
+     both have their own JSON export, and a catch log is dates and places of a real
+     person, which must never travel silently inside a URL pasted into a group chat. */
+  function shareURL(){
+    var c=document.querySelector('link[rel=canonical]');
+    return (c? c.href : location.href.split('#')[0])+'#'+hashString();
+  }
+  document.getElementById('sharebtn').addEventListener('click',function(){
+    var url=shareURL(), out=document.getElementById('shareout');
+    function show(msg){ out.textContent=msg+' '+url; }   // the URL is always visible: see what you're sending
+    if(navigator.share){
+      // the OS sheet is its own confirmation, and a cancel is invisible to us — claim nothing.
+      // It also previews the link it is sharing, so this branch showing no URL still meets
+      // "the sender can see what they are sending".
+      navigator.share({url:url}).catch(function(){ show('Copy it yourself:'); });
+    }else if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url)
+        .then(function(){ show('Copied ✓'); })      // only on resolve — a failed copy saying "copied" is a false stamp
+        .catch(function(){ show('Copy it yourself:'); });
+    }else{
+      show('Copy it yourself:');
+    }
   });
 
   /* ================= GEAR LOCKER: storage + UI ================= */
@@ -2250,6 +2291,7 @@
   buildLog();
   buildWx();
   defaultRig(); buildRig();
+  document.getElementById('sharewrap').hidden=false;  // JS-off shows no dead control
   INIT_DONE=true;
 </script>
 

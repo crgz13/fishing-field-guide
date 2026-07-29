@@ -300,8 +300,26 @@ Current state: one self-contained file, `fishing-field-guide.html` (~80KB), no b
    flounder's `#e0d4b4` so night mode recolours it with zero new palette rules. Review
    re-fetched all three pages independently: 13 claims matched, 3 absences confirmed,
    0 fails.
-   **Remaining ⑤ (any order):** share-config button,
-   print stylesheet ("tonight's session" one-pager).
+   **share-config button ✅ done** — "Share this setup" in the gear deck: canonical-URL +
+   the existing hash payload, handed over via navigator.share → clipboard → visible-URL
+   fallback. Decisions: **the link carries the setup hash ONLY** (rod/line/venue/cw/nr) —
+   locker and catch log are excluded on purpose: both have their own JSON export, and a
+   catch log is dates-and-places of a real person that must never travel silently in a
+   URL pasted into a group chat (the visible copy says so); **a share is a READ** — no
+   location.hash write, no saveProfile(), address bar and profile byte-identical after a
+   click; **"Copied ✓" only when the clipboard promise resolves** (the false-stamp rule
+   in miniature — the real clipboard rejecting a synthetic click proved the guard works),
+   and the navigator.share branch claims nothing because the OS sheet is its own
+   confirmation and a cancel is invisible; **base URL is the canonical <link> even from
+   file://** — read from the DOM so the two can't drift (the LEADS trick), and a local
+   path is useless to the recipient and leaks the sender's directory structure. The
+   encoder was extracted to `hashString()`, shared by writeHash() and the button.
+   Markup ships static with `hidden`; JS removes it at init end, so JS-off shows no dead
+   control (the norodnote/savedline pattern). NOTE for future .deck styling: #firstvisit
+   is a SECOND runtime element with class="deck" (buildFirstVisit) — a static grep for
+   class="deck" finds only #geardeck and undercounts; `.deck button.act` is safe today
+   only because first-visit buttons are classless.
+   **Remaining ⑤ (any order):** print stylesheet ("tonight's session" one-pager).
 
 ## Explicitly rejected (do not add)
 - Live tide APIs (no reliable free source; wrong tide data is worse than a link),
