@@ -65,6 +65,11 @@ shapes and preset counts. Only the non-obvious constraints live here:
 **Remaining: print stylesheet ("tonight's session" one-pager).**
 Per-item history, decisions and errata: `specs/*.md` + `git log`.
 
+**Convention:** post-build decisions and errata go in `specs/<item>.md` under
+`## Decisions & errata (post-build)` — **not here.** This file keeps only forward
+constraints. The older `## On pass (same commit) — CLAUDE.md records: …` lines in
+`specs/*.md` predate this and are superseded; do not follow them.
+
 ## Invariants from shipped work — reintroducing any of these is a regression
 Each of these is a trap the code exhibits but does not explain.
 - **`kind`, not `type`,** is the item-kind key — `type` belongs to `line{type,…}`.
