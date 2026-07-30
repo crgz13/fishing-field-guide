@@ -449,6 +449,49 @@
     .inst[data-tab]::after{box-shadow:none}
     .chips button,.mapjump button{box-shadow:none;transform:none}
   }
+
+  /* ---------- print: two modes ----------
+     DEFAULT (Cmd+P) = the whole guide, unchanged. That is the "hand someone the guide"
+     path the footer promises, so it is never replaced.
+     SESSION (button) = body.session, one sheet for the water.
+     Night mode never reaches paper — the class is stripped in beforeprint (CSS alone
+     cannot undo ~20 body.night rules without a sledgehammer). */
+  #sessionsheet{display:none}
+  @media print{
+    /* browsers do not print backgrounds by default, so every light-on-ink element on
+       this page prints white-on-white. Flip them to ink-on-white with a border. */
+    th{background:none;color:var(--ink);border-bottom:2px solid var(--ink)}
+    .watch{background:none;color:var(--ink);border:1px solid var(--ink)}
+    .safety{background:none;color:var(--ink);border:3px solid var(--buoy)}
+    .safety h2{color:var(--buoy)}
+    .inst[data-tab]::after{background:none;color:var(--ink);border:1px solid var(--ink)}
+    .badge{border:1px solid var(--ink);color:var(--ink);background:none}
+
+    body.session>*{display:none!important}
+    body.session #sessionsheet{display:block!important}
+    body.session{background:#fff;color:#1c2b36}
+  }
+  /* the sheet is pure ink-on-white by construction: no backgrounds to lose */
+  #sessionsheet h1{font-family:'Archivo',sans-serif;font-stretch:62%;font-weight:900;
+    text-transform:uppercase;font-size:19pt;line-height:1;margin-bottom:2pt}
+  #sessionsheet h2{font-family:'Archivo',sans-serif;font-stretch:75%;font-weight:800;
+    text-transform:uppercase;font-size:8.5pt;letter-spacing:.08em;
+    border-bottom:1.5pt solid #1c2b36;margin:4.5pt 0 2pt;padding-bottom:1pt}
+  #sessionsheet .ss-sub{font-size:9pt;margin-bottom:3pt}
+  #sessionsheet .ss-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1pt solid #1c2b36}
+  #sessionsheet .ss-grid div{padding:2.5pt 4pt;border-right:.5pt solid #1c2b36;font-size:9pt;font-family:var(--mono)}
+  #sessionsheet .ss-grid div:last-child{border-right:none}
+  #sessionsheet .ss-grid b{display:block;font-family:'Archivo',sans-serif;font-stretch:80%;
+    font-size:6.5pt;letter-spacing:.05em;text-transform:uppercase}
+  #sessionsheet .ss-why{font-size:7pt;margin-top:2pt}
+  /* 9pt is the legibility floor for anything you read at the water — content gets cut
+     before type goes below it. Only the derivation notes and the footer are smaller. */
+  #sessionsheet p{font-size:9pt;line-height:1.32;margin:1.5pt 0}
+  #sessionsheet ul{margin:1.5pt 0 0 11pt}
+  #sessionsheet li{font-size:9pt;line-height:1.32;margin:1pt 0}
+  #sessionsheet .ss-danger{border:1.5pt solid #d14d28;padding:3pt 5pt;margin:3pt 0;font-size:9pt}
+  #sessionsheet .ss-foot{font-size:7pt;margin-top:6pt;border-top:.5pt solid #94a39c;padding-top:2pt}
+  @page{margin:11mm}
 </style>
 </head>
 <body>
@@ -514,6 +557,10 @@
       <button type="button" class="act" id="sharebtn">Share this setup</button>
       <span id="shareout" role="status"></span>
       <p>The link opens this guide with your rod, line and mark already set. Your locker and catch log stay on this device — they have their own export files.</p>
+    </div>
+    <div class="whynote" id="printwrap" hidden>
+      <button type="button" class="act" id="printbtn">Print tonight's session</button>
+      <p>One sheet for the water: your numbers, your mark, the safety lines. Plain <b>Print</b> still gives you the whole guide.</p>
     </div>
   </div>
 
@@ -1086,6 +1133,9 @@
   </div>
 </footer>
 
+<!-- filled at click time by sessionSheet(); never shown on screen, only in body.session print -->
+<div id="sessionsheet" aria-hidden="true"></div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
   var nb = document.getElementById('nightbtn');
@@ -1104,6 +1154,19 @@
   window.addEventListener('afterprint', function () {
     PRINTCLOSED.forEach(function (d) { d.open = false; });
     PRINTCLOSED = [];
+  });
+
+  /* Night mode never reaches paper: red-on-black eats toner and reads as nothing.
+     Stripping the class beats fighting ~20 body.night rules in @media print, and it
+     fixes BOTH print modes at once. Restored on afterprint, so the screen is untouched. */
+  var PRINTNIGHT = false;
+  window.addEventListener('beforeprint', function () {
+    PRINTNIGHT = document.body.classList.contains('night');
+    if (PRINTNIGHT) document.body.classList.remove('night');
+  });
+  window.addEventListener('afterprint', function () {
+    if (PRINTNIGHT) document.body.classList.add('night');
+    PRINTNIGHT = false;
   });
 
   /* ================= GEAR ================= */
@@ -1860,6 +1923,120 @@
     }
   });
 
+  /* ================= PRINT: "TONIGHT'S SESSION" ONE-PAGER =================
+     Every value comes from the functions that render the screen — gearCalc(), VENUES,
+     sunHTML(), the live RULES array, and the safety box's own DOM text. Nothing on this
+     sheet is hand-copied, so the paper can never drift from the page.
+
+     Weather is deliberately absent: a verdict printed Monday still reads as current on
+     Wednesday. Tides ARE here, because a window and a ceiling are date-independent —
+     weather is the comfort axis, tides are the safety axis, and only one of them keeps.
+
+     Printing is a READ: no state, storage or hash is touched. */
+  function ssBadge(c){ return c==='ver'?'[verified]' : c==='anec'?'[anecdotal]' : '[shifting / danger]'; }
+
+  function sessionSheet(){
+    var k=state.venue, v=VENUES[k], g=gearCalc();
+    var when=SUNDATE||todayISO();
+    if(k==='all'){
+      return '<h1>Tonight’s session</h1><p class="ss-danger"><b>Pick one mark first.</b> '+
+        'This sheet is built for a single stance — its tide window, hazard and sun times '+
+        'are the mark’s own. Choose a mark on the page, then print again.</p>';
+    }
+    var h='<h1>'+esc(v.name)+'</h1>'+
+      '<p class="ss-sub"><b>Session date '+esc(when)+'</b> · '+esc(v.why)+' '+ssBadge(v.conf)+'</p>';
+
+    h+='<h2>Your setup</h2><p>'+esc(g.rod.label)+' · '+esc(g.line.label)+'</p><div class="ss-grid">'+
+      '<div><b>Max lead</b>'+(g.maxLead? esc(g.maxLead[0]+'g ('+g.maxLead[1]+')'):'—')+'</div>'+
+      '<div><b>Lure window</b>'+esc(g.lure[0]+'–'+g.lure[1]+'g')+'</div>'+
+      '<div><b>Hooklength</b>'+esc(g.hook+'lb fluoro')+'</div>'+
+      '<div><b>Drag</b>'+(g.line.type==='braid'?'soft — no stretch':'normal — mono stretches')+'</div>'+
+      '</div>'+
+      // principle 4: the why travels with every number, on paper more than anywhere
+      '<p class="ss-why">Max lead = rod ceiling ('+g.rod.max+'g) minus ~12g of rig + bait, rounded to a real lead size. '+
+      'Hooklength = main line ('+g.line.lb+'lb) minus ~25%, so a snag breaks at the hook, never mid-line.</p>';
+
+    // the actual shock-leader RULE, driven by the derived max lead — never a second copy of its maths
+    var sl=null; RULES.forEach(function(r){ if(r.id==='shock-leader') sl=r; });
+    if(sl&&g.maxLead){
+      var vd=sl.fn({lead:{g:g.maxLead[0]},leader:null},g);
+      if(vd) h+='<p'+(vd.v==='r'?' class="ss-danger"':'')+'><b>Shock leader:</b> '+esc(vd.why)+'</p>';
+    }
+
+    h+='<h2>The mark</h2><div class="ss-grid" style="grid-template-columns:repeat(3,1fr)">';
+    v.stats.forEach(function(s){ h+='<div><b>'+esc(s[0])+'</b>'+esc(s[1])+'</div>'; });
+    h+='</div>';
+    h+='<div class="ss-danger"><b>Hazard:</b> '+esc(v.hazard)+'</div>';
+    if(v.subs&&v.subs.length){
+      h+='<div data-cut="subs"><p><b>Sub-spots:</b></p><ul>';
+      v.subs.forEach(function(s){ h+='<li><b>'+esc(s[0])+'</b> '+ssBadge(s[2])+' — '+esc(s[1])+'</li>'; });
+      h+='</ul></div>';
+    }
+    h+='<p data-cut="shops"><b>Bait &amp; tackle:</b> '+esc(v.shops)+'</p>';
+
+    h+='<h2>Light on '+esc(when)+'</h2><p>'+sunHTML(k)+'</p>'+
+      '<p class="ss-why">Flat-horizon times — high ground or a wall behind you cuts the light shorter.</p>';
+
+    h+='<h2>Tides — the safety axis</h2>'+
+      '<p class="ss-danger"><b>This sheet carries no tide times.</b> There is no reliable free source, '+
+      'and a wrong tide is worse than none — check a tide table you trust before you go. '+
+      'This mark’s own window and ceiling are in the grid above.</p>';
+
+    // safety bullets read from the page's own box: byte-identical, never re-worded
+    var lis=[].slice.call(document.querySelectorAll('.safety li'));
+    if(lis.length){
+      h+='<h2>Before anything else</h2><ul>';
+      lis.forEach(function(li){ h+='<li>'+esc(li.textContent.replace(/\s+/g,' ').trim())+'</li>'; });
+      h+='</ul>';
+    }
+    var regs=document.querySelector('.regs p');
+    if(regs) h+='<div data-cut="regs"><h2>Rules (2026)</h2><p>'+esc(regs.textContent.replace(/\s+/g,' ').trim())+'</p></div>';
+
+    h+='<p class="ss-foot">Emergency: <b>999</b> or <b>112</b>. '+
+      'Printed '+esc(todayISO())+' (a print stamp, not a verification stamp — each claim above '+
+      'carries its own date on the page). Newest rules and dates: crgz13.github.io/fishing-field-guide</p>';
+    return h;
+  }
+
+  /* One page is a HARD budget. Cut content in the declared order — shops, then sub-spots,
+     then rules — rather than shrink type below the 9pt floor you have to read at the
+     water. Safety lines, the derived numbers and their whys, the hazard and the tides
+     caveat are never candidates. A4 portrait inside @page margin 11mm is ~710×1039px at
+     96dpi; Letter is wider and therefore shorter, so A4 is the tight case to fit. */
+  var SS_W=710, SS_H=1039;
+  function fitSheet(el){
+    function tall(){
+      el.style.cssText='display:block;position:absolute;left:-9999px;top:0;width:'+SS_W+'px';
+      var h=el.getBoundingClientRect().height; el.style.cssText=''; return h;
+    }
+    var dropped=[], names={shops:'tackle shops',subs:'sub-spots',regs:'the rules panel'};
+    ['shops','subs','regs'].forEach(function(key){
+      if(tall()<=SS_H) return;
+      var n=el.querySelectorAll('[data-cut="'+key+'"]');
+      if(!n.length) return;
+      [].slice.call(n).forEach(function(x){ x.remove(); });
+      dropped.push(names[key]);
+    });
+    // never a silent cut: the sheet says what it dropped and where to find it
+    if(dropped.length){
+      var f=el.querySelector('.ss-foot');
+      if(f) f.insertAdjacentHTML('afterbegin','<b>Trimmed to one page:</b> '+dropped.join(', ')+
+        ' — all of it is on the guide itself. ');
+    }
+    return dropped;
+  }
+
+  document.getElementById('printbtn').addEventListener('click',function(){
+    var sheet=document.getElementById('sessionsheet');
+    sheet.innerHTML=sessionSheet();   // rebuilt every time: never a stale mark
+    fitSheet(sheet);
+    document.body.classList.add('session');
+    window.print();
+  });
+  // afterprint may not fire if the dialog is dismissed oddly; the class is also cleared
+  // on the next click, so a stuck 'session' can never hide the screen (it is print-only anyway).
+  window.addEventListener('afterprint',function(){ document.body.classList.remove('session'); });
+
   /* ================= GEAR LOCKER: storage + UI ================= */
   var LOCKER=[];
   function loadLocker(){ try{var a=JSON.parse(localStorage.getItem('efg-locker')); return Array.isArray(a)?a.filter(validItem):[]}catch(e){return []} }
@@ -2398,6 +2575,7 @@
   buildWx();
   defaultRig(); buildRig();
   document.getElementById('sharewrap').hidden=false;  // JS-off shows no dead control
+  document.getElementById('printwrap').hidden=false;  // ditto — plain Cmd+P still works without JS
   INIT_DONE=true;
 </script>
 

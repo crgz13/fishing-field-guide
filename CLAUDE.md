@@ -61,8 +61,7 @@ shapes and preset counts. Only the non-obvious constraints live here:
   a BNA (proposed only); eels always released; EA licence only for targeting migratory fish.
 
 ## Roadmap
-①–④ complete. ⑤ complete except the last item.
-**Remaining: print stylesheet ("tonight's session" one-pager).**
+**①–⑤ complete.** No fixed end state — next items are decided as we go.
 Per-item history, decisions and errata: `specs/*.md` + `git log`.
 
 **Convention:** post-build decisions and errata go in `specs/<item>.md` under
@@ -115,6 +114,13 @@ Each of these is a trap the code exhibits but does not explain.
   when the clipboard promise resolves.
 - **`#firstvisit` is a second runtime `.deck` element.** A static grep for
   `class="deck"` undercounts.
+- **Two print modes, and only one is ever replaced.** Plain Cmd+P = the whole guide —
+  the "hand someone the guide" path; never repurpose it. The session sheet is
+  button-only (`body.session`). **Weather never goes on paper** (a printed verdict
+  reads as current days later); tides guidance does (windows and ceilings are
+  date-independent). Badges become `[verified]`-style text in print, never disappear.
+  "Printed <date>" is a print stamp, never a verification stamp. Night never reaches
+  paper: `beforeprint` strips the class — CSS alone cannot.
 - **Two material languages.** Printed matter (figures, danger cards, tables, safety
   box) lies FLAT; only the six engines carry `.inst` cards — the contrast is what
   keeps the safety box loudest, so never card new prose or flatten an engine. The
