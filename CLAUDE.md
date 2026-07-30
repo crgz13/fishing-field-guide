@@ -122,7 +122,21 @@ Each of these is a trap the code exhibits but does not explain.
   Decision A on RUN. Fewer than 2 contract-passing marks = the region does not ship.
   A region needs ≥1 `ver` mark. Each venue carries its own `rev` date — a mark must
   never inherit a "reviewed" date from before it existed. New regions outside NWIFCA
-  (Wales first among them) need their own regulatory sourcing before anything else.
+  need their own regulatory sourcing before anything else — **Wales' spine ships**
+  (specs/wales-groundwork-regs.md): saved Byelaw 19 carries NWIFCA's numbers on the
+  open North Wales coast but stops at the Dee-mouth line (Hilbre Point → Point of
+  Ayr), so the inner Welsh Dee bank has only bass 42cm; the byelaw's own 36cm bass
+  line is superseded by the national 42cm. Welsh marks now need only the contract.
+- **Regulatory claims are authority-scoped.** An "everywhere" rule needs every
+  covered authority's source re-fetched (bass earned it: gov.uk and gov.wales carry
+  identical 2026 numbers, both shore-inclusive). A stamp names the source each
+  claim was actually checked against — "checked against all of these" over a list
+  with one unchecked pairing is a false stamp even when every fact is true. The
+  licence rule is a statement about the statutory list (salmon, trout, freshwater
+  fish, smelt or eel — sea species are not on it), never an unsourced "no licence
+  needed for sea fishing": no official page states that exemption outright. An
+  absence claim ("Wales sets no X") requires the named candidate source run to
+  ground, not just the first authority page checked — Byelaw 19 was the trap.
 - **PLAN is location-first: mark → tide-safety → weather → gear → regs.** The
   first-visit card anchors to `#chips` (the section top), never the gear deck — and
   the page asks "where" before "what rod" everywhere, matching the first-visit card's
