@@ -1,8 +1,8 @@
 # NW Shore Fishing Guide — Project Brief (handoff)
 
 ## What this is
-A beginners' interactive guide to shore/estuary fishing in NW England (Duddon, Fylde,
-Mersey, Dee).
+A beginners' interactive guide to shore/estuary fishing in NW England and North Wales
+(Duddon, Fylde, Mersey, Dee, North Wales coast).
 Written for strangers, not for its author — the de-Craig pass shipped, so no copy is
 owner-relative or brand-relative. Stated direction (2026-07-28): grow into a UK-wide
 fishing-trip research workhorse — venue expansion is a future item, but new features
@@ -126,7 +126,14 @@ Each of these is a trap the code exhibits but does not explain.
   (specs/wales-groundwork-regs.md): saved Byelaw 19 carries NWIFCA's numbers on the
   open North Wales coast but stops at the Dee-mouth line (Hilbre Point → Point of
   Ayr), so the inner Welsh Dee bank has only bass 42cm; the byelaw's own 36cm bass
-  line is superseded by the national 42cm. Welsh marks now need only the contract.
+  line is superseded by the national 42cm. **Wales shipped** (specs/welsh-marks.md):
+  Talacre, Splash Point Rhyl, Colwyn Bay, all ver, region 'W'. Two traps from that
+  item: the byelaw line's "disused lighthouse at the Point of Ayr" stands ON Talacre
+  beach itself, so venue copy must never assert which side of the line a Dee-mouth
+  stance sits (the figures match either way — only the signature changes); and a new
+  venue's session sheet must be MEASURED worst-case before it ships — body.session
+  applied, across rod × line combos — because sheet height is gear-dependent and
+  fitSheet alone measures screen typography (~6 stat rows is the density that fits).
 - **Regulatory claims are authority-scoped.** An "everywhere" rule needs every
   covered authority's source re-fetched (bass earned it: gov.uk and gov.wales carry
   identical 2026 numbers, both shore-inclusive). A stamp names the source each
