@@ -537,7 +537,64 @@
 
 <!-- ================= PLAN ================= -->
 <section class="wrap" id="plan">
-  <h2 class="phase">Plan the session<small>Pick your gear, pick your mark. Every number and verdict on this page follows both.</small></h2>
+  <h2 class="phase">Plan the session<small>Pick your mark, pick your gear. Every number and verdict on this page follows both.</small></h2>
+
+  <div class="chips" id="chips" role="tablist" aria-label="Choose a fishing mark"></div>
+  <div class="mapjump">
+    <button type="button" id="jumpN">⛰ Cumbria marks</button>
+    <button type="button" id="jumpS">🌉 Mersey &amp; Dee marks</button>
+  </div>
+  <div id="livemap" role="application" aria-label="Satellite map of fishing marks"></div>
+  <p class="rig-caption" style="margin:6px 0 12px">Satellite view is usually captured at low tide — zoom in on a mark and you can read the gutters, channel edges and mud-to-sand lines yourself. That beats any stale pin: <b>confirm on foot at low water before fishing the flood over it.</b> Amber ⚠ pins are anecdotal or shifting-ground info; the red pin is a do-not. <b>Every pin is an approximate stance marker, not a surveyed fix</b> — it shows which structure to walk to, not where to stand.</p>
+
+  <div class="mapbox" id="mapfallback" aria-hidden="true">
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" font-family="Archivo,sans-serif">
+<rect width="420" height="300" fill="#e4ebe6"/>
+<text x="210" y="40" text-anchor="middle" font-size="14" font-weight="800">OFFLINE — SCHEMATIC VIEW</text>
+<text x="210" y="62" text-anchor="middle" font-size="11" fill="#3c4c56">No map tiles available. Use the chips above — all tactics still work offline.</text>
+<text x="60" y="110" font-size="12" font-weight="700">CUMBRIA:</text>
+<text x="60" y="130" font-size="11">● Hodbarrow · ● Silecroft · ◐ Askam</text>
+<text x="60" y="180" font-size="12" font-weight="700">MERSEY / DEE:</text>
+<text x="60" y="200" font-size="11">● Perch Rock · ● Otterspool · ◐ Thurstaston</text>
+<text x="60" y="220" font-size="11">◐ Pickerings · ◐ West Bank</text>
+<text x="60" y="248" font-size="10" fill="#3c4c56">● verified · ◐ anecdotal — pin positions approximate</text>
+</svg>
+  </div>
+
+  <div class="vpanel inst" id="vpanel" aria-live="polite" data-tab="Mark" data-note="changes with the chip you pick"></div>
+
+  <div class="safety" role="note">
+    <h2>Tide safety — non-negotiable</h2>
+    <ul>
+      <li><b>Duddon &amp; Mersey sands flood fast and fill channels behind you.</b> Fish from the edges; never wander the flats on a making tide.</li>
+      <li><b>Perch Rock causeway cuts off early on the flood.</b> Know your return time before you walk out.</li>
+      <li>Check tide times every session. Start backing off as soon as the flood begins.</li>
+      <li>Greasy rocks + running tide = fish from the beach or solid standings, not the outer rocks.</li>
+      <li>Tell someone where you are. Take the headtorch even for “daylight” sessions.</li>
+      <li><b>Weever fish sting:</b> hot water immersion (~40–45°C, 30+ min), remove visible spines, seek help if it worsens. Wear footwear on wet sand.</li>
+      <li><b>Hook in your skin:</b> barb still showing — clean and cover it. Barb out of sight — cut the line, leave the hook alone, A&amp;E. Never yank it. <a href="#fishid">Full card in fish ID</a>.</li>
+      <li>Discarded line kills wildlife (and dogs). Every scrap of trimmings goes in a pocket, home, and cut into pieces before the bin.</li>
+    </ul>
+  </div>
+
+  <details class="ref inst" data-tab="Weather" data-note="judges comfort — never safety"><summary>Weather check</summary>
+    <div class="locker"><!-- ponytail: locker/log form styling again, same shape of UI -->
+      <p><b>Weather is the comfort axis. Tides are the safety axis.</b> Nothing in this box
+      overrides a cut-off warning, a causeway time or a hazard note — and this guide carries
+      no live tide data on purpose, because wrong tide data is worse than a link. A kind
+      forecast is not permission to walk onto Duddon or Dee sand.</p>
+      <table class="wxband">
+        <tr><td><span class="fit fit-g"></span><b>under 10 mph</b></td><td>kind — light-rod weather, bites are easy to read</td></tr>
+        <tr><td><span class="fit fit-y"></span><b>10–20 mph</b></td><td>workable — casting distance and bite detection both suffer</td></tr>
+        <tr><td><span class="fit fit-r"></span><b>over 20 mph</b>, or gusts over 28</td><td>hard work on light gear — a heavier rod and lead, or another day</td></tr>
+      </table>
+      <p class="whynote">Rule-of-thumb bands, synthesised for this guide — not measurements,
+      and not venue data. They describe light shore gear, not what the sea is doing.</p>
+      <p>Type a wind speed in from any forecast app, or fetch one. <b>Nothing is requested
+      until you press fetch</b>, and nothing is stored.</p>
+      <div id="wxui"></div>
+    </div>
+  </details>
 
   <div class="deck inst" id="geardeck" data-tab="Gear" data-note="works these numbers out from your rod">
     <h3>Gear</h3>
@@ -573,49 +630,7 @@
     </div>
   </details>
 
-  <div class="chips" id="chips" role="tablist" aria-label="Choose a fishing mark"></div>
-  <div class="mapjump">
-    <button type="button" id="jumpN">⛰ Cumbria marks</button>
-    <button type="button" id="jumpS">🌉 Mersey &amp; Dee marks</button>
-  </div>
-  <div id="livemap" role="application" aria-label="Satellite map of fishing marks"></div>
-  <p class="rig-caption" style="margin:6px 0 12px">Satellite view is usually captured at low tide — zoom in on a mark and you can read the gutters, channel edges and mud-to-sand lines yourself. That beats any stale pin: <b>confirm on foot at low water before fishing the flood over it.</b> Amber ⚠ pins are anecdotal or shifting-ground info; the red pin is a do-not. <b>Every pin is an approximate stance marker, not a surveyed fix</b> — it shows which structure to walk to, not where to stand.</p>
-
-  <div class="mapbox" id="mapfallback" aria-hidden="true">
-<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" font-family="Archivo,sans-serif">
-<rect width="420" height="300" fill="#e4ebe6"/>
-<text x="210" y="40" text-anchor="middle" font-size="14" font-weight="800">OFFLINE — SCHEMATIC VIEW</text>
-<text x="210" y="62" text-anchor="middle" font-size="11" fill="#3c4c56">No map tiles available. Use the chips above — all tactics still work offline.</text>
-<text x="60" y="110" font-size="12" font-weight="700">CUMBRIA:</text>
-<text x="60" y="130" font-size="11">● Hodbarrow · ● Silecroft · ◐ Askam</text>
-<text x="60" y="180" font-size="12" font-weight="700">MERSEY / DEE:</text>
-<text x="60" y="200" font-size="11">● Perch Rock · ● Otterspool · ◐ Thurstaston</text>
-<text x="60" y="220" font-size="11">◐ Pickerings · ◐ West Bank</text>
-<text x="60" y="248" font-size="10" fill="#3c4c56">● verified · ◐ anecdotal — pin positions approximate</text>
-</svg>
-  </div>
-
-  <div class="vpanel inst" id="vpanel" aria-live="polite" data-tab="Mark" data-note="changes with the chip you pick"></div>
   <div id="buygap"></div>
-
-  <details class="ref inst" data-tab="Weather" data-note="judges comfort — never safety"><summary>Weather check</summary>
-    <div class="locker"><!-- ponytail: locker/log form styling again, same shape of UI -->
-      <p><b>Weather is the comfort axis. Tides are the safety axis.</b> Nothing in this box
-      overrides a cut-off warning, a causeway time or a hazard note — and this guide carries
-      no live tide data on purpose, because wrong tide data is worse than a link. A kind
-      forecast is not permission to walk onto Duddon or Dee sand.</p>
-      <table class="wxband">
-        <tr><td><span class="fit fit-g"></span><b>under 10 mph</b></td><td>kind — light-rod weather, bites are easy to read</td></tr>
-        <tr><td><span class="fit fit-y"></span><b>10–20 mph</b></td><td>workable — casting distance and bite detection both suffer</td></tr>
-        <tr><td><span class="fit fit-r"></span><b>over 20 mph</b>, or gusts over 28</td><td>hard work on light gear — a heavier rod and lead, or another day</td></tr>
-      </table>
-      <p class="whynote">Rule-of-thumb bands, synthesised for this guide — not measurements,
-      and not venue data. They describe light shore gear, not what the sea is doing.</p>
-      <p>Type a wind speed in from any forecast app, or fetch one. <b>Nothing is requested
-      until you press fetch</b>, and nothing is stored.</p>
-      <div id="wxui"></div>
-    </div>
-  </details>
 
   <div class="regs">
     <h3>Rules that apply everywhere here (2026)</h3>
@@ -1010,21 +1025,9 @@
   fish that side. Sizes are reviewed annually and can change: re-check before a trip.</p>
 </section>
 
-<!-- ================= SAFETY ================= -->
+<!-- ================= DOG BOX ================= -->
+<!-- the tide-safety box moved to PLAN, directly after the mark decider (location-first reorder) -->
 <div class="wrap">
-  <div class="safety" role="note">
-    <h2>Tide safety — non-negotiable</h2>
-    <ul>
-      <li><b>Duddon &amp; Mersey sands flood fast and fill channels behind you.</b> Fish from the edges; never wander the flats on a making tide.</li>
-      <li><b>Perch Rock causeway cuts off early on the flood.</b> Know your return time before you walk out.</li>
-      <li>Check tide times every session. Start backing off as soon as the flood begins.</li>
-      <li>Greasy rocks + running tide = fish from the beach or solid standings, not the outer rocks.</li>
-      <li>Tell someone where you are. Take the headtorch even for “daylight” sessions.</li>
-      <li><b>Weever fish sting:</b> hot water immersion (~40–45°C, 30+ min), remove visible spines, seek help if it worsens. Wear footwear on wet sand.</li>
-      <li><b>Hook in your skin:</b> barb still showing — clean and cover it. Barb out of sight — cut the line, leave the hook alone, A&amp;E. Never yank it. <a href="#fishid">Full card in fish ID</a>.</li>
-      <li>Discarded line kills wildlife (and dogs). Every scrap of trimmings goes in a pocket, home, and cut into pieces before the bin.</li>
-    </ul>
-  </div>
 
   <details class="dogbox">
     <summary><h2>🐾 Fishing with a dog?</h2></summary>
@@ -1460,13 +1463,14 @@
       'Why: max lead = rod ceiling ('+g.rod.max+'g) minus ~12g of rig + bait, rounded to a real lead size. '+
       'Hooklength = main line ('+g.line.lb+'lb) minus ~25% so a snag breaks at the hook, never mid-line.';
     var ss=document.getElementById('specstrip');
+    // mark first: the plate reads in the same order the page now decides
     if(ss) ss.innerHTML =
+      '<div>Mark<b>'+(VENUES[state.venue]?VENUES[state.venue].chip:'—')+'</b></div>'+
       '<div>Rod<b>'+g.rod.label.replace(/ \(.*/,'')+'</b></div>'+
       '<div>Cast weight<b>'+g.rod.min+'–'+g.rod.max+' g</b></div>'+
       '<div>Main line<b>'+g.line.label+'</b></div>'+
       '<div>Max lead<b>'+(g.maxLead? g.maxLead[1]+' ('+g.maxLead[0]+'g)':'—')+'</b></div>'+
-      '<div>Hooklength<b>'+g.hook+' lb</b></div>'+
-      '<div>Mark<b>'+(VENUES[state.venue]?VENUES[state.venue].chip:'—')+'</b></div>';
+      '<div>Hooklength<b>'+g.hook+' lb</b></div>';
     document.getElementById('glosscast').textContent=g.rod.min+'–'+g.rod.max+' g';
     document.getElementById('norodnote').hidden=!NOROD;
   }
@@ -1860,8 +1864,10 @@
       '<h3>First time here?</h3>'+
       '<p class="q">Where will you fish?</p><div class="chips" id="fvwhere"></div>'+
       '<p class="q">What rod do you have?</p><div class="chips" id="fvrod"></div>';
-    var deck=document.getElementById('geardeck');
-    deck.parentNode.insertBefore(card,deck);
+    // anchored to the TOP of PLAN, not to the gear deck: the deck now sits below the
+    // mark decider, and the first question a stranger answers is "where", not "what rod".
+    var host=document.getElementById('chips');
+    host.parentNode.insertBefore(card,host);
     var done={where:false,rod:false};
     function mark(row,btn,part){
       row.querySelectorAll('button').forEach(function(b){b.classList.toggle('active',b===btn);});

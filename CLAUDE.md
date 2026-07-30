@@ -114,6 +114,12 @@ Each of these is a trap the code exhibits but does not explain.
   when the clipboard promise resolves.
 - **`#firstvisit` is a second runtime `.deck` element.** A static grep for
   `class="deck"` undercounts.
+- **PLAN is location-first: mark → tide-safety → weather → gear → regs.** The
+  first-visit card anchors to `#chips` (the section top), never the gear deck — and
+  the page asks "where" before "what rod" everywhere, matching the first-visit card's
+  own question order. The rig-chain selects belong to DO's teaching path, never to
+  the gear cluster. The tide-safety box lives in PLAN after the mark decider; KNOW
+  keeps handling content (fish ID, hook-in-skin, dog box).
 - **Two print modes, and only one is ever replaced.** Plain Cmd+P = the whole guide —
   the "hand someone the guide" path; never repurpose it. The session sheet is
   button-only (`body.session`). **Weather never goes on paper** (a printed verdict
