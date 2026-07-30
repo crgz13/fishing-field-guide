@@ -115,6 +115,14 @@ Each of these is a trap the code exhibits but does not explain.
   when the clipboard promise resolves.
 - **`#firstvisit` is a second runtime `.deck` element.** A static grep for
   `class="deck"` undercounts.
+- **Two material languages.** Printed matter (figures, danger cards, tables, safety
+  box) lies FLAT; only the six engines carry `.inst` cards — the contrast is what
+  keeps the safety box loudest, so never card new prose or flatten an engine. The
+  map is deliberately uncarded (Leaflet clips and owns its corners). Tabs/notes are
+  **pseudo-elements reading `data-tab`/`data-note`** — a child tab dies in
+  `renderPanel()`'s innerHTML rebuild. Notes label the TOOL, never the world: a note
+  stating a fishing fact needs a badge and a source like any claim. The note floats
+  only above 1180px — below that the fixed `#nightbtn` would cover it.
 
 ## Explicitly rejected (do not add)
 - Live tide APIs (no reliable free source; wrong tide data is worse than a link),

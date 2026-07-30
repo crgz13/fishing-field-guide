@@ -7,7 +7,7 @@
 <link rel="canonical" href="https://crgz13.github.io/fishing-field-guide/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Public+Sans:wght@400;600;700&family=Spline+Sans+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink:#1c2b36;        /* chart ink navy */
@@ -17,6 +17,10 @@
     --buoy:#d14d28;       /* safety / signal only */
     --line:#1c2b36;
     --faint:#94a39c;
+    --card:#fdfefb;              /* instrument surface — a hair warmer than a figure's #fff */
+    --grid:rgba(61,107,106,.10); /* graph-paper ruling on an instrument */
+    --shadow:rgba(28,43,54,.16); /* hard riso offset, not a soft app shadow */
+    --mono:'Spline Sans Mono',ui-monospace,monospace;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
@@ -31,7 +35,11 @@
   a:focus-visible,button:focus-visible{outline:3px solid var(--buoy);outline-offset:2px}
 
   /* ---------- header ---------- */
-  header{border-bottom:3px solid var(--ink);padding:34px 0 0}
+  header{border-bottom:3px solid var(--ink);padding:34px 0 0;position:relative;overflow:hidden}
+  header .wrap{position:relative}   /* words sit above the decoration */
+  .contours{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  body.night .contours{opacity:.25}
+  @media print{.contours{display:none}}
   .eyebrow{
     font-family:'Archivo',sans-serif;font-stretch:75%;font-weight:700;
     letter-spacing:.14em;text-transform:uppercase;font-size:.78rem;color:var(--teal);
@@ -207,7 +215,9 @@
 
   /* ---------- night mode ---------- */
   #nightbtn{position:fixed;top:14px;right:14px;z-index:50;background:var(--ink);color:#fff;border:2px solid var(--ink);border-radius:20px;padding:8px 14px;font-family:'Archivo',sans-serif;font-weight:800;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
-  body.night{--ink:#e03d3d;--teal:#c04848;--sand:#8a2c2c;--buoy:#ff5a36;--faint:#5c1f1f;background:#0a0405;color:#e03d3d}
+  body.night{--ink:#e03d3d;--teal:#c04848;--sand:#8a2c2c;--buoy:#ff5a36;--faint:#5c1f1f;
+    --card:#140708;--grid:rgba(224,61,61,.10);--shadow:rgba(224,61,61,.22);
+    background:#0a0405;color:#e03d3d}
   body.night .standfirst,body.night .rig-caption,body.night figcaption,body.night .venue p,body.night td,body.night footer,body.night .step p,body.night .legend,body.night .tip,body.night .dogbox li{color:#c05050}
   body.night figure,body.night .stepnum,body.night table,body.night .tip,body.night .dogbox{background:#140708}
   body.night th{background:#3a0e0e;color:#ff9c8a}
@@ -354,6 +364,91 @@
   .locker button.act,.deck button.act{font:inherit;font-size:.85rem;padding:8px 12px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:3px;cursor:pointer}
   body.night .locker button.act,body.night .deck button.act{background:#0a0405;color:#e03d3d;border-color:#e03d3d}
   @media print{details.ref{display:block}details.ref summary::after{content:''}}
+
+  /* ---------- instrument cards ----------
+     Two material languages. Printed matter lies FLAT on the paper: figures, danger
+     cards, the season calendar, the size table, the rig diagram — things you read.
+     Anything that COMPUTES sits raised on an instrument card: graph surface, 2px ink
+     border, hard offset shadow, an ink index tab naming the tool. Lifting the engines
+     is what makes the flat red safety box the loudest print on the page.
+
+     The tab and its note are PSEUDO-ELEMENTS reading attributes, never child nodes:
+     renderPanel() rebuilds #vpanel's innerHTML on every venue change and would wipe a
+     child tab. Attributes survive, so this whole item needs no JS at all.
+
+     Note is ::before and tab is ::after on purpose — both are absolute on desktop so
+     order is invisible, but under 560px the note drops into the flow, and only ::before
+     lands at the TOP of the card where it belongs.
+
+     Attribute-gated by design: #firstvisit is a second runtime .deck (buildFirstVisit)
+     and takes the surface, but carries no data-tab, so it gets no tab. A card that dies
+     after two taps is not an instrument.
+
+     This block sits last in the stylesheet so it beats the earlier body.night .deck /
+     .vpanel background rules by source order at equal specificity. */
+  .inst,.deck{
+    position:relative;
+    background-color:var(--card);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),
+                     linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:14px 14px,14px 14px;
+    border:2px solid var(--ink);border-radius:2px;
+    box-shadow:7px 7px 0 var(--shadow);
+    padding:22px 20px 16px;
+    /* NOT the margin shorthand: .rigcheck is also .wrap, whose margin:0 auto centres it */
+    margin-top:34px;margin-bottom:26px;
+  }
+  details.ref.inst{border:2px solid var(--ink);border-radius:2px;padding:22px 20px 16px}
+  .inst[data-tab]::after{
+    content:'\271B  ' attr(data-tab);
+    position:absolute;top:-15px;left:14px;z-index:2;
+    background:var(--ink);color:var(--card);
+    font-family:'Archivo',sans-serif;font-stretch:80%;font-weight:800;
+    font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+    padding:5px 12px 4px;border-radius:2px;box-shadow:3px 3px 0 var(--shadow);
+  }
+  .inst[data-note]::before{
+    content:attr(data-note);
+    position:absolute;top:-11px;right:14px;z-index:2;
+    background:var(--paper);color:var(--teal);padding:0 8px;font-size:.72rem;
+  }
+  /* 1180, not 560: #nightbtn is fixed at the viewport's top-right and overlaps the note's
+     corner on every viewport under ~1163px (measured, not guessed). Below that the note
+     drops into the card's flow instead of hiding under the button. */
+  @media(max-width:1180px){
+    .inst[data-note]::before{position:static;display:block;background:none;padding:0;margin-bottom:8px}
+  }
+  body.night .inst,body.night .deck{
+    background-color:var(--card);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),
+                     linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  }
+  body.night .inst[data-tab]::after{color:#0a0405}
+  /* only while the note FLOATS over the card's top border does it need to mask it;
+     in flow mode (≤1180px) a background paints a full-width bar across the card. */
+  @media(min-width:1181px){body.night .inst[data-note]::before{background:#0a0405}}
+
+  /* readouts speak mono — derived numbers look like instrument output, not prose.
+     Labels stay Archivo: .derived b / .vstats b already set it, so they are untouched. */
+  .derived div,.vstats div,#suntimes,.chain .lfix,#wxout b,.specstrip b{font-family:var(--mono)}
+
+  /* controls get a physical press: the active chip reads pushed-in */
+  .chips button,.mapjump button{box-shadow:3px 3px 0 var(--shadow);transition:transform .1s,box-shadow .1s}
+  .chips button:hover,.mapjump button:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--shadow)}
+  .chips button:active,.mapjump button:active,.chips button.active{transform:translate(2px,2px);box-shadow:none}
+  .router a{transition:transform .12s,box-shadow .12s}
+  .router a:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--shadow)}
+  @media (prefers-reduced-motion:reduce){
+    .chips button,.mapjump button,.router a{transition:none}
+    .chips button:hover,.mapjump button:hover,.router a:hover{transform:none}
+  }
+
+  /* print: cards flatten back onto the paper — ink borders and tabs print, lift does not */
+  @media print{
+    .inst,.deck{box-shadow:none;background-image:none}
+    .inst[data-tab]::after{box-shadow:none}
+    .chips button,.mapjump button{box-shadow:none;transform:none}
+  }
 </style>
 </head>
 <body>
@@ -364,6 +459,17 @@
   <a href="#plan">Plan</a><a href="#do">Do</a><a href="#know">Know</a><a href="#lookup">Look up</a>
 </nav>
 <header>
+  <!-- decoration only: bathymetric contour LINES, deliberately no depth numbers — fake
+       soundings would be an invented figure on a page whose rule is silent-beats-invented.
+       aria-hidden, print-hidden, carries no information. -->
+  <svg class="contours" viewBox="0 0 880 320" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">
+    <g fill="none" stroke="#3d6b6a" stroke-width="1" opacity=".18">
+      <path d="M-20 300 Q140 250 300 285 T620 265 T920 290"/>
+      <path d="M-20 260 Q160 205 340 240 T660 215 T920 245"/>
+      <path d="M-20 215 Q180 160 380 195 T700 165 T920 200"/>
+      <path d="M-20 165 Q200 115 420 150 T740 115 T920 155"/>
+    </g>
+  </svg>
   <div class="wrap">
     <p class="eyebrow">Mersey · Dee · Duddon — light shore &amp; estuary fishing</p>
     <h1>The Estuary<br>Field Guide</h1>
@@ -390,7 +496,7 @@
 <section class="wrap" id="plan">
   <h2 class="phase">Plan the session<small>Pick your gear, pick your mark. Every number and verdict on this page follows both.</small></h2>
 
-  <div class="deck" id="geardeck">
+  <div class="deck inst" id="geardeck" data-tab="Gear" data-note="works these numbers out from your rod">
     <h3>Gear</h3>
     <div class="row">
       <select id="rodsel" aria-label="Rod"></select>
@@ -411,7 +517,7 @@
     </div>
   </div>
 
-  <details class="ref"><summary>My gear locker</summary>
+  <details class="ref inst" data-tab="Locker" data-note="what&#39;s in the bag, not what you&#39;re fishing today"><summary>My gear locker</summary>
     <div class="locker">
       <p>The selects above are <b>what you're fishing today</b>. The locker is <b>what's actually in the bag</b> — rods, reels, line, leads, hooks, rigs, lures. Keeping the two apart means the compatibility checks coming next can tell you what works together and what you're missing, instead of assuming you own the ideal kit.</p>
       <p>Bait isn't here on purpose: it's bought per session, not owned. It belongs on a trip list, not in a locker.</p>
@@ -442,10 +548,10 @@
 </svg>
   </div>
 
-  <div class="vpanel" id="vpanel" aria-live="polite"></div>
+  <div class="vpanel inst" id="vpanel" aria-live="polite" data-tab="Mark" data-note="changes with the chip you pick"></div>
   <div id="buygap"></div>
 
-  <details class="ref"><summary>Weather check</summary>
+  <details class="ref inst" data-tab="Weather" data-note="judges comfort — never safety"><summary>Weather check</summary>
     <div class="locker"><!-- ponytail: locker/log form styling again, same shape of UI -->
       <p><b>Weather is the comfort axis. Tides are the safety axis.</b> Nothing in this box
       overrides a cut-off warning, a causeway time or a hazard note — and this guide carries
@@ -476,7 +582,7 @@
   <div class="scroll" id="calwrap"></div>
   <p class="legend">● prime &nbsp;·&nbsp; ◐ possible &nbsp;·&nbsp; ○ unlikely. Local and yearly variation applies — the calendar says what to <em>target</em>, not what's guaranteed. <b>Every row here is an estimate.</b> The month bands were calibrated from each mark's own notes and the research credited in the venue panel — not from catch records. Where a venue's notes name a hard window (Hodbarrow's April–September, Silecroft's October codling), that window is the sourced fact and the row follows it. <span id="callegend2" hidden><b>▴ you've caught this here</b>, from your log below — a record of your own sessions, not a correction to the bands.</span></p>
 
-  <details class="ref"><summary>My catch log</summary>
+  <details class="ref inst" data-tab="Catch log" data-note="your record — it never changes the bands"><summary>My catch log</summary>
     <div class="locker"><!-- ponytail: same form/list/night-mode styling as the locker, same shape of UI -->
       <p>A diary of your sessions at these marks. Log a trip and a <b>▴</b> appears on the calendar above wherever you've caught that species, at that mark, in that month.</p>
       <p>The marker <b>never changes a band</b>. One good afternoon isn't evidence a month is prime, and a blank day isn't evidence it isn't — the bands stay what they are and your catches sit on top of them. Blank sessions are worth logging anyway; they just don't mark the table.</p>
@@ -587,7 +693,7 @@
 </div>
 <p class="wrap rig-caption"><strong>The spine of everything:</strong> the running ledger. The lead anchors; the line slides through the link so a fish never feels the weight; the fluoro section is deliberately the weakest so snags cost a hook, not the rig. Every bait session on this guide is a variation of this one chain.</p>
 
-<div class="wrap rigcheck">
+<div class="wrap rigcheck inst" data-tab="Rig check" data-note="tap a dot for the why">
   <p class="rc-intro">The diagram is the worked example this guide teaches — only the rod name under it is yours. To check <b>your</b> version, work down the chain below: it runs in the order the tackle does, rod to hook. Fill in what you're actually using and each link turns green, amber or red, on the list and on the diagram; tap any link for the reason. Leave anything blank and it simply isn't judged.</p>
   <div class="chain" id="rigslots"></div>
   <div id="rigwhy" aria-live="polite"></div>
