@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Estuary Field Guide — beginner shore fishing on the Mersey, Dee &amp; Duddon</title>
+<title>The Estuary Field Guide — beginner shore fishing on the Duddon, Fylde, Mersey &amp; Dee</title>
 <link rel="canonical" href="https://crgz13.github.io/fishing-field-guide/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -514,7 +514,7 @@
     </g>
   </svg>
   <div class="wrap">
-    <p class="eyebrow">Mersey · Dee · Duddon — light shore &amp; estuary fishing</p>
+    <p class="eyebrow">Duddon · Fylde · Mersey · Dee — light shore &amp; estuary fishing</p>
     <h1>The Estuary<br>Field Guide</h1>
     <p class="standfirst">Everything from the box of parts to your first flounder, in order, built around whatever gear you select below (default: a generic light spinning rod — set yours below). Print it, save it to your phone, take it to the water.</p>
     <div class="specstrip" id="specstrip">
@@ -542,6 +542,7 @@
   <div class="chips" id="chips" role="tablist" aria-label="Choose a fishing mark"></div>
   <div class="mapjump">
     <button type="button" id="jumpN">⛰ Cumbria marks</button>
+    <button type="button" id="jumpF">🎡 Fylde marks</button>
     <button type="button" id="jumpS">🌉 Mersey &amp; Dee marks</button>
   </div>
   <div id="livemap" role="application" aria-label="Satellite map of fishing marks"></div>
@@ -552,12 +553,14 @@
 <rect width="420" height="300" fill="#e4ebe6"/>
 <text x="210" y="40" text-anchor="middle" font-size="14" font-weight="800">OFFLINE — SCHEMATIC VIEW</text>
 <text x="210" y="62" text-anchor="middle" font-size="11" fill="#3c4c56">No map tiles available. Use the chips above — all tactics still work offline.</text>
-<text x="60" y="110" font-size="12" font-weight="700">CUMBRIA:</text>
-<text x="60" y="130" font-size="11">● Hodbarrow · ● Silecroft · ◐ Askam</text>
-<text x="60" y="180" font-size="12" font-weight="700">MERSEY / DEE:</text>
-<text x="60" y="200" font-size="11">● Perch Rock · ● Otterspool · ◐ Thurstaston</text>
-<text x="60" y="220" font-size="11">◐ Pickerings · ◐ West Bank</text>
-<text x="60" y="248" font-size="10" fill="#3c4c56">● verified · ◐ anecdotal — pin positions approximate</text>
+<text x="60" y="105" font-size="12" font-weight="700">CUMBRIA:</text>
+<text x="60" y="123" font-size="11">● Hodbarrow · ● Silecroft · ◐ Askam</text>
+<text x="60" y="153" font-size="12" font-weight="700">FYLDE:</text>
+<text x="60" y="171" font-size="11">● Gynn Wall · ● Fleetwood</text>
+<text x="60" y="201" font-size="12" font-weight="700">MERSEY / DEE:</text>
+<text x="60" y="219" font-size="11">● Perch Rock · ● Otterspool · ◐ Thurstaston</text>
+<text x="60" y="237" font-size="11">◐ Pickerings · ◐ West Bank</text>
+<text x="60" y="263" font-size="10" fill="#3c4c56">● verified · ◐ anecdotal — pin positions approximate</text>
 </svg>
   </div>
 
@@ -1132,7 +1135,7 @@
 </section>
 <footer>
   <div class="wrap">
-    Built around the gear you select · Mersey, Dee &amp; Duddon estuaries · Venue research: Sea Angler, Turners Tackle, Taskers, WSF &amp; local forums (verified vs anecdotal as badged) · 2026 bass rules baked in — re-check annually · Video buttons open YouTube searches · Full sources: see Sources &amp; credits under Look up · Latest version always at <a href="https://crgz13.github.io/fishing-field-guide/">crgz13.github.io/fishing-field-guide</a> — if you were handed this file, that link has the newest rules and dates.
+    Built around the gear you select · Duddon, Fylde, Mersey &amp; Dee · Venue research: Sea Angler, Turners Tackle, Taskers, WSF &amp; local forums (verified vs anecdotal as badged) · 2026 bass rules baked in — re-check annually · Video buttons open YouTube searches · Full sources: see Sources &amp; credits under Look up · Latest version always at <a href="https://crgz13.github.io/fishing-field-guide/">crgz13.github.io/fishing-field-guide</a> — if you were handed this file, that link has the newest rules and dates.
   </div>
 </footer>
 
@@ -1511,6 +1514,36 @@
       shops:'Gint\u2019s, Millom · Angling & Hiking Centre, Barrow',
       species:[['Flounder','pmmmmmmmpppp'],['Plaice','nnnmppppmnnn'],['Eel (release)','nnnmpppppnnn'],['School bass','nnnnmmpppmnn']]},
 
+    /* ---- Fylde coast (region F). Still NWIFCA, so the size table and regs panel
+       hold for these marks exactly as they do for Cumbria and Merseyside. Every
+       stat below is transcribed from the named source at build time; the tide-table
+       scale comes from each page's OWN embedded tide widget, never from geography. ---- */
+    fleetwood:{name:'Fleetwood — Esplanade & estuary mouth',chip:'Fleetwood',lat:53.9278,lng:-3.0104,conf:'ver',region:'F',rev:'30 Jul 2026',
+      why:'high-water mark · free parking at the estuary mouth · flatfish close in',
+      blurb:'A high-water venue on the Wyre. Turners Tackle are blunt about it: the sand runs out a long way and the distance and danger mean low water is neither safe nor practical here. Fish the estuary entrance for flatfish, with whiting and small codling through winter. On the main beach you are straight onto sand and lighter leads hold; the estuary’s main gully carries a few snags and the source reaches for a 6oz gripper there as the tide pushes in.',
+      stats:[['Ground','sand on the main beach; gullies and some snags in the estuary channel'],['Window','high water — the source says low water is not safe or practical'],['Season','flatfish through the year; whiting and small codling in winter'],['Parking','free near the estuary mouth — The Esplanade, FY7 6UW'],['Tide table','Fleetwood']],
+      hazard:'The sand runs out a long way and the source is explicit that low water is neither safe nor practical here — treat it as a high-water mark only. The banks shift with every tide, so walk the ground at low water before you fish a flood over it.',
+      subs:[['Rossall Point','gullies, rocky outcrops and groynes on the north-west side of Fleetwood — codling and whiting from late summer, flounder, eel and bass in June–July (Sea Angler)','ver'],['Estuary entrance','the flatfish stance the source fishes; snaggier as the flood pushes','ver']],
+      fit:{light:['y','the main beach is straight onto sand and takes lighter leads — but the estuary gully wants the 6oz the source recommends, so keep a light rod on the beach section'],
+           lure:['r','the source describes a bait mark: flatfish, whiting, codling. Nothing in it points to lure fishing'],
+           bass:['g','covers both the sand and the gully the source describes'],
+           beach:['g','the 6oz gripper the source uses in the estuary gully is beachcaster work']},
+      shops:'The source notes tackle shops locally selling fresh and frozen bait but names none — nothing listed here until a shop is verified.',
+      species:[['Flounder','ppmmmmmmpppp'],['Whiting','ppnnnnnnnmpp'],['Codling','ppnnnnnnnmpp'],['Eel (release)','nnnnmppmnnnn']]},
+
+    gynnwall:{name:'Gynn Wall, Blackpool',chip:'Gynn Wall',lat:53.8329,lng:-3.0546,conf:'ver',region:'F',rev:'30 Jul 2026',
+      why:'THE light-rod mark here · fish at the base of the wall · no distance needed',
+      blurb:'Part of the Fylde sea-defence wall running from Blackpool North Pier up toward Fleetwood. The source is emphatic that distance is not needed: fish come in against the base of the wall and a gentle 15-yard lob puts you among them — “a lot of anglers cast to Ireland when it just isn’t needed”. The bottom is sand and close to snag-free, so no heavy gripper unless the wind is up. Fishable roughly 2–3 hours up and the same down, depending how big the tide is.',
+      stats:[['Ground','sand — the source calls it pretty much snag-free'],['Window','2–3 hours up and the same down, depending on tide size'],['Range','fish at the base of the wall — a 15-yard lob is enough'],['Season','plaice in summer, cod in winter; flatfish and whiting through the year'],['Parking','side streets and pay-and-display; Blackpool council wall permits £30 (£15 disabled) allow driving onto the wall 3h either side of HW'],['Tide table','Blackpool']],
+      hazard:'Weever fish are caught here — the source describes nearly grabbing a lesser weever bare-handed on this wall, then catching four more the same session. Know the hot-water drill before you go. And if you fish the beach before the tide reaches the wall, make sure you can get back to the steps: lifeguards chain them off as the tide comes in.',
+      subs:[['Left of the boating pool','the stretch the source fishes most','ver'],['Right of the boating pool','the more popular side, now beside a go-kart track','ver']],
+      fit:{light:['g','the mark the light rod was made for — fish at the base of the wall, a 15-yard lob, sand, and no heavy gripper unless the wind is up'],
+           lure:['y','bass are about — the source has seen some stonking ones — but it describes bait fishing, not lure work'],
+           bass:['g','covers the wall comfortably in any wind the source describes'],
+           beach:['y','works, but the source is explicit that the distance is not needed here']},
+      shops:'Not named in the source — nothing listed here until a shop is verified.',
+      species:[['Flounder','ppmmmmmmpppp'],['Plaice','nnnmppppmnnn'],['Bass','nnnnmppppmnn'],['Whiting','ppnnnnnnnmpp'],['Cod','ppnnnnnnnnmp']]},
+
     newbrighton:{name:'New Brighton / Perch Rock',chip:'Perch Rock',lat:53.4425,lng:-3.0400,conf:'ver',region:'S',
       why:'best novice mark · LOW-WATER venue · free parking',
       blurb:'A LOW-water venue: fish down to and around low water from the beach either side of the fort — go round the LEFT of the fort past the lighthouse (firmer ground). The green buoy stance is popular (nearest the deep Rock Channel). At high water switch to Town Hall Steps on the prom. Mid-tide the Mersey run demands 5–6oz grip leads — beyond any light rod — so plan light-rod visits around the slack and the summer bass lure work off the rock edges.',
@@ -1560,6 +1593,7 @@
       fit:{light:['g','close-range flounder/eel ledgering'],lure:['r','no'],bass:['y','outside chance'],beach:['y','unnecessary']},
       shops:'Widnes Angling Centre 5 min away',
       species:[['Flounder','pmmmmmmmpppp'],['Eel (release)','nnnmpppppnnn'],['Whiting','mmnnnnnnnmmm']]}
+
   };
   var ROCKCHANNEL={lat:53.4460,lng:-3.0560};
 
@@ -1759,7 +1793,9 @@
     }
     h+='<div class="vhazard"><b>Hazard:</b> '+v.hazard+'</div>';
     h+='<p style="font-size:.85rem;margin-top:8px"><b>Bait &amp; tackle:</b> '+v.shops+' · <a href="https://www.google.com/maps/dir/?api=1&destination='+v.lat+','+v.lng+'" target="_blank" rel="noopener">Directions \u2197</a></p>';
-    h+='<p class="checked">Venue details reviewed 26 Jul 2026 \u2014 they change without notice, so re-verify before travelling.</p>';
+    // per-venue: a mark added later must not inherit an older "reviewed" date \u2014 that
+    // would stamp it as checked on a day it did not exist. Default = the 8 originals.
+    h+='<p class="checked">Venue details reviewed '+(v.rev||'26 Jul 2026')+' \u2014 they change without notice, so re-verify before travelling.</p>';
     el.innerHTML=h;
   }
 
@@ -1784,6 +1820,7 @@
       var danger=L.circleMarker([ROCKCHANNEL.lat,ROCKCHANNEL.lng],{radius:8,color:'#7a1d0a',weight:2,fillColor:'#c33a1e',fillOpacity:.95}).addTo(MAP);
       danger.bindPopup('<b>Rock Channel — DO NOT</b><br>Chest-wade across a draining tide. Experienced locals only; people are cut off here. Not a destination.');
       document.getElementById('jumpN').addEventListener('click',function(){MAP.setView([54.20,-3.29],12);});
+      document.getElementById('jumpF').addEventListener('click',function(){MAP.setView([53.88,-3.03],11);});
       document.getElementById('jumpS').addEventListener('click',function(){MAP.setView([53.40,-2.92],11);});
     }catch(e){
       document.getElementById('livemap').style.display='none';
@@ -1875,7 +1912,7 @@
       if(done.where&&done.rod) card.remove();
     }
     var wrow=document.getElementById('fvwhere');
-    [['Cumbria — Duddon & Barrow','hodbarrow'],['Merseyside — Mersey & Dee','newbrighton'],['Not sure yet','all']]
+    [['Cumbria — Duddon & Barrow','hodbarrow'],['Fylde — Blackpool & Fleetwood','gynnwall'],['Merseyside — Mersey & Dee','newbrighton'],['Not sure yet','all']]
       .forEach(function(o){
         var b=document.createElement('button'); b.type='button'; b.textContent=o[0];
         b.addEventListener('click',function(){select(o[1]);mark(wrow,b,'where');});

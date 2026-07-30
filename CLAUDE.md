@@ -1,7 +1,8 @@
 # NW Shore Fishing Guide — Project Brief (handoff)
 
 ## What this is
-A beginners' interactive guide to shore/estuary fishing in NW England (Mersey, Dee, Duddon).
+A beginners' interactive guide to shore/estuary fishing in NW England (Duddon, Fylde,
+Mersey, Dee).
 Written for strangers, not for its author — the de-Craig pass shipped, so no copy is
 owner-relative or brand-relative. Stated direction (2026-07-28): grow into a UK-wide
 fishing-trip research workhorse — venue expansion is a future item, but new features
@@ -114,6 +115,14 @@ Each of these is a trap the code exhibits but does not explain.
   when the clipboard promise resolves.
 - **`#firstvisit` is a second runtime `.deck` element.** A static grep for
   `class="deck"` undercounts.
+- **A venue ships only through the venue contract** (specs/venue-expansion-fylde.md):
+  named documented source fetched raw at build time or honest `anec`, stats traceable
+  line-by-line, **tide-table scale venue-sourced never geographic**, unsoftened
+  hazard, all four fit verdicts with whys, estimate-tagged bands, stance-level pins,
+  Decision A on RUN. Fewer than 2 contract-passing marks = the region does not ship.
+  A region needs ≥1 `ver` mark. Each venue carries its own `rev` date — a mark must
+  never inherit a "reviewed" date from before it existed. New regions outside NWIFCA
+  (Wales first among them) need their own regulatory sourcing before anything else.
 - **PLAN is location-first: mark → tide-safety → weather → gear → regs.** The
   first-visit card anchors to `#chips` (the section top), never the gear deck — and
   the page asks "where" before "what rod" everywhere, matching the first-visit card's
@@ -139,5 +148,6 @@ Each of these is a trap the code exhibits but does not explain.
 ## Explicitly rejected (do not add)
 - Live tide APIs (no reliable free source; wrong tide data is worse than a link),
   price/availability data, brand product databases, embedded hardcoded videos (YouTube
-  search links age better), more teaching knots, species beyond this coast,
+  search links age better), more teaching knots, species beyond shipped venues
+  (a fish-ID card exists only when a shipped venue's source names the species),
   localStorage-only persistence without export (data loss).
